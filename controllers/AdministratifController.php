@@ -170,7 +170,7 @@ class AdministratifController extends Controller
                 'dataSatker'=>$satker,
                 'dataUnit' => $unit,
                 'dataTim' => $tim,
-                'dataPengesah' => $pengesah,
+              //  'dataPengesah' => $pengesah,
             ]);
         }
     }
