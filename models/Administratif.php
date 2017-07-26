@@ -104,8 +104,5 @@ class Administratif extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id_user' => 'id_user']);
     }
 
-    public function getPengesah()
-    {
-        return $this->hasOne(Pengesah::className(), ['id_pengesah' => 'id_pengesah']);
-    }
+
 }

@@ -75,7 +75,7 @@ class AdministratifController extends Controller
       $data = $this->getJenisDokumen();
       $data2 = $this->getSifatDokumen();
       $model=$this->findModel($id);
-      $temp=json_decode($model->pengesah);
+     $temp=json_decode($model->pengesah);
       $vl = implode(",",$temp);
       $model->pengesah = $vl;
         return $this->render('view', [
@@ -155,7 +155,7 @@ class AdministratifController extends Controller
             $model->save();
             $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);
 
-            return $this->render('cek',['kode'=>$kode,'sifat'=>$sifat,'id'=>$model->id_surat_adm,
+            return $this->redirect(['view','kode'=>$kode,'sifat'=>$sifat,'id'=>$model->id_surat_adm,
               'model'=>$model,
             'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2,
@@ -170,7 +170,7 @@ class AdministratifController extends Controller
                 'dataSatker'=>$satker,
                 'dataUnit' => $unit,
                 'dataTim' => $tim,
-              //  'dataPengesah' => $pengesah,
+                'dataPengesah' => $pengesah,
             ]);
         }
     }
@@ -195,13 +195,13 @@ class AdministratifController extends Controller
         $unit = ArrayHelper::map(Unitkerja::find()->all(), 'kode_unit_kerja', 'ket_unit_kerja');
         $tim = ArrayHelper::map(Tim::find()->all(), 'kode_tim', 'nama_tim');
         //ngambil data checkbox
-        $pengesah = ArrayHelper::map(Pengesah::find()->all(), 'id_pengesah', 'nama_pengesah');
+        $pengesah = ArrayHelper::map(Pengesah::find()->all(), 'nama_pengesah', 'nama_pengesah');
 
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
 
         if ($model->load(Yii::$app->request->post()) ) {
-            return $this->redirect(['view', 'id' => $model->id_surat_adm,
+            return $this->redirect(['view', 'kode'=>$kode,'sifat'=>$sifat,'id'=>$model->id_surat_adm,'id' => $model->id_surat_adm,
             'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2]);
                       $model->save();

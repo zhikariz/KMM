@@ -18,11 +18,12 @@ use yii\widgets\ActiveForm;
     ]); ?>
     <?php
     $satker = json_decode($format->format_jenis_dokumen);
+
     if(in_array("Satuan Kerja",$satker)){
       echo Html::activeDropDownList($model, 'format_dokumen[]',$dataSatker,
       [
           'class' => 'btn btn-primary dropdown-toggle col-lg-12',
-          'prompt'=>'Pilih Satuan Kerja'
+          'prompt'=>'Pilih Satuan Kerja',
       ]);
       echo "<br>";
       echo "<br>";
