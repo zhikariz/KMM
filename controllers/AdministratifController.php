@@ -114,27 +114,11 @@ class AdministratifController extends Controller
         if ($model->load(Yii::$app->request->post())) {
 
             $model->file_dokumen = UploadedFile::getInstance($model,'file_dokumen');
-            $jml_jenis_dokumen = count(json_decode($data3->format_jenis_dokumen));
-
-            if($jml_jenis_dokumen == 1){
-              foreach($model->format_dokumen as $i){
-              $temp[] = $i;
-            }
-              $model->format_dokumen = $temp[0];
-            }else if($jml_jenis_dokumen == 2){
-              foreach($model->format_dokumen as $i){
-              $temp[] = $i;
-            }
-              $model->format_dokumen = $temp[0]."-".$temp[1];
-            }else{
-              foreach($model->format_dokumen as $i){
-              $temp[] = $i;
-            }
-              $model->format_dokumen = $temp[0]."-".$temp[1]."-".$temp[2];
-            }
+            $temp_format = json_encode($model->format_dokumen);
+            $model->format_dokumen = $temp_format;
             $no_dokumen_temp = $model->find()->where(['format_dokumen'=> $model->format_dokumen,'kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat])->orderBy(['no_dokumen'=>SORT_DESC])->one();
 
-            if($tahun_skr != $tahun_db['tahun'] && $no_dokumen_temp['format_dokumen'] == $model->format_dokumen){
+            if($tahun_skr != $tahun_db['tahun'] && $no_dokumen_temp['format_dokumen'] != $model->format_dokumen){
               $model->no_dokumen = 1;
               $model->kode_tahun = $tahun_db['kode_tahun'];
               $tahun->kode_tahun = $tahun_db['kode_tahun'] + 1;
@@ -153,9 +137,10 @@ class AdministratifController extends Controller
             $model->kode_sifat_dokumen = $sifat;
 
             $model->save();
+            if($model->file_dokumen != NULL)
             $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);
 
-            return $this->redirect(['view','kode'=>$kode,'sifat'=>$sifat,'id'=>$model->id_surat_adm,
+            return $this->redirect(['view','kode'=>$kode,'sifat'=>$sifat,'id'=>$model->id_surat_adm,'id' => $model->id_surat_adm,
               'model'=>$model,
             'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2,
@@ -201,10 +186,13 @@ class AdministratifController extends Controller
         $data2 = $this->getSifatDokumen();
 
         if ($model->load(Yii::$app->request->post()) ) {
+          $pengesah_temp = $model->pengesah;
+          $model->pengesah = json_encode($pengesah_temp);
+          $model->save();
             return $this->redirect(['view', 'kode'=>$kode,'sifat'=>$sifat,'id'=>$model->id_surat_adm,'id' => $model->id_surat_adm,
             'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2]);
-                      $model->save();
+
         } else {
           $temp_model_pengesah = json_decode($model->pengesah);
 

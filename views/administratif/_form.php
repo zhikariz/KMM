@@ -17,10 +17,11 @@ use yii\widgets\ActiveForm;
 ],
     ]); ?>
     <?php
+    if($model->isNewRecord){
     $satker = json_decode($format->format_jenis_dokumen);
 
     if(in_array("Satuan Kerja",$satker)){
-      echo Html::activeDropDownList($model, 'format_dokumen[]',$dataSatker,
+      echo Html::activeDropDownList($model, "format_dokumen[satker]",$dataSatker,
       [
           'class' => 'btn btn-primary dropdown-toggle col-lg-12',
           'prompt'=>'Pilih Satuan Kerja',
@@ -30,7 +31,7 @@ use yii\widgets\ActiveForm;
 
     }
     if(in_array("Tim Kerja",$satker)){
-        echo Html::activeDropDownList($model, 'format_dokumen[]',$dataTim,
+        echo Html::activeDropDownList($model, "format_dokumen[tim]",$dataTim,
         [
             'class' => 'btn btn-primary dropdown-toggle col-lg-12',
             'prompt'=>'Pilih Tim Kerja'
@@ -40,7 +41,7 @@ use yii\widgets\ActiveForm;
 
     }
     if(in_array("Unit Kerja",$satker)){
-        echo Html::activeDropDownList($model, 'format_dokumen[]',$dataUnit,
+        echo Html::activeDropDownList($model, "format_dokumen[unit]",$dataUnit,
         [
             'class' => 'btn btn-primary dropdown-toggle col-lg-12',
             'prompt'=>'Pilih Unit Kerja'
@@ -48,13 +49,15 @@ use yii\widgets\ActiveForm;
         echo "<br>";
         echo "<br>";
     }
+  }
      ?>
 
     <?= $form->field($model, 'perihal')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'pengesah')->checkboxlist($dataPengesah);?>
-
+        <?php if($model->isNewRecord){?>
       <?= $form->field($model, 'file_dokumen')->label('File Dokumen')->fileInput() ?>
+      <?php }?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

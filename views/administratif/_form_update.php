@@ -19,6 +19,7 @@ use kartik\widgets\FileInput;
     ]); ?>
     <?php
     $satker = json_decode($format->format_jenis_dokumen);?>
+    <?php
     <?= $form->field($model, 'format_dokumen')->textInput(['maxlength' => true]) ?>
 
 

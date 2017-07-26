@@ -35,7 +35,16 @@ $this->params['data2'] = $dataSifatDokumen;
         'hAlign' => 'center',
           'content' => function($model, $key, $index) use ($dataAdm) {
                     // you can do here something with $lang if you need so
-                    $content = $dataAdm[$index]['kode_tahun']."/".$dataAdm[$index]['no_dokumen']."/".$dataAdm[$index]['format_dokumen']."/".$dataAdm[$index]['kode_jenis_dokumen']."/".$dataAdm[$index]['kode_sifat_dokumen'];
+                    $a = json_decode($dataAdm[$index]['format_dokumen']);
+                    $jml = count((array)$a);
+                    if($jml == 1){
+                      $format=$a->satker;
+                    }else if($jml == 2){
+                      $format = $a->satker . "-" . $a->tim;
+                    }else{
+                      $format = $a->satker . "-" . $a->tim . "-" . $a->unit;
+                    }
+                    $content = $dataAdm[$index]['kode_tahun']."/".$dataAdm[$index]['no_dokumen']."/".$format."/".$dataAdm[$index]['kode_jenis_dokumen']."/".$dataAdm[$index]['kode_sifat_dokumen'];
                     return $content;
                 },
       ],
@@ -48,6 +57,11 @@ $this->params['data2'] = $dataSifatDokumen;
         'attribute'=>'pengesah',
         'vAlign' => 'middle',
         'hAlign' => 'center',
+        'content' => function($model,$key,$index) use ($dataAdm){
+          $temp=json_decode($dataAdm[$index]['pengesah']);
+           $vl = implode("<br>",$temp);
+           return $vl;
+        }
       ],
       [
         'attribute'=>'waktu_input',

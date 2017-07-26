@@ -6,12 +6,21 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Administratif */
 
-$this->title = "Detail Dokumen ".$model->kode_tahun."/".$model->format_dokumen."/".$model->kode_jenis_dokumen."/".$model->kode_sifat_dokumen;
-$this->params['breadcrumbs'][] = ['label' => 'Administratif', 'url' => ['index']];
+$json = json_decode($model->format_dokumen);
+$jml = count((array)$json);
+if($jml == 1){
+  $format = $json->satker;
+}else if($jml == 2){
+  $format = $json->satker . "-" . $json->tim;
+}else{
+  $format = $json->satker . "-" . $json->tim . "-" . $json->unit;
+}
+$this->title = "Detail Dokumen ".$model->kode_tahun."/".$model->no_dokumen."/".$format."/".$model->kode_jenis_dokumen."/".$model->kode_sifat_dokumen;
+$this->params['breadcrumbs'][] = ['label' => 'Administratif', 'url' => ['index','kode'=> $model->kode_jenis_dokumen,'sifat'=>$model->kode_sifat_dokumen]];
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['data'] = $dataJenisDokumen;
 $this->params['data2'] = $dataSifatDokumen;
-$no_dokumen = $model->kode_tahun."/".$model->format_dokumen."/".$model->kode_jenis_dokumen."/".$model->kode_sifat_dokumen;
+$no_dokumen = $model->kode_tahun."/".$format."/".$model->kode_jenis_dokumen."/".$model->kode_sifat_dokumen;
 ?>
 <div class="administratif-view">
 
@@ -44,5 +53,7 @@ return $no_dokumen;
             'file_dokumen',
         ],
     ]) ?>
+
+
 
 </div>

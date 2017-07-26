@@ -25,7 +25,7 @@ STRUKTUR FOLDER
 
 
 
-REQUIREMENTS
+HAL - HAL YANG DIBUTUHKAN
 ------------
 
 [ - ] PHP Versi 5.xx.
@@ -35,32 +35,12 @@ REQUIREMENTS
 [ - ] Web Server Apache / Nginx.
 
 
-INSTALLATION
+
+CARA INSTALL
 ------------
 
-### Install via Composer
 
-If you do not have [Composer](http://getcomposer.org/), you may install it by following the instructions
-at [getcomposer.org](http://getcomposer.org/doc/00-intro.md#installation-nix).
-
-You can then install this project template using the following command:
-
-~~~
-php composer.phar create-project --prefer-dist --stability=dev yiisoft/yii2-app-basic basic
-~~~
-
-Now you should be able to access the application through the following URL, assuming `basic` is the directory
-directly under the Web root.
-
-~~~
-http://localhost/kmm/sodoc/web/
-~~~
-
-
-### Install from an Archive File
-
-Extract the archive file downloaded from [yiiframework.com](http://www.yiiframework.com/download/) to
-a directory named `basic` that is directly under the Web root.
+Download Project Dahulu [Disini](https://gitlab.com/zhikariz/kmm/repository/archive.zip?ref=master) ke folder yang anda inginkan.
 
 Set cookie validation key in `config/web.php` file to some random secret string:
 
