@@ -28,9 +28,11 @@ STRUKTUR FOLDER
 REQUIREMENTS
 ------------
 
-[ - ] PHP Versi 5.xx
-[ - ] My Sql
-[ - ] Web Server Apache / Nginx
+[ - ] PHP Versi 5.xx.
+
+[ - ] My Sql.
+
+[ - ] Web Server Apache / Nginx.
 
 
 INSTALLATION
@@ -51,7 +53,7 @@ Now you should be able to access the application through the following URL, assu
 directly under the Web root.
 
 ~~~
-http://localhost/basic/web/
+http://localhost/kmm/sodoc/web/
 ~~~
 
 
@@ -72,7 +74,7 @@ Set cookie validation key in `config/web.php` file to some random secret string:
 You can then access the application through the following URL:
 
 ~~~
-http://localhost/basic/web/
+http://localhost/kmm/sodoc/web/
 ~~~
 
 
@@ -86,9 +88,9 @@ Edit the file `config/db.php` with real data, for example:
 ```php
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=yii2basic',
+    'dsn' => 'mysql:host=localhost;dbname=kmm_sodoc',
     'username' => 'root',
-    'password' => '1234',
+    'password' => 'root',
     'charset' => 'utf8',
 ];
 ```
