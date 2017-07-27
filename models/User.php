@@ -24,7 +24,7 @@ use Yii;
  * @property SkKepwakilGubSjalan[] $skKepwakilGubSjalans
  * @property Role $role
  */
-class User extends \yii\db\ActiveRecord
+class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
     /**
      * @inheritdoc
@@ -42,7 +42,7 @@ class User extends \yii\db\ActiveRecord
         return [
             [['username', 'password', 'id_role', 'photo_user'], 'required'],
             [['id_role'], 'integer'],
-            [['username', 'password', 'authKey', 'accessToken', 'photo_user'], 'string', 'max' => 50],
+            [['username', 'authKey', 'accessToken', 'photo_user'], 'string', 'max' => 50],
             [['id_role'], 'exist', 'skipOnError' => true, 'targetClass' => Role::className(), 'targetAttribute' => ['id_role' => 'id_role']],
         ];
     }
@@ -126,6 +126,81 @@ class User extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Role::className(), ['id_role' => 'id_role']);
     }
+    
+    public static function findIdentity($id)
+    {
+      //mencari user login berdasarkan IDnya dan hanya dicari 1.
+      $user = User::findOne($id);
+      if(count($user)){
+          return new static($user);
+      }
+      return null;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+      //mencari user login berdasarkan accessToken dan hanya dicari 1.
+        $user = $this->find()->where(['accessToken'=>$token])->one();
+        if(count($user)){
+            return new static($user);
+        }
+        return null;
+    }
+
+    /**
+     * Finds user by username
+     *
+     * @param string $username
+     * @return static|null
+     */
+    public static function findByUsername($username)
+    {
+      //mencari user login berdasarkan username dan hanya dicari 1.
+        $user = $this->find()->where(['username'=>$username])->one();
+        if(count($user)){
+            return new static($user);
+        }
+        return null;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getId()
+    {
+        return $this->id_user;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getAuthKey()
+    {
+        return $this->authKey;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function validateAuthKey($authKey)
+    {
+        return $this->authKey === $authKey;
+    }
+
+    /**
+     * Validates password
+     *
+     * @param string $password password to validate
+     * @return bool if password provided is valid for current user
+     */
+    public function validatePassword($password)
+    {
+        return Yii::$app->security->validatePassword($password, $this->password);
+    }
+
 
 
 }

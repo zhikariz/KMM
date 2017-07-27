@@ -16,8 +16,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'id_role')->textInput() ?>
-
+    <?=  "<b>Role</b><Br><br>".Html::activeDropDownList($model, "id_role",$dataRole,
+      [
+          'class' => 'btn btn-primary dropdown-toggle col-lg-12',
+          'prompt'=>'Pilih Role',
+      ]);
+      ?>
+<br><br><br>
     <?= $form->field($model, 'photo_user')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">

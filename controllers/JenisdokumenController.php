@@ -41,11 +41,13 @@ class JenisdokumenController extends Controller
 
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
+        $data_jenis_dokumen = Jenisdokumen::find()->all();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2,
+            'data_jenis_dokumen' => $data_jenis_dokumen,
         ]);
     }
 

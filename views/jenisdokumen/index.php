@@ -43,6 +43,11 @@ $this->params['data2'] = $dataSifatDokumen;
             'attribute'=>'format_jenis_dokumen',
             'vAlign' => 'middle',
             'hAlign' => 'center',
+            'content' => function($model,$key,$index) use ($data_jenis_dokumen){
+              $temp=json_decode($data_jenis_dokumen[$index]['format_jenis_dokumen']);
+               $vl = implode("<br>",$temp);
+               return $vl;
+            }
           ],
           [
             'class'=>'kartik\grid\ActionColumn'

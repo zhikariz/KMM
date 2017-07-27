@@ -69,11 +69,27 @@ $this->params['data2'] = $dataSifatDokumen;
         'hAlign' => 'center',
       ],
       [
+        'attribute'=>'file_dokumen',
+        'vAlign' => 'middle',
+        'hAlign' => 'center',
+        'format'=>'raw',
+        'content' =>
+        function($model, $key, $index) use ($dataAdm){
+          $temp = $dataAdm[$index]['file_dokumen'];
+          if($temp == NULL){
+            return "File Tidak Ada";
+          }else{
+          return Html::a($temp, "uploads/$temp", ['target'=>'_blank','data-pjax'=>"0"]);}
+
+        },
+      ],
+      [
         'attribute'=>'user.username',
         'vAlign' => 'middle',
         'hAlign' => 'center',
         'header' => 'Pembuat',
       ],
+
       [
         'class' => 'kartik\grid\ActionColumn',
         'header' => 'Actions',

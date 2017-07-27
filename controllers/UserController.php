@@ -8,6 +8,10 @@ use app\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Jenisdokumen;
+use app\models\Sifatdokumen;
+use yii\helpers\ArrayHelper;
+use app\models\Role;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -37,10 +41,14 @@ class UserController extends Controller
     {
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $data = $this->getJenisDokumen();
+        $data2 = $this->getSifatDokumen();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'dataJenisDokumen' => $data,
+            'dataSifatDokumen' => $data2,
+
         ]);
     }
 
@@ -51,8 +59,12 @@ class UserController extends Controller
      */
     public function actionView($id)
     {
+      $data = $this->getJenisDokumen();
+      $data2 = $this->getSifatDokumen();
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'dataJenisDokumen' => $data,
+            'dataSifatDokumen' => $data2,
         ]);
     }
 
@@ -64,10 +76,12 @@ class UserController extends Controller
     public function actionCreate()
     {
         $model = new User();
-
+        $data = $this->getJenisDokumen();
+        $data2 = $this->getSifatDokumen();
+        $role = ArrayHelper::map(Role::find()->all(),'id_role', 'ket_role');
         if ($model->load(Yii::$app->request->post())) {
-            //$temp = $model->password;
-            //$model->password = Yii::$app->security->generatePasswordHash($temp);
+            $temp = $model->password;
+            $model->password = Yii::$app->security->generatePasswordHash($temp);
             $model->authKey = Yii::$app->security->generateRandomString();
             $model->accessToken =Yii::$app->security->generateRandomString();
             $model->save();
@@ -75,6 +89,9 @@ class UserController extends Controller
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'dataJenisDokumen' => $data,
+                'dataSifatDokumen' => $data2,
+                'dataRole' => $role,
             ]);
         }
     }
@@ -88,12 +105,19 @@ class UserController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $data = $this->getJenisDokumen();
+        $data2 = $this->getSifatDokumen();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) ) {
+          $temp = $model->password;
+          $model->password = Yii::$app->security->generatePasswordHash($temp);
+          $model->save();
             return $this->redirect(['view', 'id' => $model->id_user]);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'dataJenisDokumen' => $data,
+                'dataSifatDokumen' => $data2,
             ]);
         }
     }
@@ -125,5 +149,13 @@ class UserController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    public function getJenisDokumen()
+    {
+      return Jenisdokumen::find()->orderBy(['kode_jenis_dokumen'=>SORT_DESC])->all();
+    }
+    public function getSifatDokumen()
+    {
+      return Sifatdokumen::find()->orderBy(['kode_sifat_dokumen'=>SORT_DESC])->all();
     }
 }

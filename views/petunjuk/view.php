@@ -7,12 +7,12 @@ use yii\widgets\DetailView;
 /* @var $model app\models\Petunjuk */
 
 $this->title = $model->id_petunjuk;
-$this->params['breadcrumbs'][] = ['label' => 'Petunjuks', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Petunjuk', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['data'] = $dataJenisDokumen;
+$this->params['data2'] = $dataSifatDokumen;
 ?>
 <div class="petunjuk-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->id_petunjuk], ['class' => 'btn btn-primary']) ?>

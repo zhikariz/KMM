@@ -9,6 +9,8 @@ use yii\widgets\Pjax;
 
 $this->title = 'Petunjuk';
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['data'] = $dataJenisDokumen;
+$this->params['data2'] = $dataSifatDokumen;
 ?>
 <div class="petunjuk-index">
 

@@ -196,7 +196,8 @@ border-left-color: #fff;
                   <img src="<?= Yii::$app->request->baseUrl?>/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                   <p>
-                    <?=Yii::$app->user->identity->username?> - <?=Yii::$app->user->identity->id_role?>
+                    <?=Yii::$app->user->identity->username?> -
+                    <?=Yii::$app->user->identity->role->ket_role?>
                     <small>Member since Nov. 2012</small>
                   </p>
                 </li>

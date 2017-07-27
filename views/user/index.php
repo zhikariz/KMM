@@ -9,11 +9,10 @@ use yii\widgets\Pjax;
 
 $this->title = 'User';
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['data'] = $dataJenisDokumen;
+$this->params['data2'] = $dataSifatDokumen;
 ?>
 <div class="user-index">
-
-    <?php Pjax::begin(); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
 
 
@@ -40,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'hAlign'=>'center',
           ],
           [
-            'attribute'=>'id_role',
+            'attribute'=>'role.ket_role',
             'vAlign'=>'middle',
             'hAlign'=>'center',
           ],

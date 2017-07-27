@@ -8,6 +8,8 @@ use app\models\PetunjukSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Jenisdokumen;
+use app\models\Sifatdokumen;
 
 /**
  * PetunjukController implements the CRUD actions for Petunjuk model.
@@ -37,10 +39,13 @@ class PetunjukController extends Controller
     {
         $searchModel = new PetunjukSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $data = $this->getJenisDokumen();
+        $data2 = $this->getSifatDokumen();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'dataJenisDokumen' => $data,
+            'dataSifatDokumen' => $data2,
         ]);
     }
 
@@ -51,8 +56,12 @@ class PetunjukController extends Controller
      */
     public function actionView($id)
     {
+      $data = $this->getJenisDokumen();
+      $data2 = $this->getSifatDokumen();
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'dataJenisDokumen' => $data,
+            'dataSifatDokumen' => $data2,
         ]);
     }
 
@@ -63,6 +72,8 @@ class PetunjukController extends Controller
      */
     public function actionCreate()
     {
+      $data = $this->getJenisDokumen();
+      $data2 = $this->getSifatDokumen();
         $model = new Petunjuk();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -70,6 +81,8 @@ class PetunjukController extends Controller
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'dataJenisDokumen' => $data,
+                'dataSifatDokumen' => $data2,
             ]);
         }
     }
@@ -83,12 +96,15 @@ class PetunjukController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $data = $this->getJenisDokumen();
+        $data2 = $this->getSifatDokumen();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id_petunjuk]);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'dataJenisDokumen' => $data,
+                'dataSifatDokumen' => $data2,
             ]);
         }
     }
@@ -120,5 +136,14 @@ class PetunjukController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function getJenisDokumen()
+    {
+      return Jenisdokumen::find()->orderBy(['kode_jenis_dokumen'=>SORT_DESC])->all();
+    }
+    public function getSifatDokumen()
+    {
+      return Sifatdokumen::find()->orderBy(['kode_sifat_dokumen'=>SORT_DESC])->all();
     }
 }

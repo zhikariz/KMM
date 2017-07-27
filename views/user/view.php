@@ -9,6 +9,8 @@ use yii\widgets\DetailView;
 $this->title = "Detail User ".$model->id_user;
 $this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['data'] = $dataJenisDokumen;
+$this->params['data2'] = $dataSifatDokumen;
 ?>
 <div class="user-view">
 
@@ -35,6 +37,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'id_role',
             'photo_user',
         ],
-    ]) ?>
+    ]) ?> 
 
 </div>

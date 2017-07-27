@@ -50,7 +50,11 @@ return $no_dokumen;
             'perihal',
             'user.username',
             'waktu_input',
-            'file_dokumen',
+            [
+            'attribute'=>'file_dokumen',
+            'format'=>'raw',
+            'value'=>Html::a($model->file_dokumen, "uploads/$model->file_dokumen", ['target'=>'_blank']),
+        ],
         ],
     ]) ?>
 

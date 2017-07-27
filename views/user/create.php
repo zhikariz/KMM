@@ -9,12 +9,15 @@ use yii\helpers\Html;
 $this->title = 'Create User';
 $this->params['breadcrumbs'][] = ['label' => 'User', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['data'] = $dataJenisDokumen;
+$this->params['data2'] = $dataSifatDokumen;
 ?>
 <div class="user-create">
 
 
     <?= $this->render('_form', [
         'model' => $model,
+        'dataRole' => $dataRole,
     ]) ?>
 
 </div>
