@@ -25,7 +25,8 @@ use yii\widgets\ActiveForm;
       ]);
       ?>
 <br><br><br>
-    <?= $form->field($model, 'photo_user')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'photo_user')->label('Foto Profil')->fileInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

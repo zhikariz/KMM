@@ -42,8 +42,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return [
             [['username', 'password','nama_user', 'id_role', 'photo_user'], 'required'],
             [['id_role'], 'integer'],
-            [['username', 'authKey','nama_user', 'accessToken', 'photo_user'], 'string', 'max' => 50],
+            [['username', 'authKey','nama_user', 'accessToken'], 'string', 'max' => 50],
             [['id_role'], 'exist', 'skipOnError' => true, 'targetClass' => Role::className(), 'targetAttribute' => ['id_role' => 'id_role']],
+            [['photo_user'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
         ];
     }
 
@@ -160,7 +161,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public static function findByUsername($username)
     {
       //mencari user login berdasarkan username dan hanya dicari 1.
-        $user = $this->find()->where(['username'=>$username])->one();
+        $user = User::find()->where(['username'=>$username])->one();
         if(count($user)){
             return new static($user);
         }

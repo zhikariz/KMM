@@ -11,6 +11,7 @@ class Users extends \yii\base\Object implements \yii\web\IdentityInterface
     public $accessToken;
     public $id_role;
     public $photo_user;
+    public $nama_user;
 
 
     /**

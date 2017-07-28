@@ -186,19 +186,19 @@ border-left-color: #fff;
               <!-- Menu Toggle Button -->
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <!-- The user image in the navbar-->
-                <img src="<?= Yii::$app->request->baseUrl?>/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                <img src="uploads/image/<?= Yii::$app->user->identity->photo_user?>" class="user-image" alt="User Image">
                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
                 <span class="hidden-xs"><?=Yii::$app->user->identity->username?></span>
               </a>
               <ul class="dropdown-menu">
                 <!-- The user image in the menu -->
                 <li class="user-header">
-                  <img src="<?= Yii::$app->request->baseUrl?>/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                  <img src="uploads/image/<?= Yii::$app->user->identity->photo_user?>" class="img-circle" alt="User Image">
 
                   <p>
-                    <?=Yii::$app->user->identity->username?> -
-                    <?=Yii::$app->user->identity->role->ket_role?>
-                    <small>Member since Nov. 2012</small>
+                    <?=Yii::$app->user->identity->nama_user?> 
+
+                    <small><?=Yii::$app->user->identity->role->ket_role?></small>
                   </p>
                 </li>
                 <!-- Menu Body -->

@@ -12,6 +12,7 @@ use app\models\Jenisdokumen;
 use app\models\Sifatdokumen;
 use yii\helpers\ArrayHelper;
 use app\models\Role;
+use yii\web\UploadedFile;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -80,11 +81,14 @@ class UserController extends Controller
         $data2 = $this->getSifatDokumen();
         $role = ArrayHelper::map(Role::find()->all(),'id_role', 'ket_role');
         if ($model->load(Yii::$app->request->post())) {
+            $model->photo_user = UploadedFile::getInstance($model,'photo_user');
             $temp = $model->password;
             $model->password = Yii::$app->security->generatePasswordHash($temp);
             $model->authKey = Yii::$app->security->generateRandomString();
             $model->accessToken =Yii::$app->security->generateRandomString();
             $model->save();
+            if($model->photo_user != NULL)
+            $model->photo_user->saveAs('uploads/image/' . $model->photo_user->baseName . '.' . $model->file_dokumen->photo_user);
             return $this->redirect(['view', 'id' => $model->id_user]);
         } else {
             return $this->render('create', [
@@ -109,9 +113,12 @@ class UserController extends Controller
         $data2 = $this->getSifatDokumen();
         $role = ArrayHelper::map(Role::find()->all(),'id_role', 'ket_role');
         if ($model->load(Yii::$app->request->post()) ) {
+          $model->photo_user = UploadedFile::getInstance($model,'photo_user');
           $temp = $model->password;
           $model->password = Yii::$app->security->generatePasswordHash($temp);
           $model->save();
+          if($model->photo_user != NULL)
+          $model->photo_user->saveAs('uploads/image/' . $model->photo_user->baseName . '.' . $model->photo_user->extension);
             return $this->redirect(['view', 'id' => $model->id_user]);
         } else {
             return $this->render('update', [
