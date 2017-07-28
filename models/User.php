@@ -40,9 +40,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'password', 'id_role', 'photo_user'], 'required'],
+            [['username', 'password','nama_user', 'id_role', 'photo_user'], 'required'],
             [['id_role'], 'integer'],
-            [['username', 'authKey', 'accessToken', 'photo_user'], 'string', 'max' => 50],
+            [['username', 'authKey','nama_user', 'accessToken', 'photo_user'], 'string', 'max' => 50],
             [['id_role'], 'exist', 'skipOnError' => true, 'targetClass' => Role::className(), 'targetAttribute' => ['id_role' => 'id_role']],
         ];
     }
@@ -56,6 +56,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'id_user' => 'Id User',
             'username' => 'Username',
             'password' => 'Password',
+            'nama_user' => 'Nama User',
             'authKey' => 'Auth Key',
             'accessToken' => 'Access Token',
             'id_role' => 'Id Role',
@@ -126,7 +127,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         return $this->hasOne(Role::className(), ['id_role' => 'id_role']);
     }
-    
+
     public static function findIdentity($id)
     {
       //mencari user login berdasarkan IDnya dan hanya dicari 1.

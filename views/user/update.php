@@ -16,6 +16,7 @@ $this->params['data2'] = $dataSifatDokumen;
 
     <?= $this->render('_form', [
         'model' => $model,
+        'dataRole' => $dataRole,
     ]) ?>
 
 </div>

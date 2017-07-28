@@ -32,11 +32,12 @@ $this->params['data2'] = $dataSifatDokumen;
             'id_user',
             'username',
             'password',
+            'nama_user',
             'authKey',
             'accessToken',
             'id_role',
             'photo_user',
         ],
-    ]) ?> 
+    ]) ?>
 
 </div>

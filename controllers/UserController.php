@@ -107,7 +107,7 @@ class UserController extends Controller
         $model = $this->findModel($id);
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
-
+        $role = ArrayHelper::map(Role::find()->all(),'id_role', 'ket_role');
         if ($model->load(Yii::$app->request->post()) ) {
           $temp = $model->password;
           $model->password = Yii::$app->security->generatePasswordHash($temp);
@@ -118,6 +118,7 @@ class UserController extends Controller
                 'model' => $model,
                 'dataJenisDokumen' => $data,
                 'dataSifatDokumen' => $data2,
+                'dataRole' => $role,
             ]);
         }
     }
