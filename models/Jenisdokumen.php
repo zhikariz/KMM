@@ -30,7 +30,7 @@ class Jenisdokumen extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['kode_jenis_dokumen', 'ket_jenis_dokumen', 'format_jenis_dokumen'], 'required'],
+            [['kode_jenis_dokumen', 'ket_jenis_dokumen'], 'required'],
             [['kode_jenis_dokumen', 'ket_jenis_dokumen', 'format_jenis_dokumen'], 'string', 'max' => 50],
             [['kode_jenis_dokumen'], 'unique'],
         ];

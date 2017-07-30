@@ -44,8 +44,13 @@ $this->params['data2'] = $dataSifatDokumen;
             'vAlign' => 'middle',
             'hAlign' => 'center',
             'content' => function($model,$key,$index) use ($data_jenis_dokumen){
+              if($data_jenis_dokumen[$index]['format_jenis_dokumen'] != ''){
               $temp=json_decode($data_jenis_dokumen[$index]['format_jenis_dokumen']);
                $vl = implode("<br>",$temp);
+             }
+               else{
+                 $vl = "Tidak Ada";
+               }
                return $vl;
             }
           ],

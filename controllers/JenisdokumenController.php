@@ -78,8 +78,10 @@ class JenisdokumenController extends Controller
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
         if ($model->load(Yii::$app->request->post())) {
+          if($model->format_jenis_dokumen != NULL){
             $temp = json_encode($model->format_jenis_dokumen);
             $model->format_jenis_dokumen = $temp;
+          }
             $model->save();
             return $this->redirect(['view', 'id' => $model->kode_jenis_dokumen]);
         } else {
@@ -103,8 +105,10 @@ class JenisdokumenController extends Controller
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
         if ($model->load(Yii::$app->request->post())) {
+          if($model->format_jenis_dokumen != NULL){
           $temp = json_encode($model->format_jenis_dokumen);
           $model->format_jenis_dokumen = $temp;
+        }
           $model->save();
             return $this->redirect(['view', 'id' => $model->kode_jenis_dokumen,'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2]);

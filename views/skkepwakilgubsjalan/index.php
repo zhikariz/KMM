@@ -9,15 +9,16 @@ use yii\widgets\Pjax;
 
 $this->title = 'Sk Kepwakil Gub Sjalans';
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['data'] = $dataJenisDokumen;
+$this->params['data2'] = $dataSifatDokumen;
 ?>
 <div class="sk-kepwakil-gub-sjalan-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Sk Kepwakil Gub Sjalan', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Sk Kepwakil Gub Sjalan', ['create','kode'=>$_GET['kode']], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([

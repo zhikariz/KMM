@@ -108,7 +108,7 @@ border-left-color: #fff;
 
         </ul>
                   </li>
-                  <li><a href="#">SK Kepala Perwakilan</a></li>
+                  <li><?=Html::a('SK Kepala Perwakilan', ['skkepwakilgubsjalan/index','kode'=>'Kep/KPwBI/Slo/Intern'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Satuan Kerja')])?></li>
                   <li><a href="#">SK Gubernur BI</a></li>
                   <li><a href="#">Surat Jalan</a></li>
                   <li><a href="#">Nota Debet</a></li>
@@ -196,7 +196,7 @@ border-left-color: #fff;
                   <img src="uploads/image/<?= Yii::$app->user->identity->photo_user?>" class="img-circle" alt="User Image">
 
                   <p>
-                    <?=Yii::$app->user->identity->nama_user?> 
+                    <?=Yii::$app->user->identity->nama_user?>
 
                     <small><?=Yii::$app->user->identity->role->ket_role?></small>
                   </p>

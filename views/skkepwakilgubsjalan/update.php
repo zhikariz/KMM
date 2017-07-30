@@ -9,6 +9,8 @@ $this->title = 'Update Sk Kepwakil Gub Sjalan: ' . $model->id_sk_kepwakil_gub_sj
 $this->params['breadcrumbs'][] = ['label' => 'Sk Kepwakil Gub Sjalans', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id_sk_kepwakil_gub_sjalan, 'url' => ['view', 'id' => $model->id_sk_kepwakil_gub_sjalan]];
 $this->params['breadcrumbs'][] = 'Update';
+$this->params['data'] = $dataJenisDokumen;
+$this->params['data2'] = $dataSifatDokumen;
 ?>
 <div class="sk-kepwakil-gub-sjalan-update">
 
