@@ -28,6 +28,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'perihal') ?>
 
+    <?php // echo $form->field($model, 'pengesah') ?>
+
     <?php // echo $form->field($model, 'id_user') ?>
 
     <?php // echo $form->field($model, 'waktu_input') ?>

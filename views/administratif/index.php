@@ -16,7 +16,6 @@ $this->params['data2'] = $dataSifatDokumen;
 
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-<?php ?>
     <?= GridView::widget([
     'dataProvider'=>$dataProvider,
     'filterModel'=>$searchModel,

@@ -19,7 +19,7 @@ class SkKepwakilGubSjalanSearch extends SkKepwakilGubSjalan
     {
         return [
             [['id_sk_kepwakil_gub_sjalan', 'kode_tahun', 'no_dokumen', 'id_user'], 'integer'],
-            [['kode_jenis_dokumen', 'perihal', 'waktu_input', 'file_dokumen'], 'safe'],
+            [['kode_jenis_dokumen', 'perihal', 'pengesah', 'waktu_input', 'file_dokumen'], 'safe'],
         ];
     }
 
@@ -67,6 +67,7 @@ class SkKepwakilGubSjalanSearch extends SkKepwakilGubSjalan
 
         $query->andFilterWhere(['like', 'kode_jenis_dokumen', $this->kode_jenis_dokumen])
             ->andFilterWhere(['like', 'perihal', $this->perihal])
+            ->andFilterWhere(['like', 'pengesah', $this->pengesah])
             ->andFilterWhere(['like', 'waktu_input', $this->waktu_input])
             ->andFilterWhere(['like', 'file_dokumen', $this->file_dokumen]);
 

@@ -14,11 +14,12 @@ $this->params['data2'] = $dataSifatDokumen;
 ?>
 <div class="sk-kepwakil-gub-sjalan-index">
 
+
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Sk Kepwakil Gub Sjalan', ['create','kode'=>$_GET['kode']], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Sk Kepwakil Gub Sjalan', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -32,6 +33,7 @@ $this->params['data2'] = $dataSifatDokumen;
             'no_dokumen',
             'kode_jenis_dokumen',
             'perihal',
+            // 'pengesah',
             // 'id_user',
             // 'waktu_input',
             // 'file_dokumen',

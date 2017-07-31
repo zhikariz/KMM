@@ -8,6 +8,8 @@
 use yii\helpers\Html;
 
 $this->title = $name;
+$this->params['data'] = $dataJenisDokumen;
+$this->params['data2'] = $dataSifatDokumen;
 ?>
 <div class="site-error">
 

@@ -20,6 +20,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'perihal')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'pengesah')->textInput(['maxlength' => true]) ?>
+
     <?= $form->field($model, 'id_user')->textInput() ?>
 
     <?= $form->field($model, 'waktu_input')->textInput(['maxlength' => true]) ?>
