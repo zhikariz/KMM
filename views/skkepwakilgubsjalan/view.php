@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model app\models\SkKepwakilGubSjalan */
 
 $this->title = $model->id_sk_kepwakil_gub_sjalan;
-$this->params['breadcrumbs'][] = ['label' => 'Sk Kepwakil Gub Sjalans', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Sk Kepwakil Gub Sjalans', 'url' => ['index','kode'=>$_GET['kode']]];
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['data'] = $dataJenisDokumen;
 $this->params['data2'] = $dataSifatDokumen;

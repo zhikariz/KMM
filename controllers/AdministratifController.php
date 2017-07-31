@@ -140,8 +140,11 @@ class AdministratifController extends Controller
             if($model->file_dokumen != NULL)
             $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);
 
-            return $this->redirect(['view','kode'=>$kode,'sifat'=>$sifat,'id'=>$model->id_surat_adm,'id' => $model->id_surat_adm,
-              'model'=>$model,
+            return $this->redirect(['view',
+            'kode'=>$kode,
+            'sifat'=>$sifat,
+            'id'=>$model->id_surat_adm,
+            'model'=>$model,
             'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2,
           ]);

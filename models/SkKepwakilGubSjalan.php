@@ -37,13 +37,12 @@ class SkKepwakilGubSjalan extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['kode_tahun', 'no_dokumen', 'kode_jenis_dokumen', 'perihal', 'pengesah', 'id_user', 'waktu_input', 'file_dokumen'], 'required'],
+            [['perihal', 'pengesah'], 'required'],
             [['kode_tahun', 'no_dokumen', 'id_user'], 'integer'],
-            [['kode_jenis_dokumen', 'waktu_input'], 'string', 'max' => 50],
-            [['perihal', 'pengesah', 'file_dokumen'], 'string', 'max' => 100],
             [['kode_jenis_dokumen'], 'exist', 'skipOnError' => true, 'targetClass' => Jenisdokumen::className(), 'targetAttribute' => ['kode_jenis_dokumen' => 'kode_jenis_dokumen']],
             [['kode_tahun'], 'exist', 'skipOnError' => true, 'targetClass' => Tahun::className(), 'targetAttribute' => ['kode_tahun' => 'kode_tahun']],
             [['id_user'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['id_user' => 'id_user']],
+            [['file_dokumen'], 'file', 'skipOnEmpty' => true, 'extensions' => 'doc, docx, pdf'],
         ];
     }
 

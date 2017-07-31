@@ -6,10 +6,11 @@
 /* @var $exception Exception */
 
 use yii\helpers\Html;
-
+use app\models\Jenisdokumen;
+use app\models\Sifatdokumen;
 $this->title = $name;
-$this->params['data'] = $dataJenisDokumen;
-$this->params['data2'] = $dataSifatDokumen;
+$this->params['data'] = Jenisdokumen::find()->orderBy(['kode_jenis_dokumen'=>SORT_DESC])->all();
+$this->params['data2'] = Sifatdokumen::find()->orderBy(['kode_sifat_dokumen'=>SORT_DESC])->all();
 ?>
 <div class="site-error">
 

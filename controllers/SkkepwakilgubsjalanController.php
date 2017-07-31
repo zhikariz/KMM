@@ -8,8 +8,13 @@ use app\models\SkKepwakilGubSjalanSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use app\models\Jenisdokumen;
 use app\models\Sifatdokumen;
+use app\models\Pengesah;
+use app\models\Tahun;
+use yii\web\UploadedFile;
+
 /**
  * SkKepwakilGubSjalanController implements the CRUD actions for SkKepwakilGubSjalan model.
  */
@@ -34,17 +39,21 @@ class SkkepwakilgubsjalanController extends Controller
      * Lists all SkKepwakilGubSjalan models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($kode)
     {
         $searchModel = new SkKepwakilGubSjalanSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
+        $data3 = Jenisdokumen::find()->where(['kode_jenis_dokumen'=>$kode])->one();
+        $dataSk = SkKepwakilGubSjalan::find()->all();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2,
+            'kode'=>$data3,
+            'dataSk'=>$dataSk,
         ]);
     }
 
@@ -53,7 +62,7 @@ class SkkepwakilgubsjalanController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
+    public function actionView($kode,$id)
     {
       $data = $this->getJenisDokumen();
       $data2 = $this->getSifatDokumen();
@@ -69,18 +78,59 @@ class SkkepwakilgubsjalanController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($kode)
     {
         $model = new SkKepwakilGubSjalan();
+        $tahun = new Tahun();
+        $jd = new Jenisdokumen();
+
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_sk_kepwakil_gub_sjalan]);
+        //data Jenis Dokumen berdasarkan kode jenis dokumen
+        $data3 = $jd->find()->where(['kode_jenis_dokumen'=>$kode])->one();
+        //tahun sekarang
+        $tahun_skr = date('Y');
+        //tahun dari db
+        $tahun_db = $tahun->find()->orderBy(['tahun'=>SORT_DESC])->one();
+        //ngambil data checkbox
+        $pengesah = ArrayHelper::map(Pengesah::find()->all(), 'nama_pengesah', 'nama_pengesah');
+        if ($model->load(Yii::$app->request->post())) {
+          $model->file_dokumen = UploadedFile::getInstance($model,'file_dokumen');
+          $no_dokumen_temp = $model->find()->where(['kode_jenis_dokumen'=>$kode])->orderBy(['no_dokumen'=>SORT_DESC])->one();
+          $model->kode_jenis_dokumen = $kode;
+
+          if($tahun_skr != $tahun_db['tahun'] && $no_dokumen_temp['kode_jenis_dokumen'] != $model->kode_jenis_dokumen){
+            $model->no_dokumen = 1;
+            $model->kode_tahun = $tahun_db['kode_tahun'];
+            $tahun->kode_tahun = $tahun_db['kode_tahun'] + 1;
+            $tahun->tahun = date('Y');
+            $tahun->save();
+          }else{
+            $model->kode_tahun = $tahun_db['kode_tahun'];
+            $model->no_dokumen = $no_dokumen_temp['no_dokumen'] + 1;
+          }
+
+          $pengesah_temp = $model->pengesah;
+          $model->pengesah = json_encode($pengesah_temp);
+          $model->waktu_input = date("d-m-Y H:i:s");
+          $model->id_user = Yii::$app->user->identity->id_user;
+          $model->save();
+          if($model->file_dokumen != NULL)
+          $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);
+
+            return $this->redirect(['view',
+            'id'=>$model->id_sk_kepwakil_gub_sjalan,
+            'kode'=>$kode,
+            'model'=>$model,
+            'dataJenisDokumen' => $data,
+            'dataSifatDokumen' => $data2]);
         } else {
             return $this->render('create', [
                 'model' => $model,
                 'dataJenisDokumen' => $data,
                 'dataSifatDokumen' => $data2,
+                'dataPengesah'=>$pengesah,
+                'kode'=>$data3,
             ]);
         }
     }
@@ -91,18 +141,32 @@ class SkkepwakilgubsjalanController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
+    public function actionUpdate($kode,$id)
     {
+        $jd = new Jenisdokumen();
         $model = $this->findModel($id);
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_sk_kepwakil_gub_sjalan]);
+        $data3 = $jd->find()->where(['kode_jenis_dokumen'=>$kode])->one();
+        $pengesah = ArrayHelper::map(Pengesah::find()->all(), 'nama_pengesah', 'nama_pengesah');
+        if ($model->load(Yii::$app->request->post())) {
+
+            //$model->save();
+            return $this->render('cek', [
+              'id'=>$model->id_sk_kepwakil_gub_sjalan,
+              'kode'=>$kode,
+              'model'=>$model,
+              'dataJenisDokumen' => $data,
+              'dataSifatDokumen' => $data2]);
         } else {
+          $temp = json_decode($model->pengesah);
+          $model->pengesah = $temp;
             return $this->render('update', [
-                'model' => $model,
-                'dataJenisDokumen' => $data,
-                'dataSifatDokumen' => $data2,
+              'model' => $model,
+              'dataJenisDokumen' => $data,
+              'dataSifatDokumen' => $data2,
+              'dataPengesah'=>$pengesah,
+              'kode'=>$data3,
             ]);
         }
     }
