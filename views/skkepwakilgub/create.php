@@ -7,7 +7,7 @@ use yii\helpers\Html;
 /* @var $model app\models\SkKepwakilGubSjalan */
 
 $this->title = 'Create '.$kode['ket_jenis_dokumen'];
-$this->params['breadcrumbs'][] = ['label' => $kode['ket_jenis_dokumen'], 'url' => ['index','kode'=>$kode['kode_jenis_dokumen']]];
+$this->params['breadcrumbs'][] = ['label' => $kode['ket_jenis_dokumen'], 'url' => ['index','kode'=>$_GET['kode']]];
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['data'] = $dataJenisDokumen;
 $this->params['data2'] = $dataSifatDokumen;

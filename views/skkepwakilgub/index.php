@@ -7,7 +7,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel app\models\SkKepwakilGubSjalanSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = $kode['ket_jenis_dokumen'];
+$this->title = "SK";
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['data'] = $dataJenisDokumen;
 $this->params['data2'] = $dataSifatDokumen;
@@ -35,7 +35,7 @@ $this->params['data2'] = $dataSifatDokumen;
         'vAlign' => 'middle',
         'hAlign' => 'center',
         'content' => function($model, $key, $index) use ($dataSk) {
-                  $content = $dataSk[$index]['kode_tahun']."/".$dataSk[$index]['no_dokumen']."/".$dataSk[$index]['kode_jenis_dokumen']."/".$dataSk[$index]->kodeTahun->tahun;
+                  $content = $dataSk[$index]['kode_tahun']."/".$dataSk[$index]['no_dokumen']."/".$dataSk[$index]['format_dokumen']."/".$dataSk[$index]->kodeTahun->tahun;
                   return $content;
               },
       ],
@@ -112,16 +112,16 @@ $this->params['data2'] = $dataSifatDokumen;
         ],
         'urlCreator' => function ($action, $model, $key, $index) {
           if ($action === 'view') {
-              $url ='index.php?r=skkepwakilgubsjalan/view&kode='.$_GET['kode'].'&id='.$model->id_sk_kepwakil_gub_sjalan;
+              $url ='index.php?r=skkepwakilgub/view&kode='.$_GET['kode'].'&id='.$model->id_sk_kepwakil_gub;
               return $url;
           }
 
           if ($action === 'update') {
-              $url ='index.php?r=skkepwakilgubsjalan/update&kode='.$_GET['kode'].'&id='.$model->id_sk_kepwakil_gub_sjalan;
+              $url ='index.php?r=skkepwakilgub/update&kode='.$_GET['kode'].'&id='.$model->id_sk_kepwakil_gub;
               return $url;
           }
           if ($action === 'delete') {
-              $url ='index.php?r=skkepwakilgubsjalan/delete&kode='.$_GET['kode'].'&id='.$model->id_sk_kepwakil_gub_sjalan;
+              $url ='index.php?r=skkepwakilgub/delete&kode='.$_GET['kode'].'&id='.$model->id_sk_kepwakil_gub;
               return $url;
           }
 
@@ -148,7 +148,7 @@ $this->params['data2'] = $dataSifatDokumen;
     // parameters from the demo form
     'panel'=>[
         'type'=>GridView::TYPE_PRIMARY,
-        'heading' => $kode['ket_jenis_dokumen'],
+        'heading' => "SK"
     ],
     'persistResize'=>false,
     'toggleDataOptions'=>['minCount'=>10],

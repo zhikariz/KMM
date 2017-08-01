@@ -3,8 +3,8 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\SkKepwakilGubSjalan;
-use app\models\SkKepwakilGubSjalanSearch;
+use app\models\SkKepwakilGub;
+use app\models\SkKepwakilGubSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -18,7 +18,7 @@ use yii\web\UploadedFile;
 /**
  * SkKepwakilGubSjalanController implements the CRUD actions for SkKepwakilGubSjalan model.
  */
-class SkkepwakilgubsjalanController extends Controller
+class SkkepwakilgubController extends Controller
 {
     /**
      * @inheritdoc
@@ -41,18 +41,16 @@ class SkkepwakilgubsjalanController extends Controller
      */
     public function actionIndex($kode)
     {
-        $searchModel = new SkKepwakilGubSjalanSearch();
-        $dataProvider = $searchModel->search($kode,Yii::$app->request->queryParams);
+        $searchModel = new SkKepwakilGubSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$kode);
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
-        $data3 = Jenisdokumen::find()->where(['kode_jenis_dokumen'=>$kode])->one();
-        $dataSk = SkKepwakilGubSjalan::find()->all();
+        $dataSk = SkKepwakilGub::find()->where(['format_dokumen'=>$kode])->all();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2,
-            'kode'=>$data3,
             'dataSk'=>$dataSk,
         ]);
     }
@@ -84,7 +82,7 @@ class SkkepwakilgubsjalanController extends Controller
      */
     public function actionCreate($kode)
     {
-        $model = new SkKepwakilGubSjalan();
+        $model = new SkKepwakilGub();
         $tahun = new Tahun();
         $jd = new Jenisdokumen();
 
@@ -123,7 +121,7 @@ class SkkepwakilgubsjalanController extends Controller
           $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);
 
             return $this->redirect(['view',
-            'id'=>$model->id_sk_kepwakil_gub_sjalan,
+            'id'=>$model->id_sk_kepwakil_gub,
             'kode'=>$kode,
             'model'=>$model,
             'dataJenisDokumen' => $data,
@@ -167,7 +165,7 @@ class SkkepwakilgubsjalanController extends Controller
             if($model->file_dokumen != $dataSk->file_dokumen){
             $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);}
             return $this->redirect(['view',
-              'id'=>$model->id_sk_kepwakil_gub_sjalan,
+              'id'=>$model->id_sk_kepwakil_gub,
               'kode'=>$kode,
               'model'=>$model,
               'dataJenisDokumen' => $data,
@@ -207,7 +205,7 @@ class SkkepwakilgubsjalanController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = SkKepwakilGubSjalan::findOne($id)) !== null) {
+        if (($model = SkKepwakilGub::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

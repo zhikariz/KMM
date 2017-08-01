@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\SkKepwakilGubSjalan;
+use app\models\SkKepwakilGub;
 
 /**
- * SkKepwakilGubSjalanSearch represents the model behind the search form of `app\models\SkKepwakilGubSjalan`.
+ * SkKepwakilGubSearch represents the model behind the search form of `app\models\SkKepwakilGub`.
  */
-class SkKepwakilGubSjalanSearch extends SkKepwakilGubSjalan
+class SkKepwakilGubSearch extends SkKepwakilGub
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class SkKepwakilGubSjalanSearch extends SkKepwakilGubSjalan
     public function rules()
     {
         return [
-            [['id_sk_kepwakil_gub_sjalan', 'kode_tahun', 'no_dokumen', 'id_user'], 'integer'],
-            [['no_dokumen', 'perihal', 'pengesah', 'waktu_input', 'file_dokumen'], 'safe'],
+            [['id_sk_kepwakil_gub', 'kode_tahun', 'no_dokumen', 'id_user'], 'integer'],
+            [['format_dokumen', 'perihal', 'pengesah', 'waktu_input', 'file_dokumen'], 'safe'],
         ];
     }
 
@@ -39,9 +39,9 @@ class SkKepwakilGubSjalanSearch extends SkKepwakilGubSjalan
      *
      * @return ActiveDataProvider
      */
-    public function search($kode,$params)
+    public function search($params,$kode)
     {
-        $query = SkKepwakilGubSjalan::find()->where(['kode_jenis_dokumen'=>$kode]);
+        $query = SkKepwakilGub::find()->where(['format_dokumen'=>$kode]);
 
         // add conditions that should always apply here
 
@@ -59,12 +59,13 @@ class SkKepwakilGubSjalanSearch extends SkKepwakilGubSjalan
 
         // grid filtering conditions
         $query->andFilterWhere([
+            'id_sk_kepwakil_gub' => $this->id_sk_kepwakil_gub,
             'kode_tahun' => $this->kode_tahun,
             'no_dokumen' => $this->no_dokumen,
             'id_user' => $this->id_user,
         ]);
 
-        $query->andFilterWhere(['like', 'kode_jenis_dokumen', $this->kode_jenis_dokumen])
+        $query->andFilterWhere(['like', 'format_dokumen', $this->format_dokumen])
             ->andFilterWhere(['like', 'perihal', $this->perihal])
             ->andFilterWhere(['like', 'pengesah', $this->pengesah])
             ->andFilterWhere(['like', 'waktu_input', $this->waktu_input])

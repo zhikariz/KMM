@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\SkKepwakilGubSjalanSearch */
+/* @var $model app\models\SuratjalanSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="sk-kepwakil-gub-sjalan-search">
+<div class="suratjalan-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
@@ -18,15 +18,15 @@ use yii\widgets\ActiveForm;
         ],
     ]); ?>
 
-    <?= $form->field($model, 'id_sk_kepwakil_gub_sjalan') ?>
+    <?= $form->field($model, 'id_surat_jalan') ?>
 
     <?= $form->field($model, 'kode_tahun') ?>
 
+    <?= $form->field($model, 'kode_satuan_kerja') ?>
+
+    <?= $form->field($model, 'kode_satker_pusat') ?>
+
     <?= $form->field($model, 'no_dokumen') ?>
-
-    <?= $form->field($model, 'kode_jenis_dokumen') ?>
-
-    <?= $form->field($model, 'perihal') ?>
 
     <?php // echo $form->field($model, 'pengesah') ?>
 
