@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Administratif', 'url' => ['index',
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['data'] = $dataJenisDokumen;
 $this->params['data2'] = $dataSifatDokumen;
-$no_dokumen = $model->kode_tahun."/".$format."/".$model->kode_jenis_dokumen."/".$model->kode_sifat_dokumen;
+$no_dokumen = $model->kode_tahun."/".$model->no_dokumen."/".$format."/".$model->kode_jenis_dokumen."/".$model->kode_sifat_dokumen;
 ?>
 <div class="administratif-view">
 

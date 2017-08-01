@@ -52,7 +52,7 @@ class AdministratifController extends Controller
         $sd = new Sifatdokumen();
         $data3 = $jd->find()->where(['kode_jenis_dokumen'=>$kode])->one();
         $data4 = $sd->find()->where(['kode_sifat_dokumen'=>$sifat])->one();
-        $data_adm = Administratif::find()->all();
+        $data_adm = Administratif::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat])->all();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

@@ -161,7 +161,7 @@ border-left-color: #fff;
                 <li><?=Html::a('Pengesah', ['pengesah/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Pengesah')])?></li>
                 <li><?=Html::a('Tim', ['tim/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Tim')])?></li>
                 <li><?=Html::a('Petunjuk / Disposisi', ['petunjuk/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Petunjuk / Disposisi')])?></li>
-                <li><?=Html::a('Satker Kantor Pusat', ['#'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Satker Kantor Pusat')])?></li>
+                <li><?=Html::a('Satker Kantor Pusat', ['satkerpusat/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Satker Kantor Pusat')])?></li>
                 <li class="divider"></li>
                 <li><?=Html::a('User', ['user/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'User')])?></li>
                 <li><?=Html::a('Hari Libur', ['hariliburtahunan/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Hari Libur')])?></li>
