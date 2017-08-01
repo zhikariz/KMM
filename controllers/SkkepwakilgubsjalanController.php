@@ -42,7 +42,7 @@ class SkkepwakilgubsjalanController extends Controller
     public function actionIndex($kode)
     {
         $searchModel = new SkKepwakilGubSjalanSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search($kode,Yii::$app->request->queryParams);
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
         $data3 = Jenisdokumen::find()->where(['kode_jenis_dokumen'=>$kode])->one();
@@ -66,8 +66,12 @@ class SkkepwakilgubsjalanController extends Controller
     {
       $data = $this->getJenisDokumen();
       $data2 = $this->getSifatDokumen();
+      $model=$this->findModel($id);
+      $temp = json_decode($model->pengesah);
+      $vl = implode(",",$temp);
+      $model->pengesah = $vl;
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
             'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2,
         ]);
@@ -145,14 +149,24 @@ class SkkepwakilgubsjalanController extends Controller
     {
         $jd = new Jenisdokumen();
         $model = $this->findModel($id);
+        $dataSk = $this->findModel($id);
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
         $data3 = $jd->find()->where(['kode_jenis_dokumen'=>$kode])->one();
         $pengesah = ArrayHelper::map(Pengesah::find()->all(), 'nama_pengesah', 'nama_pengesah');
-        if ($model->load(Yii::$app->request->post())) {
 
-            //$model->save();
-            return $this->render('cek', [
+        if ($model->load(Yii::$app->request->post())) {
+        $model->file_dokumen = UploadedFile::getInstance($model,'file_dokumen');
+
+        if($model->file_dokumen == NULL){
+          $model->file_dokumen = $dataSk->file_dokumen;
+        }
+          $pengesah_temp = $model->pengesah;
+          $model->pengesah = json_encode($pengesah_temp);
+            $model->save();
+            if($model->file_dokumen != $dataSk->file_dokumen){
+            $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);}
+            return $this->redirect(['view',
               'id'=>$model->id_sk_kepwakil_gub_sjalan,
               'kode'=>$kode,
               'model'=>$model,
@@ -177,11 +191,11 @@ class SkkepwakilgubsjalanController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
+    public function actionDelete($kode,$id)
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['index','kode'=>$kode]);
     }
 
     /**

@@ -55,9 +55,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'perihal')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'pengesah')->checkboxlist($dataPengesah);?>
-        <?php if($model->isNewRecord){?>
       <?= $form->field($model, 'file_dokumen')->label('File Dokumen')->fileInput() ?>
-      <?php }?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

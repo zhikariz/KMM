@@ -18,6 +18,7 @@ $this->params['data2'] = $dataSifatDokumen;
 <?="Kode Jenis Dokumen = ".$model->kode_jenis_dokumen."<br>"?>
 
 
+
 <?="Perihal = ".$model->perihal."<br>"?>
 <?="ID User = ".$model->id_user."<br>"?>
 <?="Waktu input = ".$model->waktu_input."<br>"?>

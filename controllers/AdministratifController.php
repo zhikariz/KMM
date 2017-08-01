@@ -174,6 +174,7 @@ class AdministratifController extends Controller
         $model = $this->findModel($id);
         $tahun = new Tahun();
         $jd = new Jenisdokumen();
+        $dataAdm = $this->findModel($id);
         $data3 = $jd->find()->where(['kode_jenis_dokumen'=>$kode])->one();
 
         $jml_jenis_dokumen = count(json_decode($data3->format_jenis_dokumen));
@@ -189,9 +190,15 @@ class AdministratifController extends Controller
         $data2 = $this->getSifatDokumen();
 
         if ($model->load(Yii::$app->request->post()) ) {
+          $model->file_dokumen = UploadedFile::getInstance($model,'file_dokumen');
+          if($model->file_dokumen == NULL){
+            $model->file_dokumen = $dataAdm->file_dokumen;
+          }
           $pengesah_temp = $model->pengesah;
           $model->pengesah = json_encode($pengesah_temp);
           $model->save();
+          if($model->file_dokumen != $dataAdm->file_dokumen){
+          $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);}
             return $this->redirect(['view', 'kode'=>$kode,'sifat'=>$sifat,'id'=>$model->id_surat_adm,'id' => $model->id_surat_adm,
             'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2]);

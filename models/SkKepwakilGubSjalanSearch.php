@@ -39,9 +39,9 @@ class SkKepwakilGubSjalanSearch extends SkKepwakilGubSjalan
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($kode,$params)
     {
-        $query = SkKepwakilGubSjalan::find();
+        $query = SkKepwakilGubSjalan::find()->where(['kode_jenis_dokumen'=>$kode]);
 
         // add conditions that should always apply here
 

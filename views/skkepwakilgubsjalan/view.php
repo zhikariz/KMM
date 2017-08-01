@@ -6,19 +6,20 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\SkKepwakilGubSjalan */
 
-$this->title = $model->id_sk_kepwakil_gub_sjalan;
-$this->params['breadcrumbs'][] = ['label' => 'Sk Kepwakil Gub Sjalans', 'url' => ['index','kode'=>$_GET['kode']]];
+$this->params['breadcrumbs'][] = ['label' => 'Sk Kepwakil Gub Sjalan', 'url' => ['index','kode'=>$_GET['kode']]];
+$this->title = "Detail Dokumen ".$model->kode_tahun."/".$model->no_dokumen."/".$model->kode_jenis_dokumen."/".$model->kodeTahun->tahun;
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['data'] = $dataJenisDokumen;
 $this->params['data2'] = $dataSifatDokumen;
+$no_dokumen = $model->kode_tahun."/".$model->no_dokumen."/".$model->kode_jenis_dokumen."/".$model->kodeTahun->tahun;
 ?>
 <div class="sk-kepwakil-gub-sjalan-view">
 
 
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id_sk_kepwakil_gub_sjalan], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id_sk_kepwakil_gub_sjalan], [
+        <?= Html::a('Update', ['update', 'kode'=>$model->kode_jenis_dokumen,'id' => $model->id_sk_kepwakil_gub_sjalan], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Delete', ['delete', 'kode'=>$model->kode_jenis_dokumen,'id' => $model->id_sk_kepwakil_gub_sjalan], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to delete this item?',
@@ -30,15 +31,22 @@ $this->params['data2'] = $dataSifatDokumen;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id_sk_kepwakil_gub_sjalan',
-            'kode_tahun',
-            'no_dokumen',
-            'kode_jenis_dokumen',
+          ['attribute'=>'No Dokumen',
+          'value'=>function($data,$row) use ($no_dokumen){
+              return $no_dokumen;
+              },
+          ],
             'perihal',
             'pengesah',
-            'id_user',
+            [
+              'attribute' => 'user.nama_user',
+            ],
             'waktu_input',
-            'file_dokumen',
+            [
+            'attribute'=>'file_dokumen',
+            'format'=>'raw',
+            'value'=>Html::a($model->file_dokumen, "uploads/$model->file_dokumen", ['target'=>'_blank']),
+        ],
         ],
     ]) ?>
 

@@ -109,8 +109,8 @@ border-left-color: #fff;
         </ul>
                   </li>
                   <li><?=Html::a('SK Kepala Perwakilan', ['skkepwakilgubsjalan/index','kode'=>'Kep/KPwBI/Slo/Intern'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Satuan Kerja')])?></li>
-                  <li><a href="#">SK Gubernur BI</a></li>
-                  <li><a href="#">Surat Jalan</a></li>
+                  <li><?=Html::a('SK Gubernur BI', ['skkepwakilgubsjalan/index','kode'=>'Kep.GBI/Slo'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Satuan Kerja')])?></li>
+                  <li><?=Html::a('Surat Jalan', ['skkepwakilgubsjalan/index','kode'=>'Perjl.'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Satuan Kerja')])?></li>
                   <li><a href="#">Nota Debet</a></li>
                 </ul>
               </li>
