@@ -36,14 +36,27 @@ $this->params['data2'] = $dataSifatDokumen;
                     // you can do here something with $lang if you need so
                     $a = json_decode($dataAdm[$index]['format_dokumen']);
                     $jml = count((array)$a);
+
                     if($jml == 1){
-                      $format=$a->satker;
+                      $format =$a->satker;
                     }else if($jml == 2){
-                      $format = $a->satker . "-" . $a->tim;
+                      if($a->tim != ''){
+                        $format = $a->satker . "-" . $a->tim;
                     }else{
+                        $format =$a->satker;
+                    }
+                  }else if($jml == 3){
+                      if($a->unit != ''){
                       $format = $a->satker . "-" . $a->tim . "-" . $a->unit;
+                    }else if($a->tim != ''){
+                      $format = $a->satker . "-" . $a->tim;
+                    }
+                    else{
+                      $format =$a->satker;
+                    }
                     }
                     $content = $dataAdm[$index]['kode_tahun']."/".$dataAdm[$index]['no_dokumen']."/".$format."/".$dataAdm[$index]['kode_jenis_dokumen']."/".$dataAdm[$index]['kode_sifat_dokumen'];
+
                     return $content;
                 },
       ],

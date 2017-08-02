@@ -84,12 +84,9 @@ class SkkepwakilgubController extends Controller
     {
         $model = new SkKepwakilGub();
         $tahun = new Tahun();
-        $jd = new Jenisdokumen();
 
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
-        //data Jenis Dokumen berdasarkan kode jenis dokumen
-        $data3 = $jd->find()->where(['kode_jenis_dokumen'=>$kode])->one();
         //tahun sekarang
         $tahun_skr = date('Y');
         //tahun dari db
@@ -98,10 +95,10 @@ class SkkepwakilgubController extends Controller
         $pengesah = ArrayHelper::map(Pengesah::find()->all(), 'nama_pengesah', 'nama_pengesah');
         if ($model->load(Yii::$app->request->post())) {
           $model->file_dokumen = UploadedFile::getInstance($model,'file_dokumen');
-          $no_dokumen_temp = $model->find()->where(['kode_jenis_dokumen'=>$kode])->orderBy(['no_dokumen'=>SORT_DESC])->one();
-          $model->kode_jenis_dokumen = $kode;
+          $no_dokumen_temp = $model->find()->where(['format_dokumen'=>$kode])->orderBy(['no_dokumen'=>SORT_DESC])->one();
+          $model->format_dokumen = $kode;
 
-          if($tahun_skr != $tahun_db['tahun'] && $no_dokumen_temp['kode_jenis_dokumen'] != $model->kode_jenis_dokumen){
+          if($tahun_skr != $tahun_db['tahun'] && $no_dokumen_temp['format_dokumen'] != $model->format_dokumen){
             $model->no_dokumen = 1;
             $model->kode_tahun = $tahun_db['kode_tahun'];
             $tahun->kode_tahun = $tahun_db['kode_tahun'] + 1;
@@ -132,7 +129,6 @@ class SkkepwakilgubController extends Controller
                 'dataJenisDokumen' => $data,
                 'dataSifatDokumen' => $data2,
                 'dataPengesah'=>$pengesah,
-                'kode'=>$data3,
             ]);
         }
     }

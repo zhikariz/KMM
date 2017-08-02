@@ -9,11 +9,22 @@ use yii\widgets\DetailView;
 $json = json_decode($model->format_dokumen);
 $jml = count((array)$json);
 if($jml == 1){
-  $format = $json->satker;
+  $format =$json->satker;
 }else if($jml == 2){
-  $format = $json->satker . "-" . $json->tim;
+  if($json->tim != ''){
+    $format = $json->satker . "-" . $json->tim;
 }else{
+    $format =$json->satker;
+}
+}else if($jml == 3){
+  if($json->unit != ''){
   $format = $json->satker . "-" . $json->tim . "-" . $json->unit;
+}else if($json->tim != ''){
+  $format = $json->satker . "-" . $json->tim;
+}
+else{
+  $format =$json->satker;
+}
 }
 $this->title = "Detail Dokumen ".$model->kode_tahun."/".$model->no_dokumen."/".$format."/".$model->kode_jenis_dokumen."/".$model->kode_sifat_dokumen;
 $this->params['breadcrumbs'][] = ['label' => 'Administratif', 'url' => ['index','kode'=> $model->kode_jenis_dokumen,'sifat'=>$model->kode_sifat_dokumen]];
