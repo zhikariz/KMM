@@ -19,7 +19,7 @@ class SuratjalanSearch extends Suratjalan
     {
         return [
             [['id_surat_jalan', 'kode_tahun', 'no_dokumen', 'id_user'], 'integer'],
-            [['kode_satuan_kerja','perihal', 'kode_satker_pusat', 'pengesah', 'waktu_input', 'file_dokumen'], 'safe'],
+            [['kode_satuan_kerja','perihal','format_dokumen', 'pengesah', 'waktu_input', 'file_dokumen'], 'safe'],
         ];
     }
 
@@ -67,7 +67,7 @@ class SuratjalanSearch extends Suratjalan
         ]);
 
         $query->andFilterWhere(['like', 'kode_satuan_kerja', $this->kode_satuan_kerja])
-            ->andFilterWhere(['like', 'kode_satker_pusat', $this->kode_satker_pusat])
+            ->andFilterWhere(['like', 'format_dokumen', $this->format_dokumen])
             ->andFilterWhere(['like', 'pengesah', $this->pengesah])
             ->andFilterWhere(['like', 'waktu_input', $this->waktu_input])
             ->andFilterWhere(['like', 'file_dokumen', $this->file_dokumen])

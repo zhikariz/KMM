@@ -34,7 +34,7 @@ $this->params['data2'] = $dataSifatDokumen;
         'vAlign' => 'middle',
         'hAlign' => 'center',
         'content' => function($model, $key, $index) use ($dataSurat) {
-                  $content = $dataSurat[$index]['kode_tahun']."/".$dataSurat[$index]['no_dokumen']."/".$dataSurat[$index]->kodeTahun->tahun;
+                  $content = $dataSurat[$index]['kode_tahun']."/".$dataSurat[$index]['no_dokumen']."/".$dataSurat[$index]['format_dokumen']."/".$dataSurat[$index]['kode_satuan_kerja'];
                   return $content;
               },
       ],
@@ -111,16 +111,16 @@ $this->params['data2'] = $dataSifatDokumen;
         ],
         'urlCreator' => function ($action, $model, $key, $index) {
           if ($action === 'view') {
-              $url ='index.php?r=skkepwakilgub/view&kode='.$_GET['kode'].'&id='.$model->id_surat_jalan;
+              $url ='index.php?r=suratjalan/view&kode='.$_GET['kode'].'&id='.$model->id_surat_jalan;
               return $url;
           }
 
           if ($action === 'update') {
-              $url ='index.php?r=skkepwakilgub/update&kode='.$_GET['kode'].'&id='.$model->id_surat_jalan;
+              $url ='index.php?r=suratjalan/update&kode='.$_GET['kode'].'&id='.$model->id_surat_jalan;
               return $url;
           }
           if ($action === 'delete') {
-              $url ='index.php?r=skkepwakilgub/delete&kode='.$_GET['kode'].'&id='.$model->id_surat_jalan;
+              $url ='index.php?r=suratjalan/delete&kode='.$_GET['kode'].'&id='.$model->id_surat_jalan;
               return $url;
           }
 

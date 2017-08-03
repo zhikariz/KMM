@@ -16,6 +16,8 @@ $this->params['data2'] = $dataSifatDokumen;
 
     <?= $this->render('_form', [
         'model' => $model,
+        'dataPengesah' => $dataPengesah,
+        'dataSatker' => $dataSatker,
     ]) ?>
 
 </div>

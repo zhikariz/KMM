@@ -10,7 +10,6 @@ use Yii;
  * @property int $id_surat_jalan
  * @property int $kode_tahun
  * @property string $kode_satuan_kerja
- * @property string $kode_satker_pusat
  * @property int $no_dokumen
  * @property string $pengesah
  * @property string $perihal
@@ -19,7 +18,6 @@ use Yii;
  * @property string $file_dokumen
  *
  * @property Satuankerja $kodeSatuanKerja
- * @property Satkerpusat $kodeSatkerPusat
  * @property Tahun $kodeTahun
  * @property User $user
  */
@@ -39,12 +37,11 @@ class Suratjalan extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['kode_tahun', 'kode_satuan_kerja', 'kode_satker_pusat', 'no_dokumen', 'pengesah', 'perihal', 'id_user', 'waktu_input', 'file_dokumen'], 'required'],
+            [['kode_tahun', 'kode_satuan_kerja', 'no_dokumen', 'pengesah', 'perihal', 'id_user', 'waktu_input'], 'required'],
             [['kode_tahun', 'no_dokumen', 'id_user'], 'integer'],
-            [['kode_satuan_kerja', 'kode_satker_pusat', 'waktu_input'], 'string', 'max' => 50],
+            [['kode_satuan_kerja', 'waktu_input'], 'string', 'max' => 50],
             [['pengesah', 'perihal', 'file_dokumen'], 'string', 'max' => 100],
             [['kode_satuan_kerja'], 'exist', 'skipOnError' => true, 'targetClass' => Satuankerja::className(), 'targetAttribute' => ['kode_satuan_kerja' => 'kode_satuan_kerja']],
-            [['kode_satker_pusat'], 'exist', 'skipOnError' => true, 'targetClass' => Satkerpusat::className(), 'targetAttribute' => ['kode_satker_pusat' => 'kode_satker_pusat']],
             [['kode_tahun'], 'exist', 'skipOnError' => true, 'targetClass' => Tahun::className(), 'targetAttribute' => ['kode_tahun' => 'kode_tahun']],
             [['id_user'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['id_user' => 'id_user']],
         ];
@@ -59,7 +56,7 @@ class Suratjalan extends \yii\db\ActiveRecord
             'id_surat_jalan' => 'Id Surat Jalan',
             'kode_tahun' => 'Kode Tahun',
             'kode_satuan_kerja' => 'Kode Satuan Kerja',
-            'kode_satker_pusat' => 'Kode Satker Pusat',
+            'format_dokumen' => 'Format Dokumen',
             'no_dokumen' => 'No Dokumen',
             'pengesah' => 'Pengesah',
             'perihal' => 'Perihal',
@@ -75,14 +72,6 @@ class Suratjalan extends \yii\db\ActiveRecord
     public function getKodeSatuanKerja()
     {
         return $this->hasOne(Satuankerja::className(), ['kode_satuan_kerja' => 'kode_satuan_kerja']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getKodeSatkerPusat()
-    {
-        return $this->hasOne(Satkerpusat::className(), ['kode_satker_pusat' => 'kode_satker_pusat']);
     }
 
     /**
