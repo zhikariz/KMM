@@ -13,9 +13,10 @@ if($jml == 1){
 }else{
   $format = $json->satker . "-" . $json->tim . "-" . $json->unit;
 }
-$this->title = 'Update Administratif : ' . $model->kode_tahun."/".$model->no_dokumen."/".$format."/".$model->kode_jenis_dokumen."/".$model->kode_sifat_dokumen;
+$no_dokumen = $model->kode_tahun."/".$model->no_dokumen."/".$format."/".$model->kode_jenis_dokumen."/".$model->kode_sifat_dokumen;
+$this->title = 'Update Administratif : ' . $no_dokumen;
 $this->params['breadcrumbs'][] = ['label' => 'Administratif', 'url' => ['index','kode'=> $model->kode_jenis_dokumen,'sifat'=>$model->kode_sifat_dokumen,]];
-$this->params['breadcrumbs'][] = ['label' => $model->id_surat_adm, 'url' => ['view', 'kode'=> $model->kode_jenis_dokumen,'sifat'=>$model->kode_sifat_dokumen, 'id' => $model->id_surat_adm]];
+$this->params['breadcrumbs'][] = ['label' => $no_dokumen, 'url' => ['view', 'kode'=> $model->kode_jenis_dokumen,'sifat'=>$model->kode_sifat_dokumen, 'id' => $model->id_surat_adm]];
 $this->params['breadcrumbs'][] = 'Update';
 $this->params['data'] = $dataJenisDokumen;
 $this->params['data2'] = $dataSifatDokumen;

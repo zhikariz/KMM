@@ -4,20 +4,22 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Suratjalan */
+/* @var $model app\models\Notadebet */
 
-$this->title = $model->kode_tahun."/".$model->no_dokumen."/".$model->format_dokumen."/".$model->kode_satuan_kerja;
-$this->params['breadcrumbs'][] = ['label' => 'Surat Jalan', 'url' => ['index','kode'=>$_GET['kode']]];
+
+$no_dokumen=$model->kode_tahun."/".$model->kode_satuan_kerja."/".$model->no_dokumen."/".$model->kode_satker_pusat;
+$this->title = $no_dokumen;
+$this->params['breadcrumbs'][] = ['label' => 'Nota Debet', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['data'] = $dataJenisDokumen;
 $this->params['data2'] = $dataSifatDokumen;
-$no_dokumen=$model->kode_tahun."/".$model->no_dokumen."/".$model->format_dokumen."/".$model->kode_satuan_kerja;
 ?>
-<div class="suratjalan-view">
+<div class="notadebet-view">
+
 
     <p>
-        <?= Html::a('Update', ['update', 'kode'=>$_GET['kode'],'id' => $model->id_surat_jalan], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'kode'=>$_GET['kode'],'id' => $model->id_surat_jalan], [
+        <?= Html::a('Update', ['update', 'id' => $model->id_nota_debet], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Delete', ['delete', 'id' => $model->id_nota_debet], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to delete this item?',
@@ -33,9 +35,10 @@ $no_dokumen=$model->kode_tahun."/".$model->no_dokumen."/".$model->format_dokumen
           'value'=>function($data,$row) use ($no_dokumen){
 return $no_dokumen;
               }],
-            'pengesah',
+            'perihal',
             'user.nama_user',
             'waktu_input',
+            'pengesah',
             [
             'attribute'=>'file_dokumen',
             'format'=>'raw',
