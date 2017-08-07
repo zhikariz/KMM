@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "e962ca280cb850ae2c66d031d01da4c9",
+    "content-hash": "d17c56ca3c44828d753d3e939e1d8106",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -4617,7 +4617,8 @@
         "kartik-v/yii2-krajee-base": 20,
         "kartik-v/yii2-grid": 20,
         "kartik-v/yii2-widget-depdrop": 20,
-        "kartik-v/bootstrap-fileinput": 20
+        "kartik-v/bootstrap-fileinput": 20,
+        "kartik-v/yii2-widget-datepicker": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
