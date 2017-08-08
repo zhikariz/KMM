@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /* @var $model app\models\Dokumenmasuk */
 
 $this->title = $model->id_dokumen_masuk;
-$this->params['breadcrumbs'][] = ['label' => 'Dokumenmasuks', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Dokumenmasuks', 'url' => ['index','sifat'=>$_GET['sifat']]];
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['data'] = $dataJenisDokumen;
 $this->params['data2'] = $dataSifatDokumen;
@@ -33,7 +33,6 @@ $this->params['data2'] = $dataSifatDokumen;
             'tgl_dokumen',
             'perihal',
             'asal_dokumen',
-            'format_dokumen',
             'tgl_terima',
             'kode_sifat_dokumen',
             'tujuan_disposisi',

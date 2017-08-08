@@ -13,36 +13,35 @@ use kartik\date\DatePicker;
 
   <?php $form = ActiveForm::begin(); ?>
 
+    <?= $form->field($model, 'no_dokumen')->textInput(['maxlength' => true]) ?>
+    
+    <?=$form->field($model, 'tgl_dokumen')->widget(DatePicker::classname(), [
+    'options' => ['placeholder' => 'Masukkan Tanggal Dokumen ...'],
+            'language' => 'id',
+    'pluginOptions' => [
+        'autoclose'=>true,
+        'format' => 'DD, dd-MM-yyyy'
+    ]
+]);?>
 
-    <?php echo '<label>Tanggal Dokumen</label>';
-    echo DatePicker::widget([
-        'name' => 'tgl_dokumen',
-        'type' => DatePicker::TYPE_INPUT,
-        'pluginOptions' => [
-            'autoclose'=>true,
-            'format' => 'dd-MM-yyyy'
-        ]
-    ]);
-    echo "<Br>"; ?>
 
     <?= $form->field($model, 'perihal')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'asal_dokumen')->textInput(['maxlength' => true]) ?>
 
-    <?php echo '<label>Tanggal Terima</label>';
-    echo DatePicker::widget([
-        'name' => 'tgl_terima',
-        'type' => DatePicker::TYPE_INPUT,
-        'pluginOptions' => [
-            'autoclose'=>true,
-            'format' => 'dd-MM-yyyy'
-        ]
-    ]);
-    echo "<Br>"; ?>
+    <?=$form->field($model, 'tgl_terima')->widget(DatePicker::classname(), [
+    'options' => ['placeholder' => 'Masukkan Tanggal Terima ...'],
+            'language' => 'id',
+    'pluginOptions' => [
+        'autoclose'=>true,
+        'format' => 'DD, dd-MM-yyyy',
+
+    ]
+]);?>
 
     <?php
     echo '<label>Kesegeraan</label>';
-    echo Html::activeDropDownList($model, "kesegeraan", ['Biasa'=>'Biasa','Segera'=>'Segera','Sangat Segera'],
+    echo Html::activeDropDownList($model, "kesegeraan", ['Biasa'=>'Biasa','Segera'=>'Segera','Sangat Segera'=>'Sangat Segera'],
     [
         'class' => 'btn btn-primary dropdown-toggle col-lg-12',
         'prompt'=>'Pilih Kesegeraan Dokumen',
@@ -50,17 +49,18 @@ use kartik\date\DatePicker;
       <?="<br>"?>
       <?="<br>"?>
 
-    <?= $form->field($model, "tujuan_disposisi['unit']")->checkboxlist($dataUnit,['separator'=>'<br>']);?>
+    <?= $form->field($model, 'tujuan_disposisi[unit]')->checkboxlist($dataUnit,['separator'=>'<br>']);?>
 
-    <?= $form->field($model, "tujuan_disposisi['tim']")->checkboxlist($dataTim,['separator'=>'<br>']);?>
+    <?= $form->field($model, 'tujuan_disposisi[tim]')->checkboxlist($dataTim,['separator'=>'<br>'])->label(false);?>
+
 
     <?= $form->field($model, 'petunjuk_disposisi')->checkboxlist($dataPetunjuk,['separator'=>'<br>']); ?>
 
-    <?= $form->field($model, 'ket_disposisi_kepala')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'ket_disposisi_kepala')->textarea(['rows' => '3']) ?>
 
-    <?= $form->field($model, 'ket_disposisi_tim')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'ket_disposisi_tim')->textarea(['rows' => '3'])?>
 
-    <?= $form->field($model, 'ket_disposisi_unit')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'ket_disposisi_unit')->textarea(['rows' => '3']) ?>
 
     <?= $form->field($model, 'file_dokumen')->label('File Dokumen')->fileInput() ?>
 

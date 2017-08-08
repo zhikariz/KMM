@@ -43,13 +43,12 @@ class Dokumenmasuk extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['no_dokumen', 'tgl_dokumen', 'perihal', 'asal_dokumen', 'tgl_terima', 'kode_sifat_dokumen', 'tujuan_disposisi', 'petunjuk_disposisi', 'ket_disposisi_kepala', 'ket_disposisi_tim', 'ket_disposisi_unit', 'file_dokumen', 'id_user', 'waktu_input'], 'required'],
+            [['no_dokumen', 'tgl_dokumen','kesegeraan', 'perihal', 'asal_dokumen','tgl_terima', 'kode_sifat_dokumen', 'petunjuk_disposisi', 'waktu_input'], 'required'],
+            [['tujuan_disposisi', 'ket_disposisi_kepala', 'ket_disposisi_tim', 'ket_disposisi_unit'], 'string'],
             [['no_dokumen', 'id_user'], 'integer'],
-            [['tgl_dokumen', 'asal_dokumen', 'tgl_terima', 'kode_sifat_dokumen', 'waktu_input'], 'string', 'max' => 50],
-            [['perihal', 'format_dokumen', 'ket_disposisi_kepala', 'ket_disposisi_tim', 'ket_disposisi_unit', 'file_dokumen'], 'string', 'max' => 100],
-            [['tujuan_disposisi', 'petunjuk_disposisi'], 'string', 'max' => 300],
             [['kode_sifat_dokumen'], 'exist', 'skipOnError' => true, 'targetClass' => Sifatdokumen::className(), 'targetAttribute' => ['kode_sifat_dokumen' => 'kode_sifat_dokumen']],
             [['id_user'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['id_user' => 'id_user']],
+            [['file_dokumen'], 'file', 'skipOnEmpty' => true, 'extensions' => 'doc, docx, pdf'],
         ];
     }
 

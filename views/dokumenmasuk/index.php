@@ -72,6 +72,12 @@ $this->params['data2'] = $dataSifatDokumen;
         'attribute'=>'tujuan_disposisi',
         'vAlign' => 'middle',
         'hAlign' => 'center',
+        'content'=>function($model,$key,$index) use ($dataDokumenMasuk){
+          $temp=json_decode($dataDokumenMasuk[$index]['tujuan_disposisi']);
+          $vl=implode("<br>",(array)$temp->unit);
+          $vl.=implode("<br>",(array)$temp->tim);
+           return $vl;
+        }
       ],
       [
         'attribute'=>'ket_disposisi_kepala',
@@ -126,16 +132,16 @@ $this->params['data2'] = $dataSifatDokumen;
         ],
         'urlCreator' => function ($action, $model, $key, $index) {
           if ($action === 'view') {
-              $url ='index.php?r=dokumenmasuk/view&sifat='.$_GET['sifat'].'&id='.$model->id_surat_adm;
+              $url ='index.php?r=dokumenmasuk/view&sifat='.$_GET['sifat'].'&id='.$model->id_dokumen_masuk;
               return $url;
           }
 
           if ($action === 'update') {
-              $url ='index.php?r=dokumenmasuk/update&sifat='.$_GET['sifat'].'&id='.$model->id_surat_adm;
+              $url ='index.php?r=dokumenmasuk/update&sifat='.$_GET['sifat'].'&id='.$model->id_dokumen_masuk;
               return $url;
           }
           if ($action === 'delete') {
-              $url ='index.php?r=dokumenmasuk/delete&sifat='.$_GET['sifat'].'&id='.$model->id_surat_adm;
+              $url ='index.php?r=dokumenmasuk/delete&sifat='.$_GET['sifat'].'&id='.$model->id_dokumen_masuk;
               return $url;
           }
 
