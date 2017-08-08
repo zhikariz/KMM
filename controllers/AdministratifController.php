@@ -204,9 +204,9 @@ class AdministratifController extends Controller
             'dataSifatDokumen' => $data2]);
 
         } else {
-          $temp_model_pengesah = json_decode($model->pengesah);
-
-
+          $temp = json_decode($model->format_dokumen,true);
+          $model->format_dokumen = $temp;
+          $temp_model_pengesah = json_decode($model->pengesah,true);
           $model->pengesah = $temp_model_pengesah;
 
 

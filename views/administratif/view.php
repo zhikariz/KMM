@@ -5,25 +5,24 @@ use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Administratif */
-
-$json = json_decode($model->format_dokumen);
-$jml = count((array)$json);
+$a= json_decode($model->format_dokumen,true);
+$jml = count($a);
 if($jml == 1){
-  $format =$json->satker;
+  $format =$a['satker'];
 }else if($jml == 2){
-  if($json->tim != ''){
-    $format = $json->satker . "-" . $json->tim;
+  if($a['tim'] != ''){
+    $format = $a['satker'] . "-" . $a['tim'];
 }else{
-    $format =$json->satker;
+    $format =$a['satker'];
 }
 }else if($jml == 3){
-  if($json->unit != ''){
-  $format = $json->satker . "-" . $json->tim . "-" . $json->unit;
-}else if($json->tim != ''){
-  $format = $json->satker . "-" . $json->tim;
+  if($a['unit'] != ''){
+  $format = $a['satker'] . "-" . $a['tim'] . "-" . $a['unit'];
+}else if($a->tim != ''){
+  $format = $a['satker'] . "-" . $a['tim'];
 }
 else{
-  $format =$json->satker;
+  $format =$a['satker'];
 }
 }
 $this->title = "Detail Dokumen ".$model->kode_tahun."/".$model->no_dokumen."/".$format."/".$model->kode_jenis_dokumen."/".$model->kode_sifat_dokumen;

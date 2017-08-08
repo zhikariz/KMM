@@ -19,7 +19,7 @@ class PejabatSearch extends Pejabat
     {
         return [
             [['id_pejabat'], 'integer'],
-            [['nama_pejabat', 'unit_pejabat'], 'safe'],
+            [['nama_deputi'], 'safe'],
         ];
     }
 
@@ -62,8 +62,7 @@ class PejabatSearch extends Pejabat
             'id_pejabat' => $this->id_pejabat,
         ]);
 
-        $query->andFilterWhere(['like', 'nama_pejabat', $this->nama_pejabat])
-            ->andFilterWhere(['like', 'unit_pejabat', $this->unit_pejabat]);
+        $query->andFilterWhere(['like', 'nama_deputi', $this->nama_deputi]);
 
         return $dataProvider;
     }

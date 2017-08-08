@@ -14,7 +14,7 @@ use kartik\date\DatePicker;
   <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'no_dokumen')->textInput(['maxlength' => true]) ?>
-    
+
     <?=$form->field($model, 'tgl_dokumen')->widget(DatePicker::classname(), [
     'options' => ['placeholder' => 'Masukkan Tanggal Dokumen ...'],
             'language' => 'id',
@@ -49,10 +49,12 @@ use kartik\date\DatePicker;
       <?="<br>"?>
       <?="<br>"?>
 
-    <?= $form->field($model, 'tujuan_disposisi[unit]')->checkboxlist($dataUnit,['separator'=>'<br>']);?>
 
-    <?= $form->field($model, 'tujuan_disposisi[tim]')->checkboxlist($dataTim,['separator'=>'<br>'])->label(false);?>
+    <?= $form->field($model, 'tujuan_disposisi[kepala]')->checkboxlist($dataKepala,['separator'=>'<br>']);?>
 
+    <?= $form->field($model, 'tujuan_disposisi[unit]')->checkboxlist($dataUnit,['separator'=>'<br>'])->label(false);?>
+
+    <?= $form->field($model, "tujuan_disposisi[tim]")->checkboxlist($dataTim,['separator'=>'<br>'])->label(false);?>
 
     <?= $form->field($model, 'petunjuk_disposisi')->checkboxlist($dataPetunjuk,['separator'=>'<br>']); ?>
 

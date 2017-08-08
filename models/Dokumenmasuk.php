@@ -45,7 +45,7 @@ class Dokumenmasuk extends \yii\db\ActiveRecord
         return [
             [['no_dokumen', 'tgl_dokumen','kesegeraan', 'perihal', 'asal_dokumen','tgl_terima', 'kode_sifat_dokumen', 'petunjuk_disposisi', 'waktu_input'], 'required'],
             [['tujuan_disposisi', 'ket_disposisi_kepala', 'ket_disposisi_tim', 'ket_disposisi_unit'], 'string'],
-            [['no_dokumen', 'id_user'], 'integer'],
+            [['id_user'], 'integer'],
             [['kode_sifat_dokumen'], 'exist', 'skipOnError' => true, 'targetClass' => Sifatdokumen::className(), 'targetAttribute' => ['kode_sifat_dokumen' => 'kode_sifat_dokumen']],
             [['id_user'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['id_user' => 'id_user']],
             [['file_dokumen'], 'file', 'skipOnEmpty' => true, 'extensions' => 'doc, docx, pdf'],

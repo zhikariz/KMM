@@ -17,8 +17,7 @@ use yii\widgets\ActiveForm;
 ],
     ]); ?>
     <?php
-    if($model->isNewRecord){
-    $satker = json_decode($format->format_jenis_dokumen);
+    $satker = json_decode($format->format_jenis_dokumen,true);
 
     if(in_array("Satuan Kerja",$satker)){
       echo Html::activeDropDownList($model, "format_dokumen[satker]",$dataSatker,
@@ -49,7 +48,6 @@ use yii\widgets\ActiveForm;
         echo "<br>";
         echo "<br>";
     }
-  }
      ?>
 
     <?= $form->field($model, 'perihal')->textInput(['maxlength' => true]) ?>

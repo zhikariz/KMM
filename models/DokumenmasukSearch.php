@@ -39,9 +39,9 @@ class DokumenmasukSearch extends Dokumenmasuk
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params,$sifat)
     {
-        $query = Dokumenmasuk::find();
+        $query = Dokumenmasuk::find()->where(['kode_sifat_dokumen'=>$sifat]);
 
         // add conditions that should always apply here
 

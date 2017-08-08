@@ -14,8 +14,6 @@ $this->params['data2'] = $dataSifatDokumen;
 ?>
 <div class="pejabat-update">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <?= $this->render('_form', [
         'model' => $model,
     ]) ?>

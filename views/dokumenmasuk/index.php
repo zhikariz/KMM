@@ -70,13 +70,26 @@ $this->params['data2'] = $dataSifatDokumen;
       ],
       [
         'attribute'=>'tujuan_disposisi',
-        'vAlign' => 'middle',
-        'hAlign' => 'center',
+        'format'=>'html',
         'content'=>function($model,$key,$index) use ($dataDokumenMasuk){
-          $temp=json_decode($dataDokumenMasuk[$index]['tujuan_disposisi']);
-          $vl=implode("<br>",(array)$temp->unit);
-          $vl.=implode("<br>",(array)$temp->tim);
-           return $vl;
+          $temp=json_decode($dataDokumenMasuk[$index]['tujuan_disposisi'],true);
+          $a = $temp['kepala'];
+        for($i=0;$i<count($a);$i++){
+          $vl[$i]='<button class="btn-xs btn btn-danger" style="margin: 1px;">'.$a[$i].'</button>';
+        }
+        $hasil = implode($vl);
+        $b = $temp['tim'];
+        for($i=0;$i<count($b);$i++){
+          $t[$i]='<button class="btn-xs btn btn-info" style="margin: 1px;">'.$b[$i].'</button>';
+        }
+        $hasil .= implode($t);
+        $c = $temp['unit'];
+        for($i=0;$i<count((array)$c);$i++){
+          $u[$i]='<button class="btn-xs btn btn-primary" style="margin: 1px;">'.$c[$i].'</button>';
+        }
+        $hasil .= implode($u);
+        return $hasil;
+
         }
       ],
       [

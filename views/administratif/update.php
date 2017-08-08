@@ -4,15 +4,28 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Administratif */
-$json = json_decode($model->format_dokumen);
-$jml = count((array)$json);
+$a= $model->format_dokumen;
+$jml = count($a);
+
 if($jml == 1){
-  $format = $json->satker;
+  $format =$a['satker'];
 }else if($jml == 2){
-  $format = $json->satker . "-" . $json->tim;
+  if($a['tim'] != ''){
+    $format = $a['satker'] . "-" . $a['tim'];
 }else{
-  $format = $json->satker . "-" . $json->tim . "-" . $json->unit;
+    $format =$a['satker'];
 }
+}else if($jml == 3){
+  if($a['unit'] != ''){
+  $format = $a['satker'] . "-" . $a['tim'] . "-" . $a['unit'];
+}else if($a->tim != ''){
+  $format = $a['satker'] . "-" . $a['tim'];
+}
+else{
+  $format =$a['satker'];
+}
+}
+
 $no_dokumen = $model->kode_tahun."/".$model->no_dokumen."/".$format."/".$model->kode_jenis_dokumen."/".$model->kode_sifat_dokumen;
 $this->title = 'Update Administratif : ' . $no_dokumen;
 $this->params['breadcrumbs'][] = ['label' => 'Administratif', 'url' => ['index','kode'=> $model->kode_jenis_dokumen,'sifat'=>$model->kode_sifat_dokumen,]];

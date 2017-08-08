@@ -9,12 +9,12 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
-use app\models\Tahun;
 use app\models\Jenisdokumen;
 use app\models\Sifatdokumen;
 use app\models\Tim;
 use app\models\Unitkerja;
 use app\models\Petunjuk;
+use app\models\Pejabat;
 use yii\web\UploadedFile;
 
 /**
@@ -44,7 +44,7 @@ class DokumenmasukController extends Controller
     public function actionIndex($sifat)
     {
         $searchModel = new DokumenmasukSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$sifat);
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
         $data_dokumen_masuk = Dokumenmasuk::find()->where(['kode_sifat_dokumen'=>$sifat])->all();
@@ -67,10 +67,12 @@ class DokumenmasukController extends Controller
       $data = $this->getJenisDokumen();
       $data2 = $this->getSifatDokumen();
       $model = $this->findModel($id);
+      $data_dokumen_masuk = Dokumenmasuk::find()->where(['kode_sifat_dokumen'=>$sifat,'id_dokumen_masuk'=>$id])->one();
         return $this->render('view', [
             'model' => $model,
             'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2,
+            'dataDokumenMasuk' => $data_dokumen_masuk,
         ]);
     }
 
@@ -82,14 +84,10 @@ class DokumenmasukController extends Controller
     public function actionCreate($sifat)
     {
         $model = new Dokumenmasuk();
-        $tahun = new Tahun();
-        //tahun dari db
-        $tahun_db = $tahun->find()->orderBy(['tahun'=>SORT_DESC])->one();
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
-
-        $tahun_skr = date('Y');
         //ngambil data checkbox
+        $dataKepala = ArrayHelper::map(Pejabat::find()->all(), 'nama_deputi', 'nama_deputi');
         $dataUnit = ArrayHelper::map(Unitkerja::find()->all(), 'ket_unit_kerja', 'ket_unit_kerja');
         $dataTim = ArrayHelper::map(Tim::find()->all(), 'nama_tim', 'nama_tim');
         $dataPetunjuk= ArrayHelper::map(Petunjuk::find()->all(), 'keterangan_petunjuk', 'keterangan_petunjuk');
@@ -120,6 +118,7 @@ class DokumenmasukController extends Controller
                 'dataSifatDokumen' => $data2,
                 'dataUnit'=>$dataUnit,
                 'dataTim'=>$dataTim,
+                'dataKepala'=>$dataKepala,
                 'dataPetunjuk'=>$dataPetunjuk
             ]);
         }
@@ -131,19 +130,46 @@ class DokumenmasukController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
+    public function actionUpdate($sifat,$id)
     {
         $model = $this->findModel($id);
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
+        $dataKepala = ArrayHelper::map(Pejabat::find()->all(), 'nama_deputi', 'nama_deputi');
+        $dataUnit = ArrayHelper::map(Unitkerja::find()->all(), 'ket_unit_kerja', 'ket_unit_kerja');
+        $dataTim = ArrayHelper::map(Tim::find()->all(), 'nama_tim', 'nama_tim');
+        $dataPetunjuk= ArrayHelper::map(Petunjuk::find()->all(), 'keterangan_petunjuk', 'keterangan_petunjuk');
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_dokumen_masuk]);
+        if ($model->load(Yii::$app->request->post())) {
+          $temp = json_encode($model->tujuan_disposisi);
+          $model->tujuan_disposisi = $temp;
+
+          $temp2 = json_encode($model->petunjuk_disposisi);
+          $model->petunjuk_disposisi = $temp2;
+
+          $model->file_dokumen = UploadedFile::getInstance($model,'file_dokumen');
+
+
+          $model->kode_sifat_dokumen = $sifat;
+          $model->waktu_input = date("d-m-Y H:i:s");
+          $model->id_user = Yii::$app->user->identity->id_user;
+          $model->save();
+          if($model->file_dokumen != NULL)
+          $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);
+          return $this->redirect(['view','sifat'=>$sifat,'id' => $model->id_dokumen_masuk,'model' => $model,
+          'dataJenisDokumen' => $data,
+          'dataSifatDokumen' => $data2,]);
         } else {
+          $temp = json_decode($model->tujuan_disposisi,true);
+          $model->tujuan_disposisi = $temp;
             return $this->render('update', [
                 'model' => $model,
                 'dataJenisDokumen' => $data,
                 'dataSifatDokumen' => $data2,
+                'dataUnit'=>$dataUnit,
+                'dataTim'=>$dataTim,
+                'dataKepala'=>$dataKepala,
+                'dataPetunjuk'=>$dataPetunjuk
             ]);
         }
     }

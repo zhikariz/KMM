@@ -18,7 +18,8 @@ $this->params['data2'] = $dataSifatDokumen;
         'model' => $model,
         'dataUnit'=>$dataUnit,
         'dataTim'=>$dataTim,
-        'dataPetunjuk'=>$dataPetunjuk
+        'dataPetunjuk'=>$dataPetunjuk,
+        'dataKepala'=>$dataKepala,
     ]) ?>
 
 </div>

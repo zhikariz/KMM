@@ -12,9 +12,7 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'nama_pejabat')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'unit_pejabat')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'nama_deputi')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

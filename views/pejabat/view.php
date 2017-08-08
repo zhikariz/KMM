@@ -14,8 +14,6 @@ $this->params['data2'] = $dataSifatDokumen;
 ?>
 <div class="pejabat-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->id_pejabat], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete', ['delete', 'id' => $model->id_pejabat], [
@@ -31,8 +29,7 @@ $this->params['data2'] = $dataSifatDokumen;
         'model' => $model,
         'attributes' => [
             'id_pejabat',
-            'nama_pejabat',
-            'unit_pejabat',
+            'nama_deputi',
         ],
     ]) ?>
 
