@@ -75,7 +75,10 @@ $this->params['data2'] = $dataSifatDokumen;
             'format'=>'raw',
             'value'=>Html::a($model->file_dokumen, "uploads/$model->file_dokumen", ['target'=>'_blank']),
             ],
-            'id_user',
+            [
+              'attribute'=>'user.nama_user',
+              'label' => 'Pembuat'
+            ],
             'waktu_input',
         ],
     ]) ?>

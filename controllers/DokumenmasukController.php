@@ -135,6 +135,7 @@ class DokumenmasukController extends Controller
         $model = $this->findModel($id);
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
+        $dataMasuk = $this->findModel($id);
         $dataKepala = ArrayHelper::map(Pejabat::find()->all(), 'nama_deputi', 'nama_deputi');
         $dataUnit = ArrayHelper::map(Unitkerja::find()->all(), 'ket_unit_kerja', 'ket_unit_kerja');
         $dataTim = ArrayHelper::map(Tim::find()->all(), 'nama_tim', 'nama_tim');
@@ -149,12 +150,16 @@ class DokumenmasukController extends Controller
 
           $model->file_dokumen = UploadedFile::getInstance($model,'file_dokumen');
 
+          if($model->file_dokumen == NULL){
+            $model->file_dokumen = $dataMasuk->file_dokumen;
+          }
+
 
           $model->kode_sifat_dokumen = $sifat;
           $model->waktu_input = date("d-m-Y H:i:s");
           $model->id_user = Yii::$app->user->identity->id_user;
           $model->save();
-          if($model->file_dokumen != NULL)
+          if($model->file_dokumen != $dataMasuk->file_dokumen)
           $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);
           return $this->redirect(['view','sifat'=>$sifat,'id' => $model->id_dokumen_masuk,'model' => $model,
           'dataJenisDokumen' => $data,
@@ -162,6 +167,8 @@ class DokumenmasukController extends Controller
         } else {
           $temp = json_decode($model->tujuan_disposisi,true);
           $model->tujuan_disposisi = $temp;
+          $temp2 = json_decode($model->petunjuk_disposisi,true);
+          $model->petunjuk_disposisi = $temp2;
             return $this->render('update', [
                 'model' => $model,
                 'dataJenisDokumen' => $data,

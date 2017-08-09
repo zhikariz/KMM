@@ -1,5 +1,4 @@
 <?php
-
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
@@ -21,7 +20,7 @@ $this->params['data2'] = $dataSifatDokumen;
     'beforeHeader'=>[
         [
             'columns'=>[
-                ['content'=>'', 'options'=>['colspan'=>8]],
+                ['content'=>'', 'options'=>['colspan'=>9]],
                 ['content'=>'Keterangan Disposisi', 'options'=>['colspan'=>3, 'class'=>'text-center warning']],
             ],
             'options'=>['class'=>'skip-export'] // remove this row from export
@@ -93,6 +92,19 @@ $this->params['data2'] = $dataSifatDokumen;
         }
       ],
       [
+        'attribute'=>'petunjuk_disposisi',
+        'format'=>'html',
+        'content'=>function($model,$key,$index) use ($dataDokumenMasuk){
+          $temp=json_decode($dataDokumenMasuk[$index]['petunjuk_disposisi'],true);
+        for($i=0;$i<count($temp);$i++){
+          $vl[$i]='<button class="btn-xs btn btn-warning" style="margin: 1px;">'.$temp[$i].'</button><br>';
+        }
+        $hasil = implode($vl);
+        return $hasil;
+
+        }
+      ],
+      [
         'attribute'=>'ket_disposisi_kepala',
         'vAlign' => 'middle',
         'hAlign' => 'center',
@@ -114,7 +126,16 @@ $this->params['data2'] = $dataSifatDokumen;
         'attribute'=>'file_dokumen',
         'vAlign' => 'middle',
         'hAlign' => 'center',
-        'format'=>'raw'
+        'format'=>'raw',
+        'content' =>
+        function($model, $key, $index) use ($dataDokumenMasuk){
+          $temp = $dataDokumenMasuk[$index]['file_dokumen'];
+          if($temp == NULL){
+            return "File Tidak Ada";
+          }else{
+          return Html::a($temp, "uploads/$temp", ['target'=>'_blank','data-pjax'=>"0"]);}
+
+        },
       ],
 
 
@@ -122,7 +143,7 @@ $this->params['data2'] = $dataSifatDokumen;
         'class' => 'kartik\grid\ActionColumn',
         'header' => 'Actions',
         'headerOptions' => ['style' => 'color:#337ab7'],
-        'template' => '{view}{update}{delete}',
+        'template' => Yii::$app->user->identity->role->ket_role=='Approval'?'{view}':(Yii::$app->user->identity->role->ket_role=='Operator'?('{view}{update}'):'{view}{update}{delete}'),
         'buttons' => [
           'view' => function ($url, $model) {
               return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [

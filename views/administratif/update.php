@@ -42,7 +42,7 @@ $this->params['data2'] = $dataSifatDokumen;
       'dataSatker' => $dataSatker,
       'dataUnit'=>$dataUnit,
       'dataTim' => $dataTim,
-      'dataPengesah' => $dataPengesah
+      'dataPengesah' => $dataPengesah,
     ]) ?>
 
 </div>

@@ -172,9 +172,9 @@ class AdministratifController extends Controller
     public function actionUpdate($kode,$sifat,$id)
     {
         $model = $this->findModel($id);
-        $tahun = new Tahun();
         $jd = new Jenisdokumen();
         $dataAdm = $this->findModel($id);
+        //$dataAdm = Administratif::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat])->one();
         $data3 = $jd->find()->where(['kode_jenis_dokumen'=>$kode])->one();
 
         $jml_jenis_dokumen = count(json_decode($data3->format_jenis_dokumen));
@@ -194,12 +194,26 @@ class AdministratifController extends Controller
           if($model->file_dokumen == NULL){
             $model->file_dokumen = $dataAdm->file_dokumen;
           }
+          if(Yii::$app->user->identity == 'Administrator')
+          {
+            $temp_format = json_encode($model->format_dokumen);
+            $model->format_dokumen = $temp_format;
+          }else{
+            $model->format_dokumen = $dataAdm->format_dokumen;
+          }
+          $model->kode_tahun = $dataAdm->kode_tahun;
+          $model->no_dokumen = $dataAdm->no_dokumen;
           $pengesah_temp = $model->pengesah;
           $model->pengesah = json_encode($pengesah_temp);
-          $model->save();
-          if($model->file_dokumen != $dataAdm->file_dokumen){
-          $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);}
-            return $this->redirect(['view', 'kode'=>$kode,'sifat'=>$sifat,'id'=>$model->id_surat_adm,'id' => $model->id_surat_adm,
+          $model->waktu_input = $dataAdm->waktu_input;
+          $model->id_user = $dataAdm->id_user;
+          $model->kode_jenis_dokumen = $kode;
+          $model->kode_sifat_dokumen = $sifat;
+          $model->save(false);
+          if($model->file_dokumen != $dataAdm->file_dokumen)
+          $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);
+
+            return $this->redirect(['view', 'model'=>$model,'kode'=>$kode,'sifat'=>$sifat,'id'=>$model->id_surat_adm,'id' => $model->id_surat_adm,
             'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2]);
 

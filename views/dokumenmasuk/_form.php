@@ -14,12 +14,14 @@ use kartik\date\DatePicker;
   <?php $form = ActiveForm::begin([
                'options' => ['enctype'=>'multipart/form-data']
            ]); ?>
+    <?php if(!$model->isNewRecord){?>
 
-    <?= $form->field($model, 'no_dokumen')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'no_dokumen')->textInput(['maxlength' => true, 'disabled' => Yii::$app->user->identity->role->ket_role != 'Administrator' ? true:false]) ?>
 
     <?=$form->field($model, 'tgl_dokumen')->widget(DatePicker::classname(), [
     'options' => ['placeholder' => 'Masukkan Tanggal Dokumen ...'],
             'language' => 'id',
+            'disabled' => Yii::$app->user->identity->role->ket_role != 'Administrator' ? true:false,
     'pluginOptions' => [
         'autoclose'=>true,
         'format' => 'DD, dd-MM-yyyy'
@@ -27,13 +29,14 @@ use kartik\date\DatePicker;
 ]);?>
 
 
-    <?= $form->field($model, 'perihal')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'perihal')->textInput(['maxlength' => true,'disabled' => Yii::$app->user->identity->role->ket_role != 'Administrator' ? true:false]) ?>
 
-    <?= $form->field($model, 'asal_dokumen')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'asal_dokumen')->textInput(['maxlength' => true,'disabled' => Yii::$app->user->identity->role->ket_role != 'Administrator' ? true:false]) ?>
 
     <?=$form->field($model, 'tgl_terima')->widget(DatePicker::classname(), [
     'options' => ['placeholder' => 'Masukkan Tanggal Terima ...'],
             'language' => 'id',
+            'disabled' => Yii::$app->user->identity->role->ket_role != 'Administrator' ? true:false,
     'pluginOptions' => [
         'autoclose'=>true,
         'format' => 'DD, dd-MM-yyyy',
@@ -47,20 +50,63 @@ use kartik\date\DatePicker;
     [
         'class' => 'btn btn-primary dropdown-toggle col-lg-12',
         'prompt'=>'Pilih Kesegeraan Dokumen',
+        'disabled' => Yii::$app->user->identity->role->ket_role != 'Administrator' ? true:false,
     ]); echo "<Br>";?>
       <?="<br>"?>
       <?="<br>"?>
 
+    <?= $form->field($model, 'tujuan_disposisi[kepala]')->checkboxlist($dataKepala,['separator'=>'<br>','onclick' => Yii::$app->user->identity->role->ket_role != 'Administrator' ? 'return false;':'return true;']);?>
+    <?php }else{
+      ?>
+      <?= $form->field($model, 'no_dokumen')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'tujuan_disposisi[kepala]')->checkboxlist($dataKepala,['separator'=>'<br>']);?>
+      <?=$form->field($model, 'tgl_dokumen')->widget(DatePicker::classname(), [
+      'options' => ['placeholder' => 'Masukkan Tanggal Dokumen ...'],
+              'language' => 'id',
+      'pluginOptions' => [
+          'autoclose'=>true,
+          'format' => 'DD, dd-MM-yyyy'
+      ]
+  ]);?>
+
+
+      <?= $form->field($model, 'perihal')->textInput(['maxlength' => true]) ?>
+
+      <?= $form->field($model, 'asal_dokumen')->textInput(['maxlength' => true]) ?>
+
+      <?=$form->field($model, 'tgl_terima')->widget(DatePicker::classname(), [
+      'options' => ['placeholder' => 'Masukkan Tanggal Terima ...'],
+              'language' => 'id',
+      'pluginOptions' => [
+          'autoclose'=>true,
+          'format' => 'DD, dd-MM-yyyy',
+
+      ]
+  ]);?>
+
+      <?php
+      echo '<label>Kesegeraan</label>';
+      echo Html::activeDropDownList($model, "kesegeraan", ['Biasa'=>'Biasa','Segera'=>'Segera','Sangat Segera'=>'Sangat Segera'],
+      [
+          'class' => 'btn btn-primary dropdown-toggle col-lg-12',
+          'prompt'=>'Pilih Kesegeraan Dokumen',
+      ]); echo "<Br>";?>
+        <?="<br>"?>
+        <?="<br>"?>
+
+      <?= $form->field($model, 'tujuan_disposisi[kepala]')->checkboxlist($dataKepala,['separator'=>'<br>']);?>
+      <?php }?>
 
     <?= $form->field($model, 'tujuan_disposisi[unit]')->checkboxlist($dataUnit,['separator'=>'<br>'])->label(false);?>
 
     <?= $form->field($model, "tujuan_disposisi[tim]")->checkboxlist($dataTim,['separator'=>'<br>'])->label(false);?>
 
     <?= $form->field($model, 'petunjuk_disposisi')->checkboxlist($dataPetunjuk,['separator'=>'<br>']); ?>
-
-    <?= $form->field($model, 'ket_disposisi_kepala')->textarea(['rows' => '3']) ?>
+      <?php if(!$model->isNewRecord){?>
+    <?= $form->field($model, 'ket_disposisi_kepala')->textarea(['rows' => '3','disabled' => Yii::$app->user->identity->role->ket_role != 'Administrator' ? true:false,]) ?>
+    <?php }else{?>
+      <?= $form->field($model, 'ket_disposisi_kepala')->textarea(['rows' => '3']) ?>
+    <?php }?>
 
     <?= $form->field($model, 'ket_disposisi_tim')->textarea(['rows' => '3'])?>
 

@@ -106,7 +106,7 @@ $this->params['data2'] = $dataSifatDokumen;
         'class' => 'kartik\grid\ActionColumn',
         'header' => 'Actions',
         'headerOptions' => ['style' => 'color:#337ab7'],
-        'template' => '{view}{update}{delete}',
+        'template' => Yii::$app->user->identity->role->ket_role=='Approval'?'{view}':(Yii::$app->user->identity->role->ket_role=='Operator'?('{view}{update}'):'{view}{update}{delete}'),
         'buttons' => [
           'view' => function ($url, $model) {
               return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
@@ -155,8 +155,11 @@ $this->params['data2'] = $dataSifatDokumen;
     // set your toolbar
     'toolbar'=> [
         ['content'=>
-            Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create','kode'=>$_GET['kode'],'sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-success', 'title'=>Yii::t('app', 'Create Satuan Kerja')]) . ' '.
-            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index','kode'=>$_GET['kode'],'sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')])
+            Yii::$app->user->identity->role->ket_role=='Operator' || 'Administrator'?
+            Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create','kode'=>$_GET['kode'],'sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-success', 'title'=>Yii::t('app', 'Create Satuan Kerja')])   . ' '.
+              Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index','kode'=>$_GET['kode'],'sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')]):
+                Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index','kode'=>$_GET['kode'],'sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')])
+
         ],
         '{export}',
         '{toggleData}',

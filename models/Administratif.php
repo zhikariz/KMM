@@ -40,10 +40,9 @@ class Administratif extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['format_dokumen', 'pengesah', 'perihal'], 'required'],
+            [['no_dokumen','kode_tahun','format_dokumen','kode_jenis_dokumen','kode_sifat_dokumen','id_user', 'pengesah', 'perihal','waktu_input'], 'required'],
             [['no_dokumen', 'kode_tahun', 'id_user'], 'integer'],
-            [['format_dokumen', 'kode_jenis_dokumen', 'kode_sifat_dokumen', 'waktu_input'], 'string', 'max' => 50],
-            [['pengesah', 'perihal'], 'string', 'max' => 100],
+            [['format_dokumen', 'kode_jenis_dokumen', 'kode_sifat_dokumen', 'waktu_input','file_dokumen'], 'string' ],
             [['kode_jenis_dokumen'], 'exist', 'skipOnError' => true, 'targetClass' => Jenisdokumen::className(), 'targetAttribute' => ['kode_jenis_dokumen' => 'kode_jenis_dokumen']],
             [['kode_sifat_dokumen'], 'exist', 'skipOnError' => true, 'targetClass' => Sifatdokumen::className(), 'targetAttribute' => ['kode_sifat_dokumen' => 'kode_sifat_dokumen']],
             [['kode_tahun'], 'exist', 'skipOnError' => true, 'targetClass' => Tahun::className(), 'targetAttribute' => ['kode_tahun' => 'kode_tahun']],

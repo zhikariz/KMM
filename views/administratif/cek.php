@@ -15,23 +15,7 @@ $this->params['data2'] = $dataSifatDokumen;
 <?="No Dokumen = ".$model->no_dokumen."<Br>"?>
 <?="Kode Tahun = ".$model->kode_tahun."<br>"?>
 <?="Format Dokumen = ".$model->format_dokumen."<br>"?>
-<?php
-$a = json_decode($model->format_dokumen);
-echo  $jml = count(json_decode($model->format_dokumen));
-if($jml == 1){
-  $format=$a->satker;
-}else if($jml == 2){
-  $format = $a->satker . "-" . $a->tim;
-}else{
-  $format = $a->satker . "-" . $a->tim . "-" . $a->unit;
-}
-$c =json_encode($model->format_dokumen);
-echo "<br>";
-echo $model->kode_tahun."/".$model->no_dokumen."/".$format."/".$model->kode_jenis_dokumen."/".$model->kode_sifat_dokumen;
-echo "<Br>";?>
-
-
-
+<?="Pengesah = ".$model->pengesah."<br>"?>
 <?="Kode Jenis Dokumen = ".$model->kode_jenis_dokumen."<br>"?>
 <?="Kode Sifat Dokumen = ".$model->kode_sifat_dokumen."<br>"?>
 <?="Perihal = ".$model->perihal."<br>"?>
