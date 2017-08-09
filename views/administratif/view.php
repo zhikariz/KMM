@@ -51,14 +51,23 @@ $no_dokumen = $model->kode_tahun."/".$model->no_dokumen."/".$format."/".$model->
         'attributes' => [
             ['attribute'=>'No Dokumen',
             'value'=>function($data,$row) use ($no_dokumen){
-return $no_dokumen;
+                return $no_dokumen;
                 },
             ],
             'pengesah',
-            'kodeJenisDokumen.ket_jenis_dokumen',
-            'kodeSifatDokumen.ket_sifat_dokumen',
+            [
+              'attribute'=>'kodeJenisDokumen.ket_jenis_dokumen',
+              'label'=>'Jenis Dokumen'
+            ],
+            [
+              'attribute'=>'kodeSifatDokumen.ket_sifat_dokumen',
+              'label'=>'Sifat Dokumen'
+            ],
             'perihal',
-            'user.username',
+            [
+              'attribute'=>'user.nama_user',
+              'label' => 'Pembuat'
+            ],
             'waktu_input',
             [
             'attribute'=>'file_dokumen',

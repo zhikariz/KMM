@@ -96,16 +96,19 @@ $this->params['data2'] = $dataSifatDokumen;
         'attribute'=>'ket_disposisi_kepala',
         'vAlign' => 'middle',
         'hAlign' => 'center',
+        'header'=>'Kepala'
       ],
       [
         'attribute'=>'ket_disposisi_tim',
         'vAlign' => 'middle',
         'hAlign' => 'center',
+        'header'=>'Tim'
       ],
       [
         'attribute'=>'ket_disposisi_unit',
         'vAlign' => 'middle',
         'hAlign' => 'center',
+        'header'=>'Unit'
       ],
       [
         'attribute'=>'file_dokumen',

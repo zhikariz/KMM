@@ -10,7 +10,9 @@ use yii\widgets\ActiveForm;
 
 <div class="satkerpusat-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+  <?php $form = ActiveForm::begin([
+               'options' => ['enctype'=>'multipart/form-data']
+           ]); ?>
 
     <?= $form->field($model, 'kode_satker_pusat')->textInput(['maxlength' => true]) ?>
 

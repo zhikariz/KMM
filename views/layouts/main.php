@@ -151,8 +151,10 @@ border-left-color: #fff;
         </div>
         <!-- /.navbar-collapse -->
         <!-- Navbar Right Menu -->
+
         <div class="navbar-custom-menu">
           <ul class="nav navbar-nav">
+            <?php if(Yii::$app->user->identity->id_role == 1){?>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Management <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
@@ -172,6 +174,7 @@ border-left-color: #fff;
                 <li><a href="#">One more separated link</a></li>
               </ul>
             </li>
+            <?php }?>
 
 
 

@@ -10,7 +10,9 @@ use yii\widgets\ActiveForm;
 
 <div class="notadebet-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+  <?php $form = ActiveForm::begin([
+               'options' => ['enctype'=>'multipart/form-data']
+           ]); ?>
 
     <?php
       echo Html::activeDropDownList($model, "kode_satuan_kerja", $dataSatker,

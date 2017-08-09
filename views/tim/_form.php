@@ -10,7 +10,9 @@ use yii\widgets\ActiveForm;
 
 <div class="tim-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+  <?php $form = ActiveForm::begin([
+               'options' => ['enctype'=>'multipart/form-data']
+           ]); ?>
 
     <?= $form->field($model, 'kode_tim')->textInput(['maxlength' => true]) ?>
 

@@ -10,7 +10,9 @@ use yii\widgets\ActiveForm;
 
 <div class="satuankerja-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+  <?php $form = ActiveForm::begin([
+               'options' => ['enctype'=>'multipart/form-data']
+           ]); ?>
 
     <?= $form->field($model, 'kode_satuan_kerja')->textInput(['maxlength' => true]) ?>
 

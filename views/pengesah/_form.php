@@ -10,7 +10,9 @@ use yii\widgets\ActiveForm;
 
 <div class="pengesah-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+  <?php $form = ActiveForm::begin([
+               'options' => ['enctype'=>'multipart/form-data']
+           ]); ?>
 
     <?= $form->field($model, 'nama_pengesah')->textInput(['maxlength' => true]) ?>
 

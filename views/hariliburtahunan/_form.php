@@ -10,7 +10,9 @@ use yii\widgets\ActiveForm;
 
 <div class="hariliburtahunan-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+  <?php $form = ActiveForm::begin([
+               'options' => ['enctype'=>'multipart/form-data']
+           ]); ?>
 
     <?= $form->field($model, 'waktu_hari_libur')->textInput(['maxlength' => true]) ?>
 

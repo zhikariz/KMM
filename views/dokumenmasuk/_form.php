@@ -11,7 +11,9 @@ use kartik\date\DatePicker;
 
 <div class="dokumenmasuk-form">
 
-  <?php $form = ActiveForm::begin(); ?>
+  <?php $form = ActiveForm::begin([
+               'options' => ['enctype'=>'multipart/form-data']
+           ]); ?>
 
     <?= $form->field($model, 'no_dokumen')->textInput(['maxlength' => true]) ?>
 

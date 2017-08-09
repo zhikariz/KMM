@@ -10,7 +10,9 @@ use yii\widgets\ActiveForm;
 
 <div class="petunjuk-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+  <?php $form = ActiveForm::begin([
+               'options' => ['enctype'=>'multipart/form-data']
+           ]); ?>
 
     <?= $form->field($model, 'keterangan_petunjuk')->textInput(['maxlength' => true]) ?>
 
