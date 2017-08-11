@@ -194,7 +194,7 @@ class AdministratifController extends Controller
           if($model->file_dokumen == NULL){
             $model->file_dokumen = $dataAdm->file_dokumen;
           }
-          if(Yii::$app->user->identity == 'Administrator')
+          if(Yii::$app->user->identity->role->ket_role == 'Administrator')
           {
             $temp_format = json_encode($model->format_dokumen);
             $model->format_dokumen = $temp_format;

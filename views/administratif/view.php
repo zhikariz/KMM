@@ -5,24 +5,25 @@ use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Administratif */
-$a= json_decode($model->format_dokumen,true);
-$jml = count($a);
+$a = json_decode($model->format_dokumen);
+$jml = count((array)$a);
+
 if($jml == 1){
-  $format =$a['satker'];
+  $format =$a->satker;
 }else if($jml == 2){
-  if($a['tim'] != ''){
-    $format = $a['satker'] . "-" . $a['tim'];
+  if($a->tim != ''){
+    $format = $a->satker . "-" . $a->tim;
 }else{
-    $format =$a['satker'];
+    $format =$a->satker;
 }
 }else if($jml == 3){
-  if($a['unit'] != ''){
-  $format = $a['satker'] . "-" . $a['tim'] . "-" . $a['unit'];
+  if($a->unit != ''){
+  $format = $a->satker . "-" . $a->tim . "-" . $a->unit;
 }else if($a->tim != ''){
-  $format = $a['satker'] . "-" . $a['tim'];
+  $format = $a->satker . "-" . $a->tim;
 }
 else{
-  $format =$a['satker'];
+  $format =$a->satker;
 }
 }
 $this->title = "Detail Dokumen ".$model->kode_tahun."/".$model->no_dokumen."/".$format."/".$model->kode_jenis_dokumen."/".$model->kode_sifat_dokumen;
@@ -35,7 +36,7 @@ $no_dokumen = $model->kode_tahun."/".$model->no_dokumen."/".$format."/".$model->
 <div class="administratif-view">
 
 
-
+<?php if(Yii::$app->user->identity->role->ket_role == 'Administrator' || Yii::$app->user->identity->role->ket_role == 'Operator'){?>
     <p>
         <?= Html::a('Update', ['update', 'kode'=>$model->kode_jenis_dokumen,'sifat'=>$model->kode_sifat_dokumen,'id' => $model->id_surat_adm], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete', ['delete', 'kode'=>$model->kode_jenis_dokumen,'sifat'=>$model->kode_sifat_dokumen,'id' => $model->id_surat_adm], [
@@ -46,6 +47,7 @@ $no_dokumen = $model->kode_tahun."/".$model->no_dokumen."/".$format."/".$model->
             ],
         ]) ?>
     </p>
+    <?php }?>
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [

@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use \kartik\widgets\Select2;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Notadebet */
@@ -15,23 +16,21 @@ use yii\widgets\ActiveForm;
            ]); ?>
 
     <?php
-      echo Html::activeDropDownList($model, "kode_satuan_kerja", $dataSatker,
-      [
-          'class' => 'btn btn-primary dropdown-toggle col-lg-12',
-          'prompt'=>'Pilih Satuan Kerja',
-      ]);
-      echo "<br>";
-      echo "<br>";
+    echo $form->field($model, 'kode_satuan_kerja')->widget(Select2::classname(),
+    [
+    'data' => $dataSatker,
+    'options'=>['placeholder'=>'Pilih Satuan Kerja'],
+    'pluginOptions' => ['allowClear' => true]
+    ]);
     ?>
 
     <?php
-      echo Html::activeDropDownList($model, "kode_satker_pusat", $dataSatkerPusat,
-      [
-          'class' => 'btn btn-primary dropdown-toggle col-lg-12',
-          'prompt'=>'Pilih Satuan Kerja Pusat',
-      ]);
-      echo "<br>";
-      echo "<br>";
+    echo $form->field($model, 'kode_satker_pusat')->widget(Select2::classname(),
+    [
+    'data' => $dataSatkerPusat,
+    'options'=>['placeholder'=>'Pilih Satuan Kerja Pusat'],
+    'pluginOptions' => ['allowClear' => true]
+    ]);
     ?>
 
 

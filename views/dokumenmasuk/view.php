@@ -13,7 +13,7 @@ $this->params['data'] = $dataJenisDokumen;
 $this->params['data2'] = $dataSifatDokumen;
 ?>
 <div class="dokumenmasuk-view">
-
+<?php if(Yii::$app->user->identity->role->ket_role == 'Administrator' || Yii::$app->user->identity->role->ket_role == 'Operator'){?>
     <p>
         <?= Html::a('Update', ['update', 'sifat'=>$_GET['sifat'],'id' => $model->id_dokumen_masuk], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete', ['delete', 'sifat'=>$_GET['sifat'],'id' => $model->id_dokumen_masuk], [
@@ -24,7 +24,7 @@ $this->params['data2'] = $dataSifatDokumen;
             ],
         ]) ?>
     </p>
-
+<?php }?>
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [

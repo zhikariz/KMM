@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use \kartik\widgets\Select2;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Suratjalan */
@@ -15,13 +16,12 @@ use yii\widgets\ActiveForm;
            ]); ?>
 
     <?php
-      echo Html::activeDropDownList($model, "kode_satuan_kerja", $dataSatker,
-      [
-          'class' => 'btn btn-primary dropdown-toggle col-lg-12',
-          'prompt'=>'Pilih Satuan Kerja',
-      ]);
-      echo "<br>";
-      echo "<br>";
+    echo $form->field($model, 'kode_satuan_kerja[satker]')->widget(Select2::classname(),
+    [
+    'data' => $dataSatker,
+    'options'=>['placeholder'=>'Pilih Satuan Kerja'],
+    'pluginOptions' => ['allowClear' => true]
+    ]);
     ?>
 
     <?= $form->field($model, 'perihal')->textInput(['maxlength' => true]) ?>

@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Administratif */
-$a= $model->format_dokumen;
+$a = $model->format_dokumen;
 $jml = count($a);
 
 if($jml == 1){
@@ -18,7 +18,7 @@ if($jml == 1){
 }else if($jml == 3){
   if($a['unit'] != ''){
   $format = $a['satker'] . "-" . $a['tim'] . "-" . $a['unit'];
-}else if($a->tim != ''){
+}else if($a['tim'] != ''){
   $format = $a['satker'] . "-" . $a['tim'];
 }
 else{

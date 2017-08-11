@@ -96,7 +96,7 @@ $this->params['data2'] = $dataSifatDokumen;
         },
       ],
       [
-        'attribute'=>'user.username',
+        'attribute'=>'user.nama_user',
         'vAlign' => 'middle',
         'hAlign' => 'center',
         'header' => 'Pembuat',
@@ -155,10 +155,10 @@ $this->params['data2'] = $dataSifatDokumen;
     // set your toolbar
     'toolbar'=> [
         ['content'=>
-            Yii::$app->user->identity->role->ket_role=='Operator' || 'Administrator'?
-            Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create','kode'=>$_GET['kode'],'sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-success', 'title'=>Yii::t('app', 'Create Satuan Kerja')])   . ' '.
-              Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index','kode'=>$_GET['kode'],'sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')]):
-                Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index','kode'=>$_GET['kode'],'sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')])
+        Yii::$app->user->identity->role->ket_role== 'Operator' || Yii::$app->user->identity->role->ket_role=='Administrator'?
+        Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create','kode'=>$_GET['kode'],'sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-success', 'title'=>Yii::t('app', 'Create Satuan Kerja')])   . ' '.
+          Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index','kode'=>$_GET['kode'],'sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')]):
+            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index','kode'=>$_GET['kode'],'sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')])
 
         ],
         '{export}',

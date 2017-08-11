@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Suratjalan */
 
-$this->title = $model->kode_tahun."/".$model->no_dokumen."/".$model->format_dokumen."/".$model->kode_satuan_kerja;
+$this->title = "Detail Dokumen ".$model->kode_tahun."/".$model->no_dokumen."/".$model->format_dokumen."/".$model->kode_satuan_kerja;
 $this->params['breadcrumbs'][] = ['label' => 'Surat Jalan', 'url' => ['index','kode'=>$_GET['kode']]];
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['data'] = $dataJenisDokumen;
@@ -14,7 +14,7 @@ $this->params['data2'] = $dataSifatDokumen;
 $no_dokumen=$model->kode_tahun."/".$model->no_dokumen."/".$model->format_dokumen."/".$model->kode_satuan_kerja;
 ?>
 <div class="suratjalan-view">
-
+<?php if(Yii::$app->user->identity->role->ket_role == 'Administrator' || Yii::$app->user->identity->role->ket_role == 'Operator'){?>
     <p>
         <?= Html::a('Update', ['update', 'kode'=>$_GET['kode'],'id' => $model->id_surat_jalan], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete', ['delete', 'kode'=>$_GET['kode'],'id' => $model->id_surat_jalan], [
@@ -25,6 +25,7 @@ $no_dokumen=$model->kode_tahun."/".$model->no_dokumen."/".$model->format_dokumen
             ],
         ]) ?>
     </p>
+    <?php } ?>
 
     <?= DetailView::widget([
         'model' => $model,

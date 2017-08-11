@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use \kartik\widgets\Select2;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Administratif */
@@ -17,66 +18,60 @@ use yii\widgets\ActiveForm;
     $satker = json_decode($format->format_jenis_dokumen,true);
 if($model->isNewRecord){
     if(in_array("Satuan Kerja",$satker)){
-      echo Html::activeDropDownList($model, "format_dokumen[satker]",$dataSatker,
+      echo $form->field($model, 'format_dokumen[satker]')->widget(Select2::classname(),
       [
-          'class' => 'btn btn-primary dropdown-toggle col-lg-12',
-          'prompt'=>'Pilih Satuan Kerja',
+      'data' => $dataSatker,
+      'options'=>['placeholder'=>'Pilih Satuan Kerja'],
+      'pluginOptions' => ['allowClear' => true]
       ]);
-      echo "<br>";
-      echo "<br>";
-
     }
+
     if(in_array("Tim Kerja",$satker)){
-        echo Html::activeDropDownList($model, "format_dokumen[tim]",$dataTim,
-        [
-            'class' => 'btn btn-primary dropdown-toggle col-lg-12',
-            'prompt'=>'Pilih Tim Kerja',
-        ]);
-        echo "<br>";
-        echo "<br>";
+      echo $form->field($model, 'format_dokumen[tim]')->widget(Select2::classname(),
+      [
+        'data' => $dataTim,
+        'options'=>['placeholder'=>'Pilih Tim']
+      ])
+        ->label(false);
 
     }
     if(in_array("Unit Kerja",$satker)){
-        echo Html::activeDropDownList($model, "format_dokumen[unit]",$dataUnit,
-        [
-            'class' => 'btn btn-primary dropdown-toggle col-lg-12',
-            'prompt'=>'Pilih Unit Kerja',
-        ]);
-        echo "<br>";
-        echo "<br>";
+      echo $form->field($model, 'format_dokumen[unit]')->widget(Select2::classname(),
+      [
+        'data' => $dataUnit,
+        'options'=>['placeholder'=>'Pilih Unit']
+      ])
+        ->label(false);
     }
   }else{
     if(in_array("Satuan Kerja",$satker)){
-      echo Html::activeDropDownList($model, "format_dokumen[satker]",$dataSatker,
+      echo $form->field($model, 'format_dokumen[satker]')->widget(Select2::classname(),
       [
-          'class' => 'btn btn-primary dropdown-toggle col-lg-12',
-          'prompt'=>'Pilih Satuan Kerja',
-          'disabled' => Yii::$app->user->identity->role->ket_role != 'Administrator'?true:false
+      'data' => $dataSatker,
+      'disabled' => Yii::$app->user->identity->role->ket_role != 'Administrator'?true:false,
+      'options'=>['placeholder'=>'Pilih Satuan Kerja'],
+      'pluginOptions' => ['allowClear' => true]
       ]);
-      echo "<br>";
-      echo "<br>";
 
     }
     if(in_array("Tim Kerja",$satker)){
-        echo Html::activeDropDownList($model, "format_dokumen[tim]",$dataTim,
-        [
-            'class' => 'btn btn-primary dropdown-toggle col-lg-12',
-            'prompt'=>'Pilih Tim Kerja',
-            'disabled' => Yii::$app->user->identity->role->ket_role != 'Administrator'?true:false,
-        ]);
-        echo "<br>";
-        echo "<br>";
+      echo $form->field($model, 'format_dokumen[tim]')->widget(Select2::classname(),
+      [
+        'data' => $dataTim,
+        'disabled' => Yii::$app->user->identity->role->ket_role != 'Administrator'?true:false,
+        'options'=>['placeholder'=>'Pilih Tim']
+      ])
+        ->label(false);
 
     }
     if(in_array("Unit Kerja",$satker)){
-        echo Html::activeDropDownList($model, "format_dokumen[unit]",$dataUnit,
-        [
-            'class' => 'btn btn-primary dropdown-toggle col-lg-12',
-            'prompt'=>'Pilih Unit Kerja',
-            'disabled' => Yii::$app->user->identity->role->ket_role != 'Administrator'?true:false
-        ]);
-        echo "<br>";
-        echo "<br>";
+      echo $form->field($model, 'format_dokumen[unit]')->widget(Select2::classname(),
+      [
+        'data' => $dataUnit,
+        'disabled' => Yii::$app->user->identity->role->ket_role != 'Administrator'?true:false,
+        'options'=>['placeholder'=>'Pilih Unit']
+      ])
+        ->label(false);
     }
   }
      ?>

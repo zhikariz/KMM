@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\date\DatePicker;
+use \kartik\widgets\Select2;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Dokumenmasuk */
@@ -45,15 +46,13 @@ use kartik\date\DatePicker;
 ]);?>
 
     <?php
-    echo '<label>Kesegeraan</label>';
-    echo Html::activeDropDownList($model, "kesegeraan", ['Biasa'=>'Biasa','Segera'=>'Segera','Sangat Segera'=>'Sangat Segera'],
+    echo $form->field($model, 'kesegeraan')->widget(Select2::classname(),
     [
-        'class' => 'btn btn-primary dropdown-toggle col-lg-12',
-        'prompt'=>'Pilih Kesegeraan Dokumen',
-        'disabled' => Yii::$app->user->identity->role->ket_role != 'Administrator' ? true:false,
-    ]); echo "<Br>";?>
-      <?="<br>"?>
-      <?="<br>"?>
+    'data' => ['Biasa'=>'Biasa','Segera'=>'Segera','Sangat Segera'=>'Sangat Segera'],
+    'disabled' => Yii::$app->user->identity->role->ket_role != 'Administrator' ? true:false,
+    'options'=>['placeholder'=>'Pilih Satuan Kerja Pusat'],
+    'pluginOptions' => ['allowClear' => true]
+  ]);?>
 
     <?= $form->field($model, 'tujuan_disposisi[kepala]')->checkboxlist($dataKepala,['separator'=>'<br>','onclick' => Yii::$app->user->identity->role->ket_role != 'Administrator' ? 'return false;':'return true;']);?>
     <?php }else{
@@ -84,15 +83,13 @@ use kartik\date\DatePicker;
       ]
   ]);?>
 
-      <?php
-      echo '<label>Kesegeraan</label>';
-      echo Html::activeDropDownList($model, "kesegeraan", ['Biasa'=>'Biasa','Segera'=>'Segera','Sangat Segera'=>'Sangat Segera'],
-      [
-          'class' => 'btn btn-primary dropdown-toggle col-lg-12',
-          'prompt'=>'Pilih Kesegeraan Dokumen',
-      ]); echo "<Br>";?>
-        <?="<br>"?>
-        <?="<br>"?>
+  <?php
+  echo $form->field($model, 'kesegeraan')->widget(Select2::classname(),
+  [
+  'data' => ['Biasa'=>'Biasa','Segera'=>'Segera','Sangat Segera'=>'Sangat Segera'],
+  'options'=>['placeholder'=>'Pilih Kesegeraan'],
+  'pluginOptions' => ['allowClear' => true]
+]);?>
 
       <?= $form->field($model, 'tujuan_disposisi[kepala]')->checkboxlist($dataKepala,['separator'=>'<br>']);?>
       <?php }?>

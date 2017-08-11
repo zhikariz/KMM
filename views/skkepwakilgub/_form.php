@@ -16,7 +16,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'perihal')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'pengesah')->checkboxlist($dataPengesah);?>
+    <?= $form->field($model, 'pengesah')->checkboxlist($dataPengesah,['separator'=>'<br>']);?>
 
     <?= $form->field($model, 'file_dokumen')->label('File Dokumen')->fileInput() ?>
 
