@@ -69,7 +69,10 @@ class NotadebetController extends Controller
       $data2 = $this->getSifatDokumen();
       $model=$this->findModel($id);
       $temp = json_decode($model->pengesah);
-      $vl = implode(",",$temp);
+      for($i=0;$i<count($temp);$i++){
+        $a[$i]='<button class="btn-xs btn btn-info" style="margin: 1px;">'.$temp[$i].'</button>';
+      }
+       $vl = implode('<br>',$a);
       $model->pengesah = $vl;
         return $this->render('view', [
             'model' => $model,

@@ -51,7 +51,10 @@ $this->params['data2'] = $dataSifatDokumen;
         'hAlign' => 'center',
         'content' => function($model,$key,$index) use ($dataNota){
           $temp=json_decode($dataNota[$index]['pengesah']);
-           $vl = implode("<br>",$temp);
+          for($i=0;$i<count($temp);$i++){
+            $a[$i]='<button class="btn-xs btn btn-info" style="margin: 1px;">'.$temp[$i].'</button>';
+          }
+           $vl = implode('<br>',$a);
            return $vl;
         }
 

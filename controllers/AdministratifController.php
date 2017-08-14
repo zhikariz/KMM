@@ -75,8 +75,11 @@ class AdministratifController extends Controller
       $data = $this->getJenisDokumen();
       $data2 = $this->getSifatDokumen();
       $model=$this->findModel($id);
-     $temp=json_decode($model->pengesah);
-      $vl = implode(",",$temp);
+     $temp=json_decode($model->pengesah,true);
+     for($i=0;$i<count($temp);$i++){
+       $a[$i]='<button class="btn-xs btn btn-info" style="margin: 1px;">'.$temp[$i].'</button>';
+     }
+      $vl = implode('<br>',$a);
       $model->pengesah = $vl;
         return $this->render('view', [
             'model' => $model,

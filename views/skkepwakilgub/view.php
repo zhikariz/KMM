@@ -55,7 +55,10 @@ $no_dokumen = $model->kode_tahun."/".$model->no_dokumen."/".$model->format_dokum
               },
           ],
             'perihal',
-            'pengesah',
+            [
+              'attribute'=>'pengesah',
+              'format'=>'raw',
+            ],
             [
               'attribute' => 'user.nama_user',
             ],

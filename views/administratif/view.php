@@ -74,7 +74,11 @@ $no_dokumen = $model->kode_tahun."/".$model->no_dokumen."/".$format."/".$model->
                 return $no_dokumen;
                 },
             ],
-            'pengesah',
+            [
+              'attribute'=>'pengesah',
+              'format'=>'raw',
+              
+            ],
             [
               'attribute'=>'kodeJenisDokumen.ket_jenis_dokumen',
               'label'=>'Jenis Dokumen'

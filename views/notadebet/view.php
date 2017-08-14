@@ -56,7 +56,10 @@ return $no_dokumen;
             'perihal',
             'user.nama_user',
             'waktu_input',
-            'pengesah',
+            [
+              'attribute'=>'pengesah',
+              'format'=>'raw'
+            ],
             [
             'attribute'=>'file_dokumen',
             'format'=>'raw',

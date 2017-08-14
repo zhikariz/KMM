@@ -52,7 +52,10 @@ $no_dokumen=$model->kode_tahun."/".$model->no_dokumen."/".$model->format_dokumen
           'value'=>function($data,$row) use ($no_dokumen){
 return $no_dokumen;
               }],
-            'pengesah',
+            [
+              'attribute'=>'pengesah',
+              'format'=>'raw'
+            ],
             'user.nama_user',
             'waktu_input',
             [
