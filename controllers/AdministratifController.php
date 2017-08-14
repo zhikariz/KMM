@@ -135,6 +135,8 @@ class AdministratifController extends Controller
             $model->id_user = Yii::$app->user->identity->id_user;
             $model->kode_jenis_dokumen = $kode;
             $model->kode_sifat_dokumen = $sifat;
+            $model->persetujuan = 'Belum Disetujui';
+            $model->ket_persetujuan=NULL;
 
             $model->save();
             if($model->file_dokumen != NULL)
@@ -209,6 +211,8 @@ class AdministratifController extends Controller
           $model->id_user = $dataAdm->id_user;
           $model->kode_jenis_dokumen = $kode;
           $model->kode_sifat_dokumen = $sifat;
+          $model->persetujuan='Belum Disetujui';
+          $model->ket_persetujuan=NULL;
           $model->save(false);
           if($model->file_dokumen != $dataAdm->file_dokumen)
           $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);
@@ -248,6 +252,34 @@ class AdministratifController extends Controller
         $this->findModel($id)->delete();
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
+        return $this->redirect(['index','kode'=>$kode,'sifat'=>$sifat,
+        'dataJenisDokumen' => $data,
+        'dataSifatDokumen' => $data2]);
+    }
+
+    public function actionApprove($kode,$sifat,$id)
+    {
+        $data = $this->getJenisDokumen();
+        $data2 = $this->getSifatDokumen();
+        $model = $this->findModel($id);
+          $model->persetujuan = 'Disetujui';
+          $model->ket_persetujuan = 'Telah Disetujui Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
+          $model->save();
+          return $this->redirect(['index','kode'=>$kode,'sifat'=>$sifat,
+          'dataJenisDokumen' => $data,
+          'dataSifatDokumen' => $data2]);
+
+
+    }
+
+    public function actionReject($kode,$sifat,$id)
+    {
+        $data = $this->getJenisDokumen();
+        $data2 = $this->getSifatDokumen();
+        $model = $this->findModel($id);
+          $model->persetujuan = 'Ditolak';
+          $model->ket_persetujuan = 'Telah Ditolak Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
+          $model->save();
         return $this->redirect(['index','kode'=>$kode,'sifat'=>$sifat,
         'dataJenisDokumen' => $data,
         'dataSifatDokumen' => $data2]);

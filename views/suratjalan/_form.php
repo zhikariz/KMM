@@ -16,7 +16,7 @@ use \kartik\widgets\Select2;
            ]); ?>
 
     <?php
-    echo $form->field($model, 'kode_satuan_kerja[satker]')->widget(Select2::classname(),
+    echo $form->field($model, 'kode_satuan_kerja')->widget(Select2::classname(),
     [
     'data' => $dataSatker,
     'options'=>['placeholder'=>'Pilih Satuan Kerja'],

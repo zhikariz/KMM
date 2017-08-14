@@ -24,7 +24,24 @@ $this->params['data2'] = $dataSifatDokumen;
             ],
         ]) ?>
     </p>
-<?php }?>
+<?php }else{?>
+  <p>
+    <?= Html::a('Setujui', ['approve', 'sifat'=>$_GET['sifat'],'id' => $model->id_dokumen_masuk], [
+        'class' => 'btn btn-success',
+        'data' => [
+            'confirm' => 'Apakah kamu ingin menyetujui surat ini?',
+            'method' => 'post',
+        ],
+    ]) ?>
+    <?= Html::a('Tolak', ['reject', 'sifat'=>$_GET['sifat'],'id' => $model->id_dokumen_masuk], [
+        'class' => 'btn btn-danger',
+        'data' => [
+            'confirm' => 'Apakah kamu ingin menolak surat ini?',
+            'method' => 'post',
+        ],
+    ]) ?>
+  </p>
+  <?php }?>
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
@@ -80,6 +97,22 @@ $this->params['data2'] = $dataSifatDokumen;
               'label' => 'Pembuat'
             ],
             'waktu_input',
+            [
+              'attribute'=>'persetujuan',
+              'format'=>'raw',
+              'value'=>function($data,$row){
+                  if($data->persetujuan == 'Disetujui'){
+                    return '<button class="btn-xs btn btn-success" style="margin: 1px;">'.$data->persetujuan.'</button';
+                  }else if($data->persetujuan == 'Belum Disetujui'){
+                    return '<button class="btn-xs btn btn-warning" style="margin: 1px;">'.$data->persetujuan.'</button';
+                  }else{
+                    return '<button class="btn-xs btn btn-danger" style="margin: 1px;">'.$data->persetujuan.'</button';
+                  }
+                  },
+            ],
+            [
+              'attribute'=>'ket_persetujuan',
+            ]
         ],
     ]) ?>
 

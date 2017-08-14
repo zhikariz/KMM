@@ -47,7 +47,25 @@ $no_dokumen = $model->kode_tahun."/".$model->no_dokumen."/".$format."/".$model->
             ],
         ]) ?>
     </p>
-    <?php }?>
+    <?php }else{?>
+      <p>
+        <?= Html::a('Setujui', ['approve', 'kode'=>$model->kode_jenis_dokumen,'sifat'=>$model->kode_sifat_dokumen,'id' => $model->id_surat_adm], [
+            'class' => 'btn btn-success',
+            'data' => [
+                'confirm' => 'Apakah kamu ingin menyetujui surat ini?',
+                'method' => 'post',
+            ],
+        ]) ?>
+        <?= Html::a('Tolak', ['reject', 'kode'=>$model->kode_jenis_dokumen,'sifat'=>$model->kode_sifat_dokumen,'id' => $model->id_surat_adm], [
+            'class' => 'btn btn-danger',
+            'data' => [
+                'confirm' => 'Apakah kamu ingin menolak surat ini?',
+                'method' => 'post',
+            ],
+        ]) ?>
+
+      </p>
+      <?php }?>
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
@@ -75,7 +93,23 @@ $no_dokumen = $model->kode_tahun."/".$model->no_dokumen."/".$format."/".$model->
             'attribute'=>'file_dokumen',
             'format'=>'raw',
             'value'=>Html::a($model->file_dokumen, "uploads/$model->file_dokumen", ['target'=>'_blank']),
-        ],
+            ],
+            [
+              'attribute'=>'persetujuan',
+              'format'=>'raw',
+              'value'=>function($data,$row){
+                  if($data->persetujuan == 'Disetujui'){
+                    return '<button class="btn-xs btn btn-success" style="margin: 1px;">'.$data->persetujuan.'</button';
+                  }else if($data->persetujuan == 'Belum Disetujui'){
+                    return '<button class="btn-xs btn btn-warning" style="margin: 1px;">'.$data->persetujuan.'</button';
+                  }else{
+                    return '<button class="btn-xs btn btn-danger" style="margin: 1px;">'.$data->persetujuan.'</button';
+                  }
+                  },
+            ],
+            [
+              'attribute'=>'ket_persetujuan',
+            ]
         ],
     ]) ?>
 

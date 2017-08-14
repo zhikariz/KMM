@@ -116,6 +116,8 @@ class SuratjalanController extends Controller
           $pengesah_temp = $model->pengesah;
           $model->pengesah = json_encode($pengesah_temp);
           $model->format_dokumen = $kode;
+          $model->persetujuan = 'Belum Disetujui';
+          $model->ket_persetujuan = NULL;
           $model->save();
           if($model->file_dokumen != NULL)
           $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);
@@ -154,12 +156,14 @@ class SuratjalanController extends Controller
           }
           $pengesah_temp = $model->pengesah;
           $model->pengesah = json_encode($pengesah_temp);
+          $model->persetujuan = 'Belum Disetujui';
+          $model->ket_persetujuan = NULL;
           $model->save();
           if($model->file_dokumen != $dataSurat->file_dokumen){
           $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);}
             return $this->redirect(['view', 'kode'=>$kode,'id' => $model->id_surat_jalan]);
         } else {
-          $temp_model_pengesah = json_decode($model->pengesah);
+          $temp_model_pengesah = json_decode($model->pengesah,true);
           $model->pengesah = $temp_model_pengesah;
             return $this->render('update', [
                 'model' => $model,
@@ -180,6 +184,26 @@ class SuratjalanController extends Controller
     public function actionDelete($kode,$id)
     {
         $this->findModel($id)->delete();
+
+        return $this->redirect(['index','kode'=>$kode]);
+    }
+
+    public function actionApprove($kode,$id)
+    {
+      $model = $this->findModel($id);
+        $model->persetujuan = 'Disetujui';
+        $model->ket_persetujuan = 'Telah Disetujui Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
+        $model->save();
+
+        return $this->redirect(['index','kode'=>$kode]);
+    }
+
+    public function actionReject($kode,$id)
+    {
+      $model = $this->findModel($id);
+        $model->persetujuan = 'Ditolak';
+        $model->ket_persetujuan = 'Telah Ditolak Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
+        $model->save();
 
         return $this->redirect(['index','kode'=>$kode]);
     }

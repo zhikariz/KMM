@@ -118,6 +118,8 @@ class NotadebetController extends Controller
             $model->pengesah = json_encode($pengesah_temp);
             $model->waktu_input = date("d-m-Y H:i:s");
             $model->id_user = Yii::$app->user->identity->id_user;
+            $model->persetujuan = 'Belum Disetujui';
+            $model->ket_persetujuan=NULL;
 
             $model->save();
             if($model->file_dokumen != NULL)
@@ -161,6 +163,8 @@ class NotadebetController extends Controller
           }
           $pengesah_temp = $model->pengesah;
           $model->pengesah = json_encode($pengesah_temp);
+          $model->persetujuan = 'Belum Disetujui';
+          $model->ket_persetujuan=NULL;
             $model->save();
             if($model->file_dokumen != $dataNota->file_dokumen){
             $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);}
@@ -188,6 +192,26 @@ class NotadebetController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
+
+        return $this->redirect(['index']);
+    }
+
+    public function actionApprove($id)
+    {
+      $model = $this->findModel($id);
+        $model->persetujuan = 'Disetujui';
+        $model->ket_persetujuan = 'Telah Disetujui Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
+        $model->save();
+
+        return $this->redirect(['index']);
+    }
+
+    public function actionReject($id)
+    {
+      $model = $this->findModel($id);
+        $model->persetujuan = 'Ditolak';
+        $model->ket_persetujuan = 'Telah Ditolak Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
+        $model->save();
 
         return $this->redirect(['index']);
     }
