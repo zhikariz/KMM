@@ -47,7 +47,19 @@ class DokumenmasukController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$sifat);
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
-        $data_dokumen_masuk = Dokumenmasuk::find()->where(['kode_sifat_dokumen'=>$sifat])->all();
+
+        switch (Yii::$app->user->identity->role->ket_role) {
+      case 'Administrator':
+          $data_dokumen_masuk = Dokumenmasuk::find()->where(['kode_sifat_dokumen'=>$sifat])->all();
+          break;
+      case 'Operator':
+          $data_dokumen_masuk = Dokumenmasuk::findBySql('SELECT * FROM dokumenmasuk WHERE kode_sifat_dokumen="'.$sifat.'" AND (persetujuan = "Disetujui" OR persetujuan = "Ditolak");')->all();
+          break;
+      case 'Approval':
+          $data_dokumen_masuk = Dokumenmasuk::find()->where(['kode_sifat_dokumen'=>$sifat,'persetujuan'=>'Belum Disetujui'])->all();
+          break;
+
+  }
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

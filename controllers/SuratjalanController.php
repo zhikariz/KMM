@@ -45,7 +45,19 @@ class SuratjalanController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
-        $dataSurat = Suratjalan::find()->all();
+        switch (Yii::$app->user->identity->role->ket_role) {
+      case 'Administrator':
+          $dataSurat = Suratjalan::find()->all();
+          break;
+      case 'Operator':
+          $dataSurat = Suratjalan::findBySql('SELECT * FROM suratjalan WHERE (persetujuan = "Disetujui" OR persetujuan = "Ditolak")')->all();
+          break;
+      case 'Approval':
+          $dataSurat = Suratjalan::find()->where(['persetujuan'=>'Belum Disetujui'])->all();
+          break;
+
+  }
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

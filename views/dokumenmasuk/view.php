@@ -77,11 +77,14 @@ $this->params['data2'] = $dataSifatDokumen;
             ],
             [
             'attribute'=>'petunjuk_disposisi',
-            'format' => 'html',
+            'format' => 'raw',
             'value'=>function($data,$row) use ($dataDokumenMasuk){
               $temp=json_decode($dataDokumenMasuk['petunjuk_disposisi'],true);
-              $vl=implode("<br>",$temp);
-               return $vl;
+              for($i=0;$i<count($temp);$i++){
+                $vl[$i]='<button class="btn-xs btn btn-warning" style="margin: 1px;">'.$temp[$i].'</button><br>';
+              }
+              $hasil = implode($vl);
+               return $hasil;
             }
             ],
             'ket_disposisi_kepala',

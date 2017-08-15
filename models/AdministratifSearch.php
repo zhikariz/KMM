@@ -41,13 +41,20 @@ class AdministratifSearch extends Administratif
      */
     public function search($params,$kode,$sifat)
     {
-         /*if(Yii::$app->user->identity->role->ket_role == 'Administrator' || Yii::$app->user->identity->role->ket_role == 'Operator')
-         {
-          $query = Administratif::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat,'persetujuan'=>'Disetujui']);
-        }else{
-          $query = Administratif::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat,'persetujuan'=>'Belum Disetujui']);
-        }*/
+      switch (Yii::$app->user->identity->role->ket_role) {
+    case 'Administrator':
         $query = Administratif::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat]);
+        break;
+    case 'Operator':
+        $query = Administratif::findBySql('SELECT * FROM `administratif` WHERE kode_jenis_dokumen = "'.$kode.'" AND kode_sifat_dokumen = "'.$sifat.'" AND (persetujuan = "Disetujui" OR persetujuan = "Ditolak")');
+        break;
+    case 'Approval':
+        $query = Administratif::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat,'persetujuan'=>'Belum Disetujui']);
+        break;
+
+}
+
+
 
         // add conditions that should always apply here
 

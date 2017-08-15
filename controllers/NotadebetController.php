@@ -47,7 +47,18 @@ class NotadebetController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
-        $dataNota = Notadebet::find()->all();
+        switch (Yii::$app->user->identity->role->ket_role) {
+      case 'Administrator':
+          $dataNota = Notadebet::find()->all();
+          break;
+      case 'Operator':
+          $dataNota = Notadebet::findBySql('SELECT * FROM notadebet WHERE (persetujuan = "Disetujui" OR persetujuan = "Ditolak")')->all();
+          break;
+      case 'Approval':
+          $dataNota = Notadebet::find()->where(['persetujuan'=>'Belum Disetujui'])->all();
+          break;
+
+  }
 
         return $this->render('index', [
             'searchModel' => $searchModel,

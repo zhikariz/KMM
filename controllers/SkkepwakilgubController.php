@@ -45,7 +45,19 @@ class SkkepwakilgubController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$kode);
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
-        $dataSk = SkKepwakilGub::find()->where(['format_dokumen'=>$kode])->all();
+        switch (Yii::$app->user->identity->role->ket_role) {
+      case 'Administrator':
+          $dataSk = SkKepwakilGub::find()->where(['format_dokumen'=>$kode])->all();
+          break;
+      case 'Operator':
+          $dataSk = SkKepwakilGub::findBySql('SELECT * FROM sk_kepwakil_gub WHERE format_dokumen = "'.$kode.'" AND (persetujuan = "Disetujui" OR persetujuan = "Ditolak")')->all();
+          break;
+      case 'Approval':
+          $dataSk = SkKepwakilGub::find()->where(['format_dokumen'=>$kode,'persetujuan'=>'Belum Disetujui'])->all();
+          break;
+
+  }
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

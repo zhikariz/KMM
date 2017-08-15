@@ -41,7 +41,19 @@ class DokumenmasukSearch extends Dokumenmasuk
      */
     public function search($params,$sifat)
     {
-        $query = Dokumenmasuk::find()->where(['kode_sifat_dokumen'=>$sifat]);
+
+        switch (Yii::$app->user->identity->role->ket_role) {
+      case 'Administrator':
+          $query = Dokumenmasuk::find()->where(['kode_sifat_dokumen'=>$sifat]);
+          break;
+      case 'Operator':
+          $query = Dokumenmasuk::findBySql('SELECT * FROM dokumenmasuk WHERE kode_sifat_dokumen="'.$sifat.'" AND (persetujuan = "Disetujui" OR persetujuan = "Ditolak")');
+          break;
+      case 'Approval':
+          $query = Dokumenmasuk::find()->where(['kode_sifat_dokumen'=>$sifat,'persetujuan'=>'Belum Disetujui']);
+          break;
+
+  }
 
         // add conditions that should always apply here
 

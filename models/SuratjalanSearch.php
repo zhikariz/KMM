@@ -41,8 +41,18 @@ class SuratjalanSearch extends Suratjalan
      */
     public function search($params)
     {
-        $query = Suratjalan::find();
+        switch (Yii::$app->user->identity->role->ket_role) {
+      case 'Administrator':
+          $query = Suratjalan::find();
+          break;
+      case 'Operator':
+          $query = Suratjalan::findBySql('SELECT * FROM suratjalan WHERE (persetujuan = "Disetujui" OR persetujuan = "Ditolak")');
+          break;
+      case 'Approval':
+          $query = Suratjalan::find()->where(['persetujuan'=>'Belum Disetujui']);
+          break;
 
+  }
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([

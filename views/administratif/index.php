@@ -95,8 +95,7 @@ $this->params['data2'] = $dataSifatDokumen;
             return "File Tidak Ada";
           }else{
           return Html::a($temp, "uploads/$temp", ['target'=>'_blank','data-pjax'=>"0"]);}
-
-        },
+      },
       ],
       [
         'attribute'=>'user.nama_user',

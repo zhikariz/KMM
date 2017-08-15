@@ -52,7 +52,17 @@ class AdministratifController extends Controller
         $sd = new Sifatdokumen();
         $data3 = $jd->find()->where(['kode_jenis_dokumen'=>$kode])->one();
         $data4 = $sd->find()->where(['kode_sifat_dokumen'=>$sifat])->one();
-        $data_adm = Administratif::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat])->all();
+        switch (Yii::$app->user->identity->role->ket_role) {
+      case 'Administrator':
+          $data_adm = Administratif::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat])->all();
+          break;
+      case 'Operator':
+          $data_adm = Administratif::findBySql('SELECT * FROM `administratif` WHERE kode_jenis_dokumen = "'.$kode.'" AND kode_sifat_dokumen = "'.$sifat.'" AND (persetujuan = "Disetujui" OR persetujuan = "Ditolak")')->all();
+          break;
+      case 'Approval':
+          $data_adm = Administratif::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat,'persetujuan'=>'Belum Disetujui'])->all();
+          break;
+        }
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

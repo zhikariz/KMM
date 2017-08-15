@@ -41,7 +41,19 @@ class NotadebetSearch extends Notadebet
      */
     public function search($params)
     {
-        $query = Notadebet::find();
+
+        switch (Yii::$app->user->identity->role->ket_role) {
+      case 'Administrator':
+          $query = Notadebet::find();
+          break;
+      case 'Operator':
+          $query = Notadebet::findBySql('SELECT * FROM notadebet WHERE (persetujuan = "Disetujui" OR persetujuan = "Ditolak")');
+          break;
+      case 'Approval':
+          $query = Notadebet::find()->where(['persetujuan'=>'Belum Disetujui']);
+          break;
+
+  }
 
         // add conditions that should always apply here
 
