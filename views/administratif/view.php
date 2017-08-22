@@ -35,35 +35,6 @@ $no_dokumen = $model->kode_tahun."/".$model->no_dokumen."/".$format."/".$model->
 ?>
 <div class="administratif-view">
 
-
-<?php if(Yii::$app->user->identity->role->ket_role == 'Administrator'){?>
-  <p>
-      <?= Html::a('Update', ['update', 'kode'=>$model->kode_jenis_dokumen,'sifat'=>$model->kode_sifat_dokumen,'id' => $model->id_surat_adm], ['class' => 'btn btn-primary']) ?>
-      <?= Html::a('Delete', ['delete', 'kode'=>$model->kode_jenis_dokumen,'sifat'=>$model->kode_sifat_dokumen,'id' => $model->id_surat_adm], [
-          'class' => 'btn btn-danger',
-          'data' => [
-              'confirm' => 'Are you sure you want to delete this item?',
-              'method' => 'post',
-          ],
-      ]) ?></p><p>
-    <?= Html::a('Setujui', ['approve', 'kode'=>$model->kode_jenis_dokumen,'sifat'=>$model->kode_sifat_dokumen,'id' => $model->id_surat_adm], [
-        'class' => 'btn btn-success',
-        'data' => [
-            'confirm' => 'Apakah kamu ingin menyetujui surat ini?',
-            'method' => 'post',
-        ],
-    ]) ?>
-    <?= Html::a('Tolak', ['reject', 'kode'=>$model->kode_jenis_dokumen,'sifat'=>$model->kode_sifat_dokumen,'id' => $model->id_surat_adm], [
-        'class' => 'btn btn-danger',
-        'data' => [
-            'confirm' => 'Apakah kamu ingin menolak surat ini?',
-            'method' => 'post',
-        ],
-    ]) ?>
-
-  </p>
-  <?php
-}else if(Yii::$app->user->identity->role->ket_role == 'Operator'){?>
     <p>
         <?= Html::a('Update', ['update', 'kode'=>$model->kode_jenis_dokumen,'sifat'=>$model->kode_sifat_dokumen,'id' => $model->id_surat_adm], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete', ['delete', 'kode'=>$model->kode_jenis_dokumen,'sifat'=>$model->kode_sifat_dokumen,'id' => $model->id_surat_adm], [
@@ -74,25 +45,7 @@ $no_dokumen = $model->kode_tahun."/".$model->no_dokumen."/".$format."/".$model->
             ],
         ]) ?>
     </p>
-    <?php }else{?>
-      <p>
-        <?= Html::a('Setujui', ['approve', 'kode'=>$model->kode_jenis_dokumen,'sifat'=>$model->kode_sifat_dokumen,'id' => $model->id_surat_adm], [
-            'class' => 'btn btn-success',
-            'data' => [
-                'confirm' => 'Apakah kamu ingin menyetujui surat ini?',
-                'method' => 'post',
-            ],
-        ]) ?>
-        <?= Html::a('Tolak', ['reject', 'kode'=>$model->kode_jenis_dokumen,'sifat'=>$model->kode_sifat_dokumen,'id' => $model->id_surat_adm], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Apakah kamu ingin menolak surat ini?',
-                'method' => 'post',
-            ],
-        ]) ?>
 
-      </p>
-      <?php }?>
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [

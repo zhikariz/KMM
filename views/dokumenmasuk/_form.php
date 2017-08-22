@@ -96,8 +96,6 @@ use \kartik\widgets\Select2;
 
     <?= $form->field($model, 'tujuan_disposisi[unit]')->checkboxlist($dataUnit,['separator'=>'<br>'])->label(false);?>
 
-    <?= $form->field($model, "tujuan_disposisi[tim]")->checkboxlist($dataTim,['separator'=>'<br>'])->label(false);?>
-
     <?= $form->field($model, 'petunjuk_disposisi')->checkboxlist($dataPetunjuk,['separator'=>'<br>']); ?>
       <?php if(!$model->isNewRecord){?>
     <?= $form->field($model, 'ket_disposisi_kepala')->textarea(['rows' => '3','disabled' => Yii::$app->user->identity->role->ket_role != 'Administrator' ? true:false,]) ?>

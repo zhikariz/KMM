@@ -176,7 +176,7 @@ $this->params['data2'] = $dataSifatDokumen;
         'heading' => "Administratif ".$kode['ket_jenis_dokumen'],
     ],
     'persistResize'=>false,
-    'toggleDataOptions'=>['minCount'=>10],
+    'toggleDataOptions'=>['minCount'=>5],
     ]); ?>
     <?php Pjax::end(); ?>
 </div>

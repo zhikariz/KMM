@@ -78,6 +78,9 @@ border-left-color: #fff;
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
           <ul class="nav navbar-nav">
+            <?php
+            if(Yii::$app->user->identity->role->ket_role=='Administrator' || Yii::$app->user->identity->role->ket_role=='Operator'){
+            ?>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dokumen Masuk <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
@@ -118,6 +121,52 @@ border-left-color: #fff;
                   <li><?=Html::a('Nota Debet', ['notadebet/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Nota Debet')])?></li>
                 </ul>
               </li>
+
+              <?php }
+              if(Yii::$app->user->identity->role->ket_role=='Administrator' || Yii::$app->user->identity->role->ket_role=='Approval'){
+              ?>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Approval Dokumen Keluar <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                  <li class="dropdown-submenu">
+        <a tabindex="-1" href="#">Administratif</a>
+        <ul class="dropdown-menu">
+        <?php
+        foreach($this->params['data'] as $index){
+          ?>
+          <li class="dropdown-submenu">
+            <a href="#"><?= $index['ket_jenis_dokumen'];?></a>
+            <ul class="dropdown-menu">
+              <?php foreach($this->params['data2'] as $index2){
+                ?>
+                <li><?=Html::a($index2['ket_sifat_dokumen'], ['tempadm/index','kode'=>$index['kode_jenis_dokumen'],'sifat'=>$index2['kode_sifat_dokumen']], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Satuan Kerja')])?></li>
+                <?php
+              }?>
+            </ul>
+          </li>
+          <?php
+        }?>
+
+        </ul>
+                  </li>
+                  <li><?=Html::a('SK Kepala Perwakilan', ['skkepwakilgub/index','kode'=>'Kep/KPwBI/Slo/Intern'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Administratif')])?></li>
+                  <li><?=Html::a('SK Gubernur BI', ['skkepwakilgub/index','kode'=>'Kep.GBI/Slo'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'SK Kep Wakil & SK Gub BI')])?></li>
+                  <li><?=Html::a('Surat Jalan', ['suratjalan/index','kode'=>'Perjl.'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Surat Jalan')])?></li>
+                  <li><?=Html::a('Nota Debet', ['notadebet/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Nota Debet')])?></li>
+                </ul>
+              </li>
+
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Approval Dokumen Masuk <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                  <?php foreach($this->params['data2'] as $index2){
+                    ?>
+                    <li><?=Html::a($index2['ket_sifat_dokumen'], ['dokumenmasuk/index','sifat'=>$index2['kode_sifat_dokumen']], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Satuan Kerja')])?></li>
+                    <?php
+                  }?>
+                </ul>
+              </li>
+              <?php }?>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Lain - Lain <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
@@ -155,7 +204,7 @@ border-left-color: #fff;
 
         <div class="navbar-custom-menu">
           <ul class="nav navbar-nav">
-            <?php if(Yii::$app->user->identity->id_role == 1){?>
+            <?php if(Yii::$app->user->identity->role->ket_role == 'Administrator'){?>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Management <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">

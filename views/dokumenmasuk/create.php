@@ -17,7 +17,6 @@ $this->params['data2'] = $dataSifatDokumen;
     <?= $this->render('_form', [
         'model' => $model,
         'dataUnit'=>$dataUnit,
-        'dataTim'=>$dataTim,
         'dataPetunjuk'=>$dataPetunjuk,
         'dataKepala'=>$dataKepala,
     ]) ?>

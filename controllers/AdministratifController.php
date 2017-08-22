@@ -3,20 +3,23 @@
 namespace app\controllers;
 
 use Yii;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
+use yii\web\UploadedFile;
 use app\models\Tahun;
 use app\models\Jenisdokumen;
 use app\models\Sifatdokumen;
 use app\models\Administratif;
 use app\models\AdministratifSearch;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
 use app\models\Satuankerja;
 use app\models\Unitkerja;
 use app\models\Tim;
 use app\models\Pengesah;
-use yii\web\UploadedFile;
+use app\models\TempAdm;
+
+
 
 /**
  * AdministratifController implements the CRUD actions for Administratif model.
@@ -57,10 +60,7 @@ class AdministratifController extends Controller
           $data_adm = Administratif::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat])->all();
           break;
       case 'Operator':
-          $data_adm = Administratif::findBySql('SELECT * FROM `administratif` WHERE kode_jenis_dokumen = "'.$kode.'" AND kode_sifat_dokumen = "'.$sifat.'" AND (persetujuan = "Disetujui" OR persetujuan = "Ditolak")')->all();
-          break;
-      case 'Approval':
-          $data_adm = Administratif::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat,'persetujuan'=>'Belum Disetujui'])->all();
+          $data_adm = Administratif::findBySql('SELECT * FROM `administratif` WHERE kode_jenis_dokumen = "'.$kode.'" AND kode_sifat_dokumen = "'.$sifat.'" AND (persetujuan = NULL OR persetujuan = "Disetujui" OR persetujuan = "Ditolak")')->all();
           break;
         }
         return $this->render('index', [
@@ -148,7 +148,7 @@ class AdministratifController extends Controller
             $model->id_user = Yii::$app->user->identity->id_user;
             $model->kode_jenis_dokumen = $kode;
             $model->kode_sifat_dokumen = $sifat;
-            $model->persetujuan = 'Belum Disetujui';
+            $model->persetujuan = NULL;
             $model->ket_persetujuan=NULL;
 
             $model->save();
@@ -187,6 +187,7 @@ class AdministratifController extends Controller
     public function actionUpdate($kode,$sifat,$id)
     {
         $model = $this->findModel($id);
+        $temp_model = new TempAdm();
         $jd = new Jenisdokumen();
         $dataAdm = $this->findModel($id);
         //$dataAdm = Administratif::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat])->one();
@@ -205,30 +206,35 @@ class AdministratifController extends Controller
         $data2 = $this->getSifatDokumen();
 
         if ($model->load(Yii::$app->request->post()) ) {
-          $model->file_dokumen = UploadedFile::getInstance($model,'file_dokumen');
-          if($model->file_dokumen == NULL){
-            $model->file_dokumen = $dataAdm->file_dokumen;
+          $temp_model->file_dokumen = UploadedFile::getInstance($model,'file_dokumen');
+          if($temp_model->file_dokumen == NULL){
+            $temp_model->file_dokumen = $dataAdm->file_dokumen;
           }
           if(Yii::$app->user->identity->role->ket_role == 'Administrator')
           {
             $temp_format = json_encode($model->format_dokumen);
-            $model->format_dokumen = $temp_format;
+            $temp_model->format_dokumen = $temp_format;
           }else{
-            $model->format_dokumen = $dataAdm->format_dokumen;
+            $temp_model->format_dokumen = $dataAdm->format_dokumen;
           }
-          $model->kode_tahun = $dataAdm->kode_tahun;
-          $model->no_dokumen = $dataAdm->no_dokumen;
+          $temp_model->id_surat_adm = $model->id_surat_adm;
+          $temp_model->kode_tahun = $dataAdm->kode_tahun;
+          $temp_model->no_dokumen = $model->no_dokumen;
           $pengesah_temp = $model->pengesah;
-          $model->pengesah = json_encode($pengesah_temp);
-          $model->waktu_input = $dataAdm->waktu_input;
-          $model->id_user = $dataAdm->id_user;
-          $model->kode_jenis_dokumen = $kode;
-          $model->kode_sifat_dokumen = $sifat;
-          $model->persetujuan='Belum Disetujui';
-          $model->ket_persetujuan=NULL;
-          $model->save(false);
-          if($model->file_dokumen != $dataAdm->file_dokumen)
-          $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);
+          $temp_model->pengesah = json_encode($pengesah_temp);
+          $temp_model->waktu_input = $dataAdm->waktu_input;
+          $temp_model->id_user = $dataAdm->id_user;
+          $temp_model->kode_jenis_dokumen = $kode;
+          $temp_model->kode_sifat_dokumen = $sifat;
+          $temp_model->perihal = $model->perihal;
+          $temp_model->editor = Yii::$app->user->identity->nama_user;
+          $this->actionBelum($kode,$sifat,$id);
+          $model->save();
+
+          $temp_model->save(false);
+          if($temp_model->file_dokumen != $dataAdm->file_dokumen){
+          $temp_model->file_dokumen->saveAs('uploads/' . $temp_model->file_dokumen->baseName . '.' . $temp_model->file_dokumen->extension);
+        }
 
             return $this->redirect(['view', 'model'=>$model,'kode'=>$kode,'sifat'=>$sifat,'id'=>$model->id_surat_adm,'id' => $model->id_surat_adm,
             'dataJenisDokumen' => $data,
@@ -270,33 +276,19 @@ class AdministratifController extends Controller
         'dataSifatDokumen' => $data2]);
     }
 
-    public function actionApprove($kode,$sifat,$id)
+    public function actionBelum($kode,$sifat,$id)
     {
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
         $model = $this->findModel($id);
-          $model->persetujuan = 'Disetujui';
-          $model->ket_persetujuan = 'Telah Disetujui Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
+
+          $model->persetujuan = 'Belum Disetujui';
+        $model->ket_persetujuan=NULL;
           $model->save();
-          return $this->redirect(['index','kode'=>$kode,'sifat'=>$sifat,
-          'dataJenisDokumen' => $data,
-          'dataSifatDokumen' => $data2]);
-
-
+          return null;
     }
 
-    public function actionReject($kode,$sifat,$id)
-    {
-        $data = $this->getJenisDokumen();
-        $data2 = $this->getSifatDokumen();
-        $model = $this->findModel($id);
-          $model->persetujuan = 'Ditolak';
-          $model->ket_persetujuan = 'Telah Ditolak Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
-          $model->save();
-        return $this->redirect(['index','kode'=>$kode,'sifat'=>$sifat,
-        'dataJenisDokumen' => $data,
-        'dataSifatDokumen' => $data2]);
-    }
+
 
     /**
      * Finds the Administratif model based on its primary key value.

@@ -87,8 +87,7 @@ class UserController extends Controller
             $model->authKey = Yii::$app->security->generateRandomString();
             $model->accessToken =Yii::$app->security->generateRandomString();
             $model->save();
-            if($model->photo_user != NULL)
-            $model->photo_user->saveAs('uploads/image/' . $model->photo_user->baseName . '.' . $model->file_dokumen->photo_user);
+            $model->photo_user->saveAs('uploads/image/' . $model->photo_user->baseName . '.' . $model->photo_user->extension);
             return $this->redirect(['view', 'id' => $model->id_user]);
         } else {
             return $this->render('create', [

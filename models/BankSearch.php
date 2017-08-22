@@ -46,6 +46,8 @@ class BankSearch extends Bank
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pageSize' => 5,
+        ],
         ]);
 
         $this->load($params);

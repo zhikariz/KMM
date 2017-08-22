@@ -53,7 +53,7 @@ class DokumenmasukController extends Controller
           $data_dokumen_masuk = Dokumenmasuk::find()->where(['kode_sifat_dokumen'=>$sifat])->all();
           break;
       case 'Operator':
-          $data_dokumen_masuk = Dokumenmasuk::findBySql('SELECT * FROM dokumenmasuk WHERE kode_sifat_dokumen="'.$sifat.'" AND (persetujuan = "Disetujui" OR persetujuan = "Ditolak");')->all();
+        $data_dokumen_masuk = Dokumenmasuk::find()->where(['kode_sifat_dokumen'=>$sifat])->all();
           break;
       case 'Approval':
           $data_dokumen_masuk = Dokumenmasuk::find()->where(['kode_sifat_dokumen'=>$sifat,'persetujuan'=>'Belum Disetujui'])->all();
@@ -101,7 +101,6 @@ class DokumenmasukController extends Controller
         //ngambil data checkbox
         $dataKepala = ArrayHelper::map(Pejabat::find()->all(), 'nama_deputi', 'nama_deputi');
         $dataUnit = ArrayHelper::map(Unitkerja::find()->all(), 'ket_unit_kerja', 'ket_unit_kerja');
-        $dataTim = ArrayHelper::map(Tim::find()->all(), 'nama_tim', 'nama_tim');
         $dataPetunjuk= ArrayHelper::map(Petunjuk::find()->all(), 'keterangan_petunjuk', 'keterangan_petunjuk');
 
         if ($model->load(Yii::$app->request->post())) {
@@ -117,7 +116,7 @@ class DokumenmasukController extends Controller
           $model->kode_sifat_dokumen = $sifat;
           $model->waktu_input = date("d-m-Y H:i:s");
           $model->id_user = Yii::$app->user->identity->id_user;
-          $model->persetujuan = 'Belum Disetujui';
+          $model->persetujuan = NULL;
           $model->ket_persetujuan=NULL;
           $model->save();
           if($model->file_dokumen != NULL)
@@ -131,7 +130,6 @@ class DokumenmasukController extends Controller
                 'dataJenisDokumen' => $data,
                 'dataSifatDokumen' => $data2,
                 'dataUnit'=>$dataUnit,
-                'dataTim'=>$dataTim,
                 'dataKepala'=>$dataKepala,
                 'dataPetunjuk'=>$dataPetunjuk
             ]);
@@ -152,7 +150,6 @@ class DokumenmasukController extends Controller
         $dataMasuk = $this->findModel($id);
         $dataKepala = ArrayHelper::map(Pejabat::find()->all(), 'nama_deputi', 'nama_deputi');
         $dataUnit = ArrayHelper::map(Unitkerja::find()->all(), 'ket_unit_kerja', 'ket_unit_kerja');
-        $dataTim = ArrayHelper::map(Tim::find()->all(), 'nama_tim', 'nama_tim');
         $dataPetunjuk= ArrayHelper::map(Petunjuk::find()->all(), 'keterangan_petunjuk', 'keterangan_petunjuk');
 
         if ($model->load(Yii::$app->request->post())) {
@@ -190,7 +187,6 @@ class DokumenmasukController extends Controller
                 'dataJenisDokumen' => $data,
                 'dataSifatDokumen' => $data2,
                 'dataUnit'=>$dataUnit,
-                'dataTim'=>$dataTim,
                 'dataKepala'=>$dataKepala,
                 'dataPetunjuk'=>$dataPetunjuk
             ]);

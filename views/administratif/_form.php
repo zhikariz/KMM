@@ -14,6 +14,14 @@ use \kartik\widgets\Select2;
   <?php $form = ActiveForm::begin([
                'options' => ['enctype'=>'multipart/form-data']
            ]); ?>
+
+           <?php
+           if (!$model->isNewRecord) {
+             if(Yii::$app->user->identity->role->ket_role== 'Administrator'){
+             echo $form->field($model, 'no_dokumen')->textInput(['maxlength' => true,]);
+           }
+           }
+             ?>
     <?php
     $satker = json_decode($format->format_jenis_dokumen,true);
 if($model->isNewRecord){

@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Administratif;
+use app\models\TempAdm;
 
 /**
- * AdministratifSearch represents the model behind the search form of `app\models\Administratif`.
+ * TempAdmSearch represents the model behind the search form of `app\models\TempAdm`.
  */
-class AdministratifSearch extends Administratif
+class TempAdmSearch extends TempAdm
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class AdministratifSearch extends Administratif
     public function rules()
     {
         return [
-            [['id_surat_adm', 'kode_tahun', 'id_user'], 'integer'],
-            [['format_dokumen', 'pengesah', 'kode_jenis_dokumen', 'kode_sifat_dokumen', 'perihal', 'waktu_input', 'file_dokumen'], 'safe'],
+            [['id_temp_adm', 'id_surat_adm', 'no_dokumen', 'kode_tahun', 'id_user'], 'integer'],
+            [['format_dokumen', 'pengesah', 'kode_jenis_dokumen', 'kode_sifat_dokumen', 'perihal', 'waktu_input', 'file_dokumen', 'editor'], 'safe'],
         ];
     }
 
@@ -41,27 +41,11 @@ class AdministratifSearch extends Administratif
      */
     public function search($params,$kode,$sifat)
     {
-      switch (Yii::$app->user->identity->role->ket_role) {
-    case 'Administrator':
-        $query = Administratif::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat]);
-        break;
-    case 'Operator':
-        $query = Administratif::findBySql('SELECT * FROM `administratif` WHERE kode_jenis_dokumen = "'.$kode.'" AND kode_sifat_dokumen = "'.$sifat.'" AND (persetujuan = NULL OR persetujuan = "Disetujui" OR persetujuan = "Ditolak")');
-        break;
-    case 'Approval':
-        $query = Administratif::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat,'persetujuan'=>'Belum Disetujui']);
-        break;
-
-}
-
-
+        $query = TempAdm::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat]);
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
-          'pagination' => [
-        'pageSize' => 5,
-    ],
             'query' => $query,
         ]);
 
@@ -75,6 +59,7 @@ class AdministratifSearch extends Administratif
 
         // grid filtering conditions
         $query->andFilterWhere([
+            'id_temp_adm' => $this->id_temp_adm,
             'id_surat_adm' => $this->id_surat_adm,
             'no_dokumen' => $this->no_dokumen,
             'kode_tahun' => $this->kode_tahun,
@@ -87,7 +72,8 @@ class AdministratifSearch extends Administratif
             ->andFilterWhere(['like', 'kode_sifat_dokumen', $this->kode_sifat_dokumen])
             ->andFilterWhere(['like', 'perihal', $this->perihal])
             ->andFilterWhere(['like', 'waktu_input', $this->waktu_input])
-            ->andFilterWhere(['like', 'file_dokumen', $this->file_dokumen]);
+            ->andFilterWhere(['like', 'file_dokumen', $this->file_dokumen])
+            ->andFilterWhere(['like', 'editor', $this->editor]);
 
         return $dataProvider;
     }

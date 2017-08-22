@@ -47,7 +47,7 @@ class DokumenmasukSearch extends Dokumenmasuk
           $query = Dokumenmasuk::find()->where(['kode_sifat_dokumen'=>$sifat]);
           break;
       case 'Operator':
-          $query = Dokumenmasuk::findBySql('SELECT * FROM dokumenmasuk WHERE kode_sifat_dokumen="'.$sifat.'" AND (persetujuan = "Disetujui" OR persetujuan = "Ditolak")');
+          $query = Dokumenmasuk::find()->where(['kode_sifat_dokumen'=>$sifat]);
           break;
       case 'Approval':
           $query = Dokumenmasuk::find()->where(['kode_sifat_dokumen'=>$sifat,'persetujuan'=>'Belum Disetujui']);
@@ -59,6 +59,8 @@ class DokumenmasukSearch extends Dokumenmasuk
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pageSize' => 5,
+        ],
         ]);
 
         $this->load($params);
