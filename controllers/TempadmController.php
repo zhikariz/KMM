@@ -150,8 +150,14 @@ class TempadmController extends Controller
           $model_adm->id_user = $model->id_user;
           $model_adm->waktu_input = $model->waktu_input;
           $model_adm->file_dokumen = $model->file_dokumen;
-          $temp_editor = $model_adm->editor;
-          $model_adm->editor = $temp_editor . ',' . $model->editor;
+          if($model_adm->editor == null){
+            $temp_editor = $model->editor;
+            $model_adm->editor = $temp_editor;
+          }else{
+            $temp_editor = [$model_adm->editor,$model->editor];
+            $model_adm->editor = implode(' , ',$temp_editor);
+          }
+
           $model_adm->persetujuan = 'Disetujui';
           $model_adm->ket_persetujuan = 'Telah Disetujui Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
           $model_adm->save();
@@ -171,6 +177,13 @@ class TempadmController extends Controller
         $model_adm = Administratif::find()->where(['id_surat_adm'=>$model->id_surat_adm])->one();
           $model_adm->persetujuan = 'Ditolak';
           $model_adm->ket_persetujuan = 'Telah Ditolak Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
+          if($model_adm->editor == null){
+            $temp_editor = $model->editor;
+            $model_adm->editor = $temp_editor;
+          }else{
+            $temp_editor = [$model_adm->editor,$model->editor];
+            $model_adm->editor = implode(' , ',$temp_editor);
+          }
           $model_adm->save();
           $this->findModel($id)->delete();
         return $this->redirect(['index','kode'=>$kode,'sifat'=>$sifat,

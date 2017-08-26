@@ -149,9 +149,9 @@ border-left-color: #fff;
 
         </ul>
                   </li>
-                  <li><?=Html::a('SK Kepala Perwakilan', ['skkepwakilgub/index','kode'=>'Kep/KPwBI/Slo/Intern'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Administratif')])?></li>
-                  <li><?=Html::a('SK Gubernur BI', ['skkepwakilgub/index','kode'=>'Kep.GBI/Slo'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'SK Kep Wakil & SK Gub BI')])?></li>
-                  <li><?=Html::a('Surat Jalan', ['suratjalan/index','kode'=>'Perjl.'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Surat Jalan')])?></li>
+                  <li><?=Html::a('SK Kepala Perwakilan', ['tempskkepwakilgub/index','kode'=>'Kep/KPwBI/Slo/Intern'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Administratif')])?></li>
+                  <li><?=Html::a('SK Gubernur BI', ['tempskkepwakilgub/index','kode'=>'Kep.GBI/Slo'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'SK Kep Wakil & SK Gub BI')])?></li>
+                  <li><?=Html::a('Surat Jalan', ['tempsuratjalan/index','kode'=>'Perjl.'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Surat Jalan')])?></li>
                   <li><?=Html::a('Nota Debet', ['notadebet/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Nota Debet')])?></li>
                 </ul>
               </li>
@@ -220,8 +220,6 @@ border-left-color: #fff;
                 <li class="divider"></li>
                 <li><?=Html::a('User', ['user/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'User')])?></li>
                 <li><?=Html::a('Hari Libur', ['hariliburtahunan/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Hari Libur')])?></li>
-                <li class="divider"></li>
-                <li><a href="#">One more separated link</a></li>
               </ul>
             </li>
             <?php }?>

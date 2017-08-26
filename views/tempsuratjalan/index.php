@@ -4,19 +4,16 @@ use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\NotadebetSearch */
+/* @var $searchModel app\models\TempSuratjalanSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Nota Debet';
+$this->title = 'Temp Suratjalans';
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['data'] = $dataJenisDokumen;
 $this->params['data2'] = $dataSifatDokumen;
 ?>
-<div class="notadebet-index">
-
+<div class="temp-suratjalan-index">
     <?php Pjax::begin(); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
@@ -35,8 +32,8 @@ $this->params['data2'] = $dataSifatDokumen;
         'attribute'=>'no_dokumen',
         'vAlign' => 'middle',
         'hAlign' => 'center',
-        'content' => function($model, $key, $index) {
-                  $content = $model->kode_tahun."/".$model->kode_satuan_kerja."/".$model->no_dokumen."/".$model->kode_satker_pusat;
+        'content' => function($model, $key, $index)  {
+                  $content = $model->kode_tahun."/".$model->no_dokumen."/".$model->format_dokumen."/".$model->kode_satuan_kerja;
                   return $content;
               },
       ],
@@ -79,18 +76,12 @@ $this->params['data2'] = $dataSifatDokumen;
 
         },
       ],
-      [
-        'attribute'=>'user.username',
-        'vAlign' => 'middle',
-        'hAlign' => 'center',
-        'header' => 'Pembuat',
-      ],
 
       [
         'class' => 'kartik\grid\ActionColumn',
         'header' => 'Actions',
         'headerOptions' => ['style' => 'color:#337ab7'],
-        'template' => Yii::$app->user->identity->role->ket_role=='Approval'?'{view}':(Yii::$app->user->identity->role->ket_role=='Operator'?('{view}{update}'):'{view}{update}{delete}'),
+        'template' => '{view}',
         'buttons' => [
           'view' => function ($url, $model) {
               return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
@@ -116,16 +107,16 @@ $this->params['data2'] = $dataSifatDokumen;
         ],
         'urlCreator' => function ($action, $model, $key, $index) {
           if ($action === 'view') {
-              $url ='index.php?r=notadebet/view'.'&id='.$model->id_nota_debet;
+              $url ='index.php?r=tempsuratjalan/view&kode='.$_GET['kode'].'&id='.$model->id_surat_jalan;
               return $url;
           }
 
           if ($action === 'update') {
-              $url ='index.php?r=notadebet/update'.'&id='.$model->id_nota_debet;
+              $url ='index.php?r=tempsuratjalan/update&kode='.$_GET['kode'].'&id='.$model->id_surat_jalan;
               return $url;
           }
           if ($action === 'delete') {
-              $url ='index.php?r=notadebet/delete'.'&id='.$model->id_nota_debet;
+              $url ='index.php?r=tempsuratjalan/delete&kode='.$_GET['kode'].'&id='.$model->id_surat_jalan;
               return $url;
           }
 
@@ -139,10 +130,7 @@ $this->params['data2'] = $dataSifatDokumen;
     // set your toolbar
     'toolbar'=> [
         ['content'=>
-        Yii::$app->user->identity->role->ket_role== 'Operator' || Yii::$app->user->identity->role->ket_role=='Administrator'?
-        Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'], ['data-pjax'=>0, 'class'=>'btn btn-success', 'title'=>Yii::t('app', 'Create Satuan Kerja')])   . ' '.
-          Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')]):
-            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')])
+            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index','kode'=>$_GET['kode']], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')])
         ],
         '{export}',
         '{toggleData}',
@@ -154,10 +142,11 @@ $this->params['data2'] = $dataSifatDokumen;
     // parameters from the demo form
     'panel'=>[
         'type'=>GridView::TYPE_PRIMARY,
-        'heading' => "Nota Debet"
+        'heading' => "Surat Jalan"
     ],
     'persistResize'=>false,
     'toggleDataOptions'=>['minCount'=>10],
     ]); ?>
+
     <?php Pjax::end(); ?>
 </div>

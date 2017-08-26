@@ -33,8 +33,8 @@ $this->params['data2'] = $dataSifatDokumen;
         'attribute'=>'no_dokumen',
         'vAlign' => 'middle',
         'hAlign' => 'center',
-        'content' => function($model, $key, $index) use ($dataSurat) {
-                  $content = $dataSurat[$index]['kode_tahun']."/".$dataSurat[$index]['no_dokumen']."/".$dataSurat[$index]['format_dokumen']."/".$dataSurat[$index]['kode_satuan_kerja'];
+        'content' => function($model, $key, $index) {
+                  $content = $model->kode_tahun."/".$model->no_dokumen."/".$model->format_dokumen."/".$model->kode_satuan_kerja;
                   return $content;
               },
       ],
@@ -47,8 +47,8 @@ $this->params['data2'] = $dataSifatDokumen;
         'attribute'=>'pengesah',
         'vAlign' => 'middle',
         'hAlign' => 'center',
-        'content' => function($model,$key,$index) use ($dataSurat){
-          $temp=json_decode($dataSurat[$index]['pengesah']);
+        'content' => function($model,$key,$index){
+          $temp=json_decode($model->pengesah);
           for($i=0;$i<count($temp);$i++){
             $a[$i]='<button class="btn-xs btn btn-info" style="margin: 1px;">'.$temp[$i].'</button>';
           }
@@ -68,8 +68,8 @@ $this->params['data2'] = $dataSifatDokumen;
         'hAlign' => 'center',
         'format'=>'raw',
         'content' =>
-        function($model, $key, $index) use ($dataSurat){
-          $temp = $dataSurat[$index]['file_dokumen'];
+        function($model, $key, $index){
+          $temp = $model->file_dokumen;
           if($temp == NULL){
             return "File Tidak Ada";
           }else{

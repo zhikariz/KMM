@@ -47,25 +47,12 @@ class NotadebetController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
-        switch (Yii::$app->user->identity->role->ket_role) {
-      case 'Administrator':
-          $dataNota = Notadebet::find()->all();
-          break;
-      case 'Operator':
-          $dataNota = Notadebet::findBySql('SELECT * FROM notadebet WHERE (persetujuan = "Disetujui" OR persetujuan = "Ditolak")')->all();
-          break;
-      case 'Approval':
-          $dataNota = Notadebet::find()->where(['persetujuan'=>'Belum Disetujui'])->all();
-          break;
-
-  }
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2,
-            'dataNota' => $dataNota,
         ]);
     }
 
@@ -132,10 +119,10 @@ class NotadebetController extends Controller
             $model->pengesah = json_encode($pengesah_temp);
             $model->waktu_input = date("d-m-Y H:i:s");
             $model->id_user = Yii::$app->user->identity->id_user;
-            $model->persetujuan = 'Belum Disetujui';
+            $model->persetujuan = NULL;
             $model->ket_persetujuan=NULL;
 
-            $model->save();
+            $model->save(false);
             if($model->file_dokumen != NULL)
             $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);
             return $this->redirect(['view', 'id' => $model->id_nota_debet]);

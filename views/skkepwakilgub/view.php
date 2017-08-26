@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use aryelds\sweetalert\SweetAlert;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\SkKepwakilGubSjalan */
@@ -14,7 +15,17 @@ $this->params['data2'] = $dataSifatDokumen;
 $no_dokumen = $model->kode_tahun."/".$model->no_dokumen."/".$model->format_dokumen."/".$model->kodeTahun->tahun;
 ?>
 <div class="sk-kepwakil-gub-sjalan-view">
-
+  <?php foreach (Yii::$app->session->getAllFlashes() as $message) {
+      echo SweetAlert::widget([
+          'options' => [
+              'title' => (!empty($message['title'])) ? Html::encode($message['title']) : 'Title Not Set!',
+              'text' => (!empty($message['text'])) ? Html::encode($message['text']) : 'Text Not Set!',
+              'type' => (!empty($message['type'])) ? $message['type'] : SweetAlert::TYPE_INFO,
+              'timer' => (!empty($message['timer'])) ? $message['timer'] : 4000,
+              'showConfirmButton' =>  (!empty($message['showConfirmButton'])) ? $message['showConfirmButton'] : true,
+          ]
+      ]);
+  }?>
 
   <?php if(Yii::$app->user->identity->role->ket_role == 'Administrator' || Yii::$app->user->identity->role->ket_role == 'Operator'){?>
     <p>
@@ -23,23 +34,6 @@ $no_dokumen = $model->kode_tahun."/".$model->no_dokumen."/".$model->format_dokum
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
-    <?php }else{ ?>
-      <p>
-        <?= Html::a('Setujui', ['approve', 'kode'=>$model->format_dokumen,'id' => $model->id_sk_kepwakil_gub], [
-            'class' => 'btn btn-success',
-            'data' => [
-                'confirm' => 'Apakah kamu ingin menyetujui surat ini?',
-                'method' => 'post',
-            ],
-        ]) ?>
-        <?= Html::a('Tolak', ['reject', 'kode'=>$model->format_dokumen,'id' => $model->id_sk_kepwakil_gub], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Apakah kamu ingin menolak surat ini?',
                 'method' => 'post',
             ],
         ]) ?>
@@ -83,6 +77,9 @@ $no_dokumen = $model->kode_tahun."/".$model->no_dokumen."/".$model->format_dokum
         ],
         [
           'attribute'=>'ket_persetujuan',
+        ],
+        [
+          'attribute'=>'editor',
         ]
         ],
     ]) ?>

@@ -27,7 +27,7 @@ else{
 }
 }
 $this->title = "Detail Dokumen ".$model->kode_tahun."/".$model->no_dokumen."/".$format."/".$model->kode_jenis_dokumen."/".$model->kode_sifat_dokumen;
-$this->params['breadcrumbs'][] = ['label' => 'Temp Adms', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Approval Administratif', 'url' => ['index','kode'=>$_GET['kode'],'sifat'=>$_GET['sifat']]];
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['data'] = $dataJenisDokumen;
 $this->params['data2'] = $dataSifatDokumen;

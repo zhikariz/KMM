@@ -32,31 +32,30 @@ $this->params['data2'] = $dataSifatDokumen;
         'attribute'=>'no_dokumen',
         'vAlign' => 'middle',
         'hAlign' => 'center',
-          'content' => function($model, $key, $index) use ($dataAdm) {
+          'content' => function($model, $key, $index) {
                     // you can do here something with $lang if you need so
-                    $a = json_decode($dataAdm[$index]['format_dokumen']);
-                    $jml = count((array)$a);
 
-                    if($jml == 1){
-                      $format =$a->satker;
-                    }else if($jml == 2){
-                      if($a->tim != ''){
-                        $format = $a->satker . "-" . $a->tim;
+                    //$content = $dataAdm[$index]['kode_tahun']."/".$dataAdm[$index]['no_dokumen']."/".$format."/".$dataAdm[$index]['kode_jenis_dokumen']."/".$dataAdm[$index]['kode_sifat_dokumen'];
+                    $formats = json_decode($model->format_dokumen,true);
+                    if(count($formats) == 3){
+                      if($formats['unit'] != ''){
+                        $format = $formats['satker'] .'-'.$formats['tim'].'-'.$formats['unit'];
+                      }else if($formats['tim'] != ''){
+                        $format = $formats['satker'] . '-'.$formats['tim'];
+                      }else{
+                        $format = $formats['satker'];
+                      }
+                    }else if(count($formats)==2){
+                      if($formats['tim'] != ''){
+                        $format = $formats['satker'] . '-'.$formats['tim'];
+                      }else{
+                        $format = $formats['satker'];
+                      }
+
                     }else{
-                        $format =$a->satker;
+                      $format = $formats['satker'];
                     }
-                  }else if($jml == 3){
-                      if($a->unit != ''){
-                      $format = $a->satker . "-" . $a->tim . "-" . $a->unit;
-                    }else if($a->tim != ''){
-                      $format = $a->satker . "-" . $a->tim;
-                    }
-                    else{
-                      $format =$a->satker;
-                    }
-                    }
-                    $content = $dataAdm[$index]['kode_tahun']."/".$dataAdm[$index]['no_dokumen']."/".$format."/".$dataAdm[$index]['kode_jenis_dokumen']."/".$dataAdm[$index]['kode_sifat_dokumen'];
-
+                    $content = $model->kode_tahun.'/'.$model->no_dokumen.'/'.$format.'/'.$model->kode_jenis_dokumen.'/'.$model->kode_sifat_dokumen;
                     return $content;
                 },
       ],
@@ -69,8 +68,8 @@ $this->params['data2'] = $dataSifatDokumen;
         'attribute'=>'pengesah',
         'vAlign' => 'middle',
         'hAlign' => 'center',
-        'content' => function($model,$key,$index) use ($dataAdm){
-          $temp=json_decode($dataAdm[$index]['pengesah'],true);
+        'content' => function($model,$key,$index){
+          $temp=json_decode($model->pengesah,true);
           for($i=0;$i<count($temp);$i++){
             $a[$i]='<button class="btn-xs btn btn-info" style="margin: 1px;">'.$temp[$i].'</button>';
           }
@@ -89,8 +88,8 @@ $this->params['data2'] = $dataSifatDokumen;
         'hAlign' => 'center',
         'format'=>'raw',
         'content' =>
-        function($model, $key, $index) use ($dataAdm){
-          $temp = $dataAdm[$index]['file_dokumen'];
+        function($model, $key, $index){
+          $temp = $model->file_dokumen;
           if($temp == NULL){
             return "File Tidak Ada";
           }else{

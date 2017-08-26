@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\SkKepwakilGub;
+use app\models\TempSkKepwakilGub;
 
 /**
- * SkKepwakilGubSearch represents the model behind the search form of `app\models\SkKepwakilGub`.
+ * TempSkKepwakilGubSearch represents the model behind the search form of `app\models\TempSkKepwakilGub`.
  */
-class SkKepwakilGubSearch extends SkKepwakilGub
+class TempSkKepwakilGubSearch extends TempSkKepwakilGub
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class SkKepwakilGubSearch extends SkKepwakilGub
     public function rules()
     {
         return [
-            [['id_sk_kepwakil_gub', 'kode_tahun', 'no_dokumen', 'id_user'], 'integer'],
-            [['format_dokumen', 'perihal', 'pengesah', 'waktu_input', 'file_dokumen'], 'safe'],
+            [['id_temp_sk_kep_wakil_gub', 'id_sk_kepwakil_gub', 'kode_tahun', 'no_dokumen', 'id_user'], 'integer'],
+            [['format_dokumen', 'perihal', 'pengesah', 'waktu_input', 'file_dokumen', 'editor'], 'safe'],
         ];
     }
 
@@ -41,19 +41,8 @@ class SkKepwakilGubSearch extends SkKepwakilGub
      */
     public function search($params,$kode)
     {
+        $query = TempSkKepwakilGub::find()->where(['format_dokumen'=>$kode]);
 
-        switch (Yii::$app->user->identity->role->ket_role) {
-      case 'Administrator':
-          $query = SkKepwakilGub::find()->where(['format_dokumen'=>$kode]);
-          break;
-      case 'Operator':
-          $query = SkKepwakilGub::findBySql('SELECT * FROM sk_kepwakil_gub WHERE format_dokumen = "'.$kode.'" AND (persetujuan = "Disetujui" OR persetujuan = "Ditolak")');
-          break;
-      case 'Approval':
-          $query = SkKepwakilGub::find()->where(['format_dokumen'=>$kode,'persetujuan'=>'Belum Disetujui']);
-          break;
-
-  }
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
@@ -70,6 +59,7 @@ class SkKepwakilGubSearch extends SkKepwakilGub
 
         // grid filtering conditions
         $query->andFilterWhere([
+            'id_temp_sk_kep_wakil_gub' => $this->id_temp_sk_kep_wakil_gub,
             'id_sk_kepwakil_gub' => $this->id_sk_kepwakil_gub,
             'kode_tahun' => $this->kode_tahun,
             'no_dokumen' => $this->no_dokumen,
@@ -80,7 +70,8 @@ class SkKepwakilGubSearch extends SkKepwakilGub
             ->andFilterWhere(['like', 'perihal', $this->perihal])
             ->andFilterWhere(['like', 'pengesah', $this->pengesah])
             ->andFilterWhere(['like', 'waktu_input', $this->waktu_input])
-            ->andFilterWhere(['like', 'file_dokumen', $this->file_dokumen]);
+            ->andFilterWhere(['like', 'file_dokumen', $this->file_dokumen])
+            ->andFilterWhere(['like', 'editor', $this->editor]);
 
         return $dataProvider;
     }

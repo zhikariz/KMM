@@ -25,25 +25,7 @@ $no_dokumen=$model->kode_tahun."/".$model->no_dokumen."/".$model->format_dokumen
             ],
         ]) ?>
     </p>
-    <?php }else{ ?>
-      <p>
-        <?= Html::a('Setujui', ['approve', 'kode'=>$_GET['kode'],'id' => $model->id_surat_jalan], [
-            'class' => 'btn btn-success',
-            'data' => [
-                'confirm' => 'Apakah kamu ingin menyetujui surat ini?',
-                'method' => 'post',
-            ],
-        ]) ?>
-
-        <?= Html::a('Tolak', ['reject', 'kode'=>$_GET['kode'],'id' => $model->id_surat_jalan], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Apakah kamu ingin menolak surat ini?',
-                'method' => 'post',
-            ],
-        ]) ?>
-      </p>
-      <?php }?>
+    <?php }?>
 
     <?= DetailView::widget([
         'model' => $model,
@@ -57,6 +39,7 @@ return $no_dokumen;
               'format'=>'raw'
             ],
             'user.nama_user',
+            'perihal',
             'waktu_input',
             [
             'attribute'=>'file_dokumen',

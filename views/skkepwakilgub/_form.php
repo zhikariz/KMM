@@ -14,6 +14,14 @@ use yii\widgets\ActiveForm;
                'options' => ['enctype'=>'multipart/form-data']
            ]); ?>
 
+           <?php
+           if (!$model->isNewRecord) {
+             if(Yii::$app->user->identity->role->ket_role== 'Administrator'){
+             echo $form->field($model, 'no_dokumen')->textInput(['maxlength' => true,]);
+           }
+           }
+             ?>
+
     <?= $form->field($model, 'perihal')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'pengesah')->checkboxlist($dataPengesah,['separator'=>'<br>']);?>

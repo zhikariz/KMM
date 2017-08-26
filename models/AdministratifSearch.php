@@ -19,7 +19,7 @@ class AdministratifSearch extends Administratif
     {
         return [
             [['id_surat_adm', 'kode_tahun', 'id_user'], 'integer'],
-            [['format_dokumen', 'pengesah', 'kode_jenis_dokumen', 'kode_sifat_dokumen', 'perihal', 'waktu_input', 'file_dokumen'], 'safe'],
+            [['no_dokumen','format_dokumen', 'pengesah', 'kode_jenis_dokumen', 'kode_sifat_dokumen', 'perihal', 'waktu_input', 'file_dokumen'], 'safe'],
         ];
     }
 
@@ -46,23 +46,19 @@ class AdministratifSearch extends Administratif
         $query = Administratif::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat]);
         break;
     case 'Operator':
-        $query = Administratif::findBySql('SELECT * FROM `administratif` WHERE kode_jenis_dokumen = "'.$kode.'" AND kode_sifat_dokumen = "'.$sifat.'" AND (persetujuan = NULL OR persetujuan = "Disetujui" OR persetujuan = "Ditolak")');
+        //$query = Administratif::findBySql('SELECT * FROM administratif WHERE kode_jenis_dokumen = "'.$kode.'" AND kode_sifat_dokumen = "'.$sifat.'" AND persetujuan IS NULL AND ( persetujuan = "Disetujui" OR persetujuan = "Ditolak")');
+        $query =Administratif::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat])
+        ->andWhere(['or',['persetujuan'=>'Ditolak'],['persetujuan'=>'Disetujui'],['persetujuan'=>NULL]]);
         break;
-    case 'Approval':
-        $query = Administratif::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat,'persetujuan'=>'Belum Disetujui']);
-        break;
-
-}
+        }
 
 
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
-          'pagination' => [
-        'pageSize' => 5,
-    ],
             'query' => $query,
+            'pagination' => [ 'pageSize' => 5 ],
         ]);
 
         $this->load($params);
@@ -75,13 +71,14 @@ class AdministratifSearch extends Administratif
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id_surat_adm' => $this->id_surat_adm,
             'no_dokumen' => $this->no_dokumen,
+            'id_surat_adm' => $this->id_surat_adm,
             'kode_tahun' => $this->kode_tahun,
             'id_user' => $this->id_user,
         ]);
 
         $query->andFilterWhere(['like', 'format_dokumen', $this->format_dokumen])
+        ->andFilterWhere(['like', 'no_dokumen', $this->no_dokumen])
             ->andFilterWhere(['like', 'pengesah', $this->pengesah])
             ->andFilterWhere(['like', 'kode_jenis_dokumen', $this->kode_jenis_dokumen])
             ->andFilterWhere(['like', 'kode_sifat_dokumen', $this->kode_sifat_dokumen])

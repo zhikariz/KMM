@@ -55,14 +55,6 @@ class AdministratifController extends Controller
         $sd = new Sifatdokumen();
         $data3 = $jd->find()->where(['kode_jenis_dokumen'=>$kode])->one();
         $data4 = $sd->find()->where(['kode_sifat_dokumen'=>$sifat])->one();
-        switch (Yii::$app->user->identity->role->ket_role) {
-      case 'Administrator':
-          $data_adm = Administratif::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat])->all();
-          break;
-      case 'Operator':
-          $data_adm = Administratif::findBySql('SELECT * FROM `administratif` WHERE kode_jenis_dokumen = "'.$kode.'" AND kode_sifat_dokumen = "'.$sifat.'" AND (persetujuan = NULL OR persetujuan = "Disetujui" OR persetujuan = "Ditolak")')->all();
-          break;
-        }
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -70,7 +62,6 @@ class AdministratifController extends Controller
             'dataSifatDokumen' => $data2,
             'kode'=>$data3,
             'sifat'=>$data4,
-            'dataAdm'=>$data_adm,
 
         ]);
     }
@@ -214,12 +205,14 @@ class AdministratifController extends Controller
           {
             $temp_format = json_encode($model->format_dokumen);
             $temp_model->format_dokumen = $temp_format;
+              $temp_model->no_dokumen = $model->no_dokumen;
           }else{
-            $temp_model->format_dokumen = $dataAdm->format_dokumen;
+              $temp_model->format_dokumen = $dataAdm->format_dokumen;
+              $temp_model->no_dokumen = $dataAdm->no_dokumen;
           }
           $temp_model->id_surat_adm = $model->id_surat_adm;
           $temp_model->kode_tahun = $dataAdm->kode_tahun;
-          $temp_model->no_dokumen = $model->no_dokumen;
+
           $pengesah_temp = $model->pengesah;
           $temp_model->pengesah = json_encode($pengesah_temp);
           $temp_model->waktu_input = $dataAdm->waktu_input;
@@ -229,7 +222,6 @@ class AdministratifController extends Controller
           $temp_model->perihal = $model->perihal;
           $temp_model->editor = Yii::$app->user->identity->nama_user;
           $this->actionBelum($kode,$sifat,$id);
-          $model->save();
 
           $temp_model->save(false);
           if($temp_model->file_dokumen != $dataAdm->file_dokumen){

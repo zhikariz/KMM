@@ -59,8 +59,9 @@ class DokumenmasukSearch extends Dokumenmasuk
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pageSize' => 5,
-        ],
+            'pagination' => [
+          'pageSize' => 5,
+      ],
         ]);
 
         $this->load($params);

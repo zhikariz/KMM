@@ -15,6 +15,7 @@ use app\models\Pengesah;
 use app\models\Tahun;
 use app\models\Satuankerja;
 use yii\web\UploadedFile;
+use app\models\TempSuratjalan;
 /**
  * SuratjalanController implements the CRUD actions for Suratjalan model.
  */
@@ -45,25 +46,12 @@ class SuratjalanController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
-        switch (Yii::$app->user->identity->role->ket_role) {
-      case 'Administrator':
-          $dataSurat = Suratjalan::find()->all();
-          break;
-      case 'Operator':
-          $dataSurat = Suratjalan::findBySql('SELECT * FROM suratjalan WHERE (persetujuan = "Disetujui" OR persetujuan = "Ditolak")')->all();
-          break;
-      case 'Approval':
-          $dataSurat = Suratjalan::find()->where(['persetujuan'=>'Belum Disetujui'])->all();
-          break;
-
-  }
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2,
-            'dataSurat'=>$dataSurat,
         ]);
     }
 
@@ -131,9 +119,9 @@ class SuratjalanController extends Controller
           $pengesah_temp = $model->pengesah;
           $model->pengesah = json_encode($pengesah_temp);
           $model->format_dokumen = $kode;
-          $model->persetujuan = 'Belum Disetujui';
+          $model->persetujuan = NULL;
           $model->ket_persetujuan = NULL;
-          $model->save();
+          $model->save(false);
           if($model->file_dokumen != NULL)
           $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);
             return $this->redirect(['view', 'kode'=>$kode,'id' => $model->id_surat_jalan]);
@@ -157,6 +145,7 @@ class SuratjalanController extends Controller
     public function actionUpdate($kode,$id)
     {
         $model = $this->findModel($id);
+        $temp_model = new TempSuratjalan();
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
         $dataSurat = $this->findModel($id);
@@ -165,17 +154,33 @@ class SuratjalanController extends Controller
         //ngambil data checkbox
         $pengesah = ArrayHelper::map(Pengesah::find()->all(), 'nama_pengesah', 'nama_pengesah');
         if ($model->load(Yii::$app->request->post()) ) {
-          $model->file_dokumen = UploadedFile::getInstance($model,'file_dokumen');
-          if($model->file_dokumen == NULL){
-            $model->file_dokumen = $dataSurat->file_dokumen;
+          $temp_model->file_dokumen = UploadedFile::getInstance($model,'file_dokumen');
+          if($temp_model->file_dokumen == NULL){
+            $temp_model->file_dokumen = $dataSurat->file_dokumen;
           }
+          if(Yii::$app->user->identity->role->ket_role == 'Administrator')
+          {
+              $temp_model->no_dokumen = $model->no_dokumen;
+              $temp_model->kode_satuan_kerja = $model->kode_satuan_kerja;
+          }else {
+              $temp_model->no_dokumen = $dataSurat->no_dokumen;
+              $temp_model->kode_satuan_kerja = $dataSurat->kode_satuan_kerja;
+          }
+          $temp_model->format_dokumen = $kode;
+          $temp_model->id_user = $dataSurat->id_user;
+          $temp_model->waktu_input = $dataSurat->waktu_input;
+          $temp_model->editor = Yii::$app->user->identity->id_user;
+          $temp_model->perihal = $model->perihal;
           $pengesah_temp = $model->pengesah;
-          $model->pengesah = json_encode($pengesah_temp);
-          $model->persetujuan = 'Belum Disetujui';
-          $model->ket_persetujuan = NULL;
-          $model->save();
-          if($model->file_dokumen != $dataSurat->file_dokumen){
-          $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);}
+          $temp_model->pengesah = json_encode($pengesah_temp);
+          $temp_model->id_surat_jalan = $dataSurat->id_surat_jalan;
+          $temp_model->kode_tahun = $dataSurat->kode_tahun;
+
+          $this->actionBelum($kode,$id);
+          $temp_model->save(false);
+
+          if($temp_model->file_dokumen != $dataSurat->file_dokumen){
+          $temp_model->file_dokumen->saveAs('uploads/' . $temp_model->file_dokumen->baseName . '.' . $temp_model->file_dokumen->extension);}
             return $this->redirect(['view', 'kode'=>$kode,'id' => $model->id_surat_jalan]);
         } else {
           $temp_model_pengesah = json_decode($model->pengesah,true);
@@ -203,24 +208,15 @@ class SuratjalanController extends Controller
         return $this->redirect(['index','kode'=>$kode]);
     }
 
-    public function actionApprove($kode,$id)
+
+
+    public function actionBelum($kode,$id)
     {
-      $model = $this->findModel($id);
-        $model->persetujuan = 'Disetujui';
-        $model->ket_persetujuan = 'Telah Disetujui Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
-        $model->save();
-
-        return $this->redirect(['index','kode'=>$kode]);
-    }
-
-    public function actionReject($kode,$id)
-    {
-      $model = $this->findModel($id);
-        $model->persetujuan = 'Ditolak';
-        $model->ket_persetujuan = 'Telah Ditolak Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
-        $model->save();
-
-        return $this->redirect(['index','kode'=>$kode]);
+        $model = $this->findModel($id);
+        $model->persetujuan = 'Belum Disetujui';
+        $model->ket_persetujuan=NULL;
+          $model->save();
+          return null;
     }
 
     /**

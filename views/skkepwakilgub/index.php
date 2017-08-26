@@ -34,8 +34,8 @@ $this->params['data2'] = $dataSifatDokumen;
         'attribute'=>'no_dokumen',
         'vAlign' => 'middle',
         'hAlign' => 'center',
-        'content' => function($model, $key, $index) use ($dataSk) {
-                  $content = $dataSk[$index]['kode_tahun']."/".$dataSk[$index]['no_dokumen']."/".$dataSk[$index]['format_dokumen']."/".$dataSk[$index]->kodeTahun->tahun;
+        'content' => function($model, $key, $index) {
+                  $content = $model->kode_tahun."/".$model->no_dokumen."/".$model->format_dokumen."/".$model->kodeTahun->tahun;
                   return $content;
               },
       ],
@@ -48,8 +48,8 @@ $this->params['data2'] = $dataSifatDokumen;
         'attribute'=>'pengesah',
         'vAlign' => 'middle',
         'hAlign' => 'center',
-        'content' => function($model,$key,$index) use ($dataSk){
-          $temp=json_decode($dataSk[$index]['pengesah']);
+        'content' => function($model,$key,$index){
+          $temp=json_decode($model->pengesah);
           for($i=0;$i<count($temp);$i++){
             $a[$i]='<button class="btn-xs btn btn-info" style="margin: 1px;">'.$temp[$i].'</button>';
           }
@@ -69,8 +69,8 @@ $this->params['data2'] = $dataSifatDokumen;
         'hAlign' => 'center',
         'format'=>'raw',
         'content' =>
-        function($model, $key, $index) use ($dataSk){
-          $temp = $dataSk[$index]['file_dokumen'];
+        function($model, $key, $index){
+          $temp = $model->file_dokumen;
           if($temp == NULL){
             return "File Tidak Ada";
           }else{
@@ -79,7 +79,7 @@ $this->params['data2'] = $dataSifatDokumen;
         },
       ],
       [
-        'attribute'=>'user.username',
+        'attribute'=>'user.nama_user',
         'vAlign' => 'middle',
         'hAlign' => 'center',
         'header' => 'Pembuat',

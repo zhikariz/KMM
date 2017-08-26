@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Notadebet;
+use app\models\TempSuratjalan;
 
 /**
- * NotadebetSearch represents the model behind the search form of `app\models\Notadebet`.
+ * TempSuratjalanSearch represents the model behind the search form of `app\models\TempSuratjalan`.
  */
-class NotadebetSearch extends Notadebet
+class TempSuratjalanSearch extends TempSuratjalan
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class NotadebetSearch extends Notadebet
     public function rules()
     {
         return [
-            [['id_nota_debet', 'kode_tahun', 'no_dokumen', 'id_user'], 'integer'],
-            [['kode_satuan_kerja','pengesah', 'kode_satker_pusat', 'perihal', 'waktu_input', 'file_dokumen'], 'safe'],
+            [['id_temp_suratjalan', 'id_surat_jalan', 'kode_tahun', 'no_dokumen', 'id_user'], 'integer'],
+            [['kode_satuan_kerja', 'format_dokumen', 'pengesah', 'perihal', 'waktu_input', 'file_dokumen', 'editor'], 'safe'],
         ];
     }
 
@@ -41,16 +41,7 @@ class NotadebetSearch extends Notadebet
      */
     public function search($params)
     {
-
-        switch (Yii::$app->user->identity->role->ket_role) {
-      case 'Administrator':
-          $query = Notadebet::find();
-          break;
-      case 'Operator':
-          $query = Notadebet::find()->andWhere(['or',['persetujuan'=>'Ditolak'],['persetujuan'=>'Disetujui'],['persetujuan'=>NULL]]);
-          break;
-
-  }
+        $query = TempSuratjalan::find();
 
         // add conditions that should always apply here
 
@@ -68,19 +59,20 @@ class NotadebetSearch extends Notadebet
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id_nota_debet' => $this->id_nota_debet,
+            'id_temp_suratjalan' => $this->id_temp_suratjalan,
+            'id_surat_jalan' => $this->id_surat_jalan,
             'kode_tahun' => $this->kode_tahun,
             'no_dokumen' => $this->no_dokumen,
             'id_user' => $this->id_user,
-            'pengesah'=>$this->pengesah,
         ]);
 
         $query->andFilterWhere(['like', 'kode_satuan_kerja', $this->kode_satuan_kerja])
-            ->andFilterWhere(['like', 'kode_satker_pusat', $this->kode_satker_pusat])
-            ->andFilterWhere(['like', 'perihal', $this->perihal])
+            ->andFilterWhere(['like', 'format_dokumen', $this->format_dokumen])
             ->andFilterWhere(['like', 'pengesah', $this->pengesah])
+            ->andFilterWhere(['like', 'perihal', $this->perihal])
             ->andFilterWhere(['like', 'waktu_input', $this->waktu_input])
-            ->andFilterWhere(['like', 'file_dokumen', $this->file_dokumen]);
+            ->andFilterWhere(['like', 'file_dokumen', $this->file_dokumen])
+            ->andFilterWhere(['like', 'editor', $this->editor]);
 
         return $dataProvider;
     }

@@ -15,13 +15,33 @@ use \kartik\widgets\Select2;
                'options' => ['enctype'=>'multipart/form-data']
            ]); ?>
 
+           <?php
+           if (!$model->isNewRecord) {
+             if(Yii::$app->user->identity->role->ket_role== 'Administrator'){
+             echo $form->field($model, 'no_dokumen')->textInput(['maxlength' => true,]);
+      }
+    }
+             ?>
+
     <?php
+if(!$model->isNewRecord){
+    echo $form->field($model, 'kode_satuan_kerja')->widget(Select2::classname(),
+    [
+    'data' => $dataSatker,
+    'options'=>['placeholder'=>'Pilih Satuan Kerja'],
+    'disabled' => Yii::$app->user->identity->role->ket_role != 'Administrator'?true:false,
+    'pluginOptions' => ['allowClear' => true]
+    ]);
+  }else{
     echo $form->field($model, 'kode_satuan_kerja')->widget(Select2::classname(),
     [
     'data' => $dataSatker,
     'options'=>['placeholder'=>'Pilih Satuan Kerja'],
     'pluginOptions' => ['allowClear' => true]
     ]);
+  }
+
+
     ?>
 
     <?= $form->field($model, 'perihal')->textInput(['maxlength' => true]) ?>

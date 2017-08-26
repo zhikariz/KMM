@@ -41,23 +41,20 @@ class SkKepwakilGubSearch extends SkKepwakilGub
      */
     public function search($params,$kode)
     {
-
-        switch (Yii::$app->user->identity->role->ket_role) {
-      case 'Administrator':
-          $query = SkKepwakilGub::find()->where(['format_dokumen'=>$kode]);
-          break;
-      case 'Operator':
-          $query = SkKepwakilGub::findBySql('SELECT * FROM sk_kepwakil_gub WHERE format_dokumen = "'.$kode.'" AND (persetujuan = "Disetujui" OR persetujuan = "Ditolak")');
-          break;
-      case 'Approval':
-          $query = SkKepwakilGub::find()->where(['format_dokumen'=>$kode,'persetujuan'=>'Belum Disetujui']);
-          break;
-
-  }
+      switch (Yii::$app->user->identity->role->ket_role) {
+        case 'Administrator':
+        $query = SkKepwakilGub::find()->where(['format_dokumen'=>$kode]);
+        break;
+        case 'Operator':
+        $query =SkKepwakilGub::find()->where(['format_dokumen'=>$kode])
+        ->andWhere(['or',['persetujuan'=>'Ditolak'],['persetujuan'=>'Disetujui'],['persetujuan'=>NULL]]);
+        break;
+      }
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [ 'pageSize' => 5 ],
         ]);
 
         $this->load($params);

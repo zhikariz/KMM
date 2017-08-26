@@ -93,6 +93,9 @@ $no_dokumen = $model->kode_tahun."/".$model->no_dokumen."/".$format."/".$model->
             ],
             [
               'attribute'=>'ket_persetujuan',
+            ],
+            [
+              'attribute'=>'editor',
             ]
         ],
     ]) ?>
