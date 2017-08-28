@@ -145,7 +145,13 @@ class AdministratifController extends Controller
             $model->save();
             if($model->file_dokumen != NULL)
             $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);
-
+            Yii::$app->getSession()->setFlash('success', [
+           'text' => 'Dokumen Telah Disimpan',
+           'title' => 'Tersimpan',
+           'type' => 'success',
+           'timer' => 3000,
+           'showConfirmButton' => true
+       ]);
             return $this->redirect(['view',
             'kode'=>$kode,
             'sifat'=>$sifat,
@@ -227,7 +233,13 @@ class AdministratifController extends Controller
           if($temp_model->file_dokumen != $dataAdm->file_dokumen){
           $temp_model->file_dokumen->saveAs('uploads/' . $temp_model->file_dokumen->baseName . '.' . $temp_model->file_dokumen->extension);
         }
-
+        Yii::$app->getSession()->setFlash('success', [
+       'text' => 'Dokumen Selesai Terupdate Silahkan Tunggu Approval Untuk Menyetujui',
+       'title' => 'Proses Update',
+       'type' => 'success',
+       'timer' => 3000,
+       'showConfirmButton' => true
+   ]);
             return $this->redirect(['view', 'model'=>$model,'kode'=>$kode,'sifat'=>$sifat,'id'=>$model->id_surat_adm,'id' => $model->id_surat_adm,
             'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2]);
@@ -263,6 +275,13 @@ class AdministratifController extends Controller
         $this->findModel($id)->delete();
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
+        Yii::$app->getSession()->setFlash('success', [
+       'text' => 'Dokumen Telah Terhapus',
+       'title' => 'Terhapus',
+       'type' => 'success',
+       'timer' => 3000,
+       'showConfirmButton' => true
+   ]);
         return $this->redirect(['index','kode'=>$kode,'sifat'=>$sifat,
         'dataJenisDokumen' => $data,
         'dataSifatDokumen' => $data2]);

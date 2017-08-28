@@ -126,6 +126,13 @@ class NotadebetController extends Controller
             $model->save(false);
             if($model->file_dokumen != NULL)
             $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);
+            Yii::$app->getSession()->setFlash('success', [
+           'text' => 'Dokumen Telah Disimpan',
+           'title' => 'Tersimpan',
+           'type' => 'success',
+           'timer' => 3000,
+           'showConfirmButton' => true
+       ]);
             return $this->redirect(['view', 'id' => $model->id_nota_debet]);
         } else {
             return $this->render('create', [
@@ -188,6 +195,13 @@ class NotadebetController extends Controller
             {
               $temp_model->file_dokumen->saveAs('uploads/' . $temp_model->file_dokumen->baseName . '.' . $temp_model->file_dokumen->extension);
             }
+            Yii::$app->getSession()->setFlash('success', [
+           'text' => 'Dokumen Selesai Terupdate Silahkan Tunggu Approval Untuk Menyetujui',
+           'title' => 'Proses Update',
+           'type' => 'success',
+           'timer' => 3000,
+           'showConfirmButton' => true
+       ]);
             return $this->redirect(['view', 'id' => $model->id_nota_debet]);
         } else {
           $temp = json_decode($model->pengesah);
@@ -212,11 +226,18 @@ class NotadebetController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
+        Yii::$app->getSession()->setFlash('success', [
+       'text' => 'Dokumen Telah Terhapus',
+       'title' => 'Terhapus',
+       'type' => 'success',
+       'timer' => 3000,
+       'showConfirmButton' => true
+   ]);
 
         return $this->redirect(['index']);
     }
 
-  
+
 
     public function actionBelum($id)
     {

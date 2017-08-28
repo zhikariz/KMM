@@ -47,7 +47,7 @@ class DokumenmasukSearch extends Dokumenmasuk
           $query = Dokumenmasuk::find()->where(['kode_sifat_dokumen'=>$sifat]);
           break;
       case 'Operator':
-          $query = Dokumenmasuk::find()->where(['kode_sifat_dokumen'=>$sifat]);
+          $query = Dokumenmasuk::find()->where(['kode_sifat_dokumen'=>$sifat])->andWhere(['or',['persetujuan'=>NULL],['persetujuan'=>'Ditolak'],['persetujuan'=>'Disetujui']]);
           break;
 
   }

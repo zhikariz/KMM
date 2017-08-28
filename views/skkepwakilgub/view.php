@@ -30,6 +30,7 @@ $no_dokumen = $model->kode_tahun."/".$model->no_dokumen."/".$model->format_dokum
   <?php if(Yii::$app->user->identity->role->ket_role == 'Administrator' || Yii::$app->user->identity->role->ket_role == 'Operator'){?>
     <p>
         <?= Html::a('Update', ['update', 'kode'=>$model->format_dokumen,'id' => $model->id_sk_kepwakil_gub], ['class' => 'btn btn-primary']) ?>
+          <?php if(Yii::$app->user->identity->role->ket_role == 'Administrator'){?>
         <?= Html::a('Delete', ['delete', 'kode'=>$model->format_dokumen,'id' => $model->id_sk_kepwakil_gub], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -37,6 +38,7 @@ $no_dokumen = $model->kode_tahun."/".$model->no_dokumen."/".$model->format_dokum
                 'method' => 'post',
             ],
         ]) ?>
+        <?php }?>
     </p>
     <?php }?>
 

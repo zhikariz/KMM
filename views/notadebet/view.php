@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use aryelds\sweetalert\SweetAlert;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Notadebet */
@@ -19,6 +20,7 @@ $this->params['data2'] = $dataSifatDokumen;
   <?php if(Yii::$app->user->identity->role->ket_role == 'Administrator' || Yii::$app->user->identity->role->ket_role == 'Operator'){?>
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->id_nota_debet], ['class' => 'btn btn-primary']) ?>
+          <?php if(Yii::$app->user->identity->role->ket_role == 'Administrator'){?>
         <?= Html::a('Delete', ['delete', 'id' => $model->id_nota_debet], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -26,8 +28,20 @@ $this->params['data2'] = $dataSifatDokumen;
                 'method' => 'post',
             ],
         ]) ?>
+        <?php }?>
     </p>
     <?php }?>
+    <?php foreach (Yii::$app->session->getAllFlashes() as $message) {
+        echo SweetAlert::widget([
+            'options' => [
+                'title' => (!empty($message['title'])) ? Html::encode($message['title']) : 'Title Not Set!',
+                'text' => (!empty($message['text'])) ? Html::encode($message['text']) : 'Text Not Set!',
+                'type' => (!empty($message['type'])) ? $message['type'] : SweetAlert::TYPE_INFO,
+                'timer' => (!empty($message['timer'])) ? $message['timer'] : 4000,
+                'showConfirmButton' =>  (!empty($message['showConfirmButton'])) ? $message['showConfirmButton'] : true,
+            ]
+        ]);
+    }?>
 
     <?= DetailView::widget([
         'model' => $model,

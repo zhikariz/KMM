@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
+use aryelds\sweetalert\SweetAlert;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\NotadebetSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -15,6 +16,17 @@ $this->params['data2'] = $dataSifatDokumen;
 <div class="notadebet-index">
 
     <?php Pjax::begin(); ?>
+    <?php foreach (Yii::$app->session->getAllFlashes() as $message) {
+        echo SweetAlert::widget([
+            'options' => [
+                'title' => (!empty($message['title'])) ? Html::encode($message['title']) : 'Title Not Set!',
+                'text' => (!empty($message['text'])) ? Html::encode($message['text']) : 'Text Not Set!',
+                'type' => (!empty($message['type'])) ? $message['type'] : SweetAlert::TYPE_INFO,
+                'timer' => (!empty($message['timer'])) ? $message['timer'] : 4000,
+                'showConfirmButton' =>  (!empty($message['showConfirmButton'])) ? $message['showConfirmButton'] : true,
+            ]
+        ]);
+    }?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>

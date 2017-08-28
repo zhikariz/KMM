@@ -122,6 +122,13 @@ class SkkepwakilgubController extends Controller
           if($model->file_dokumen != NULL)
           $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);
 
+          Yii::$app->getSession()->setFlash('success', [
+         'text' => 'Dokumen Telah Disimpan',
+         'title' => 'Tersimpan',
+         'type' => 'success',
+         'timer' => 3000,
+         'showConfirmButton' => true
+     ]);
             return $this->redirect(['view',
             'id'=>$model->id_sk_kepwakil_gub,
             'kode'=>$kode,
@@ -181,8 +188,8 @@ class SkkepwakilgubController extends Controller
             if($temp_model->file_dokumen != $dataSk->file_dokumen){
             $temp_model->file_dokumen->saveAs('uploads/' . $temp_model->file_dokumen->baseName . '.' . $temp_model->file_dokumen->extension);}
             Yii::$app->getSession()->setFlash('success', [
-           'text' => 'Update Telah Disimpan',
-           'title' => 'Tersimpan',
+           'text' => 'Dokumen Selesai Terupdate Silahkan Tunggu Approval Untuk Menyetujui',
+           'title' => 'Proses Update',
            'type' => 'success',
            'timer' => 3000,
            'showConfirmButton' => true
@@ -215,6 +222,13 @@ class SkkepwakilgubController extends Controller
     public function actionDelete($kode,$id)
     {
         $this->findModel($id)->delete();
+        Yii::$app->getSession()->setFlash('success', [
+       'text' => 'Dokumen Telah Dihapus',
+       'title' => 'Terhapus',
+       'type' => 'success',
+       'timer' => 3000,
+       'showConfirmButton' => true
+   ]);
 
         return $this->redirect(['index','kode'=>$kode]);
     }
