@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Suratjalan;
+use app\models\TempNotaDebet;
 
 /**
- * SuratjalanSearch represents the model behind the search form of `app\models\Suratjalan`.
+ * TempNotaDebetSearch represents the model behind the search form of `app\models\TempNotaDebet`.
  */
-class SuratjalanSearch extends Suratjalan
+class TempNotaDebetSearch extends TempNotaDebet
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class SuratjalanSearch extends Suratjalan
     public function rules()
     {
         return [
-            [['id_surat_jalan', 'kode_tahun', 'no_dokumen', 'id_user'], 'integer'],
-            [['kode_satuan_kerja','perihal','format_dokumen', 'pengesah', 'waktu_input', 'file_dokumen'], 'safe'],
+            [['id_temp_nota_debet', 'id_nota_debet', 'kode_tahun', 'no_dokumen', 'id_user'], 'integer'],
+            [['kode_satuan_kerja', 'kode_satker_pusat', 'pengesah', 'perihal', 'waktu_input', 'file_dokumen', 'editor'], 'safe'],
         ];
     }
 
@@ -41,19 +41,12 @@ class SuratjalanSearch extends Suratjalan
      */
     public function search($params)
     {
-        switch (Yii::$app->user->identity->role->ket_role) {
-      case 'Administrator':
-          $query = Suratjalan::find();
-          break;
-      case 'Operator':
-          $query = Suratjalan::find()->andWhere(['or',['persetujuan'=>'Ditolak'],['persetujuan'=>'Disetujui'],['persetujuan'=>NULL]]);
-          break;
-  }
+        $query = TempNotaDebet::find();
+
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination'=>['pageSize'=>5],
         ]);
 
         $this->load($params);
@@ -66,19 +59,20 @@ class SuratjalanSearch extends Suratjalan
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id_surat_jalan' => $this->id_surat_jalan,
+            'id_temp_nota_debet' => $this->id_temp_nota_debet,
+            'id_nota_debet' => $this->id_nota_debet,
             'kode_tahun' => $this->kode_tahun,
             'no_dokumen' => $this->no_dokumen,
             'id_user' => $this->id_user,
-            'perihal'=>$this->perihal,
         ]);
 
         $query->andFilterWhere(['like', 'kode_satuan_kerja', $this->kode_satuan_kerja])
-            ->andFilterWhere(['like', 'format_dokumen', $this->format_dokumen])
+            ->andFilterWhere(['like', 'kode_satker_pusat', $this->kode_satker_pusat])
             ->andFilterWhere(['like', 'pengesah', $this->pengesah])
+            ->andFilterWhere(['like', 'perihal', $this->perihal])
             ->andFilterWhere(['like', 'waktu_input', $this->waktu_input])
             ->andFilterWhere(['like', 'file_dokumen', $this->file_dokumen])
-            ->andFilterWhere(['like', 'perihal', $this->perihal]);
+            ->andFilterWhere(['like', 'editor', $this->editor]);
 
         return $dataProvider;
     }

@@ -14,7 +14,13 @@ use \kartik\widgets\Select2;
   <?php $form = ActiveForm::begin([
                'options' => ['enctype'=>'multipart/form-data']
            ]); ?>
-
+           <?php
+           if (!$model->isNewRecord) {
+             if(Yii::$app->user->identity->role->ket_role== 'Administrator'){
+             echo $form->field($model, 'no_dokumen')->textInput(['maxlength' => true,]);
+           }
+           }
+             ?>
     <?php
     echo $form->field($model, 'kode_satuan_kerja')->widget(Select2::classname(),
     [

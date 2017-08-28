@@ -16,6 +16,7 @@ use app\models\Tahun;
 use app\models\Satuankerja;
 use app\models\Satkerpusat;
 use yii\web\UploadedFile;
+use app\models\TempNotaDebet;
 
 /**
  * NotadebetController implements the CRUD actions for Notadebet model.
@@ -120,7 +121,7 @@ class NotadebetController extends Controller
             $model->waktu_input = date("d-m-Y H:i:s");
             $model->id_user = Yii::$app->user->identity->id_user;
             $model->persetujuan = NULL;
-            $model->ket_persetujuan=NULL;
+            $model->ket_persetujuan = NULL;
 
             $model->save(false);
             if($model->file_dokumen != NULL)
@@ -150,6 +151,7 @@ class NotadebetController extends Controller
         $dataNota = $this->findModel($id);
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
+        $temp_model = new TempNotaDebet();
         //ngambil data drop down
         $satker = ArrayHelper::map(Satuankerja::find()->all(), 'kode_satuan_kerja', 'ket_satuan_kerja');
         $satkerPusat = ArrayHelper::map(Satkerpusat::find()->all(), 'kode_satker_pusat', 'ket_satker_pusat');
@@ -157,18 +159,35 @@ class NotadebetController extends Controller
         $pengesah = ArrayHelper::map(Pengesah::find()->all(), 'nama_pengesah', 'nama_pengesah');
 
         if ($model->load(Yii::$app->request->post()) ) {
-          $model->file_dokumen = UploadedFile::getInstance($model,'file_dokumen');
+          $temp_model->file_dokumen = UploadedFile::getInstance($model,'file_dokumen');
 
-          if($model->file_dokumen == NULL){
-            $model->file_dokumen = $dataNota->file_dokumen;
+          if($temp_model->file_dokumen == NULL){
+            $temp_model->file_dokumen = $dataNota->file_dokumen;
+          }
+
+          if(Yii::$app->user->identity->role->ket_role == 'Administrator')
+          {
+              $temp_model->no_dokumen = $model->no_dokumen;
+          }else{
+              $temp_model->no_dokumen = $dataNota->no_dokumen;
           }
           $pengesah_temp = $model->pengesah;
-          $model->pengesah = json_encode($pengesah_temp);
-          $model->persetujuan = 'Belum Disetujui';
-          $model->ket_persetujuan=NULL;
-            $model->save();
-            if($model->file_dokumen != $dataNota->file_dokumen){
-            $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);}
+          $temp_model->pengesah = json_encode($pengesah_temp);
+          $temp_model->id_nota_debet = $dataNota->id_nota_debet;
+          $temp_model->kode_tahun = $dataNota->kode_tahun;
+          $temp_model->kode_satuan_kerja = $model->kode_satuan_kerja;
+          $temp_model->kode_satker_pusat = $model->kode_satker_pusat;
+          $temp_model->perihal = $model->perihal;
+          $temp_model->id_user = $dataNota->id_user;
+          $temp_model->waktu_input = $dataNota->waktu_input;
+          $temp_model->editor = Yii::$app->user->identity->nama_user;
+
+          $this->actionBelum($id);
+          $temp_model->save(false);
+            if($temp_model->file_dokumen != $dataNota->file_dokumen)
+            {
+              $temp_model->file_dokumen->saveAs('uploads/' . $temp_model->file_dokumen->baseName . '.' . $temp_model->file_dokumen->extension);
+            }
             return $this->redirect(['view', 'id' => $model->id_nota_debet]);
         } else {
           $temp = json_decode($model->pengesah);
@@ -197,26 +216,19 @@ class NotadebetController extends Controller
         return $this->redirect(['index']);
     }
 
-    public function actionApprove($id)
+  
+
+    public function actionBelum($id)
     {
-      $model = $this->findModel($id);
-        $model->persetujuan = 'Disetujui';
-        $model->ket_persetujuan = 'Telah Disetujui Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
-        $model->save();
+        $data = $this->getJenisDokumen();
+        $data2 = $this->getSifatDokumen();
+        $model = $this->findModel($id);
 
-        return $this->redirect(['index']);
+          $model->persetujuan = 'Belum Disetujui';
+        $model->ket_persetujuan=NULL;
+          $model->save();
+          return null;
     }
-
-    public function actionReject($id)
-    {
-      $model = $this->findModel($id);
-        $model->persetujuan = 'Ditolak';
-        $model->ket_persetujuan = 'Telah Ditolak Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
-        $model->save();
-
-        return $this->redirect(['index']);
-    }
-
     /**
      * Finds the Notadebet model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

@@ -70,8 +70,8 @@ $this->params['data2'] = $dataSifatDokumen;
       [
         'attribute'=>'tujuan_disposisi',
         'format'=>'html',
-        'content'=>function($model,$key,$index) use ($dataDokumenMasuk){
-          $temp=json_decode($dataDokumenMasuk[$index]['tujuan_disposisi'],true);
+        'content'=>function($model,$key,$index){
+          $temp=json_decode($model->tujuan_disposisi,true);
           $a = $temp['kepala'];
         for($i=0;$i<count($a);$i++){
           $vl[$i]='<button class="btn-xs btn btn-danger" style="margin: 1px;">'.$a[$i].'</button>';
@@ -91,8 +91,8 @@ $this->params['data2'] = $dataSifatDokumen;
       [
         'attribute'=>'petunjuk_disposisi',
         'format'=>'html',
-        'content'=>function($model,$key,$index) use ($dataDokumenMasuk){
-          $temp=json_decode($dataDokumenMasuk[$index]['petunjuk_disposisi'],true);
+        'content'=>function($model,$key,$index){
+          $temp=json_decode($model->petunjuk_disposisi,true);
         for($i=0;$i<count($temp);$i++){
           $vl[$i]='<button class="btn-xs btn btn-warning" style="margin: 1px;">'.$temp[$i].'</button><br>';
         }
@@ -125,8 +125,8 @@ $this->params['data2'] = $dataSifatDokumen;
         'hAlign' => 'center',
         'format'=>'raw',
         'content' =>
-        function($model, $key, $index) use ($dataDokumenMasuk){
-          $temp = $dataDokumenMasuk[$index]['file_dokumen'];
+        function($model, $key, $index){
+          $temp = $model->file_dokumen;
           if($temp == NULL){
             return "File Tidak Ada";
           }else{

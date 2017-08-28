@@ -152,7 +152,7 @@ border-left-color: #fff;
                   <li><?=Html::a('SK Kepala Perwakilan', ['tempskkepwakilgub/index','kode'=>'Kep/KPwBI/Slo/Intern'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Administratif')])?></li>
                   <li><?=Html::a('SK Gubernur BI', ['tempskkepwakilgub/index','kode'=>'Kep.GBI/Slo'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'SK Kep Wakil & SK Gub BI')])?></li>
                   <li><?=Html::a('Surat Jalan', ['tempsuratjalan/index','kode'=>'Perjl.'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Surat Jalan')])?></li>
-                  <li><?=Html::a('Nota Debet', ['notadebet/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Nota Debet')])?></li>
+                  <li><?=Html::a('Nota Debet', ['tempnotadebet/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Nota Debet')])?></li>
                 </ul>
               </li>
 
@@ -161,7 +161,7 @@ border-left-color: #fff;
                 <ul class="dropdown-menu" role="menu">
                   <?php foreach($this->params['data2'] as $index2){
                     ?>
-                    <li><?=Html::a($index2['ket_sifat_dokumen'], ['dokumenmasuk/index','sifat'=>$index2['kode_sifat_dokumen']], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Satuan Kerja')])?></li>
+                    <li><?=Html::a($index2['ket_sifat_dokumen'], ['tempdokumenmasuk/index','sifat'=>$index2['kode_sifat_dokumen']], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Satuan Kerja')])?></li>
                     <?php
                   }?>
                 </ul>

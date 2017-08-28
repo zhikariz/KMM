@@ -53,6 +53,16 @@ use \kartik\widgets\Select2;
     'options'=>['placeholder'=>'Pilih Satuan Kerja Pusat'],
     'pluginOptions' => ['allowClear' => true]
   ]);?>
+  <?php
+  echo $form->field($model, 'dari')->widget(Select2::classname(),
+  [
+  'data' => $dataKepala,
+  'disabled' => Yii::$app->user->identity->role->ket_role != 'Administrator' ? true:false,
+  'options'=>['placeholder'=>'Pilih Dari'],
+  'pluginOptions' => ['allowClear' => true]
+  ]);?>
+
+
 
     <?= $form->field($model, 'tujuan_disposisi[kepala]')->checkboxlist($dataKepala,['separator'=>'<br>','onclick' => Yii::$app->user->identity->role->ket_role != 'Administrator' ? 'return false;':'return true;']);?>
     <?php }else{
@@ -90,6 +100,15 @@ use \kartik\widgets\Select2;
   'options'=>['placeholder'=>'Pilih Kesegeraan'],
   'pluginOptions' => ['allowClear' => true]
 ]);?>
+
+<?php
+echo $form->field($model, 'dari')->widget(Select2::classname(),
+[
+'data' => $dataKepala,
+'options'=>['placeholder'=>'Pilih Dari'],
+'pluginOptions' => ['allowClear' => true]
+]);?>
+
 
       <?= $form->field($model, 'tujuan_disposisi[kepala]')->checkboxlist($dataKepala,['separator'=>'<br>']);?>
       <?php }?>

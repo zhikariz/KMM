@@ -16,6 +16,7 @@ use app\models\Unitkerja;
 use app\models\Petunjuk;
 use app\models\Pejabat;
 use yii\web\UploadedFile;
+use app\models\TempDokumenMasuk;
 
 /**
  * DokumenmasukController implements the CRUD actions for Dokumenmasuk model.
@@ -48,24 +49,11 @@ class DokumenmasukController extends Controller
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
 
-        switch (Yii::$app->user->identity->role->ket_role) {
-      case 'Administrator':
-          $data_dokumen_masuk = Dokumenmasuk::find()->where(['kode_sifat_dokumen'=>$sifat])->all();
-          break;
-      case 'Operator':
-        $data_dokumen_masuk = Dokumenmasuk::find()->where(['kode_sifat_dokumen'=>$sifat])->all();
-          break;
-      case 'Approval':
-          $data_dokumen_masuk = Dokumenmasuk::find()->where(['kode_sifat_dokumen'=>$sifat,'persetujuan'=>'Belum Disetujui'])->all();
-          break;
-
-  }
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2,
-            'dataDokumenMasuk' => $data_dokumen_masuk,
         ]);
     }
 
@@ -117,7 +105,7 @@ class DokumenmasukController extends Controller
           $model->waktu_input = date("d-m-Y H:i:s");
           $model->id_user = Yii::$app->user->identity->id_user;
           $model->persetujuan = NULL;
-          $model->ket_persetujuan=NULL;
+          $model->ket_persetujuan = NULL;
           $model->save();
           if($model->file_dokumen != NULL)
           $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);
@@ -151,29 +139,38 @@ class DokumenmasukController extends Controller
         $dataKepala = ArrayHelper::map(Pejabat::find()->all(), 'nama_deputi', 'nama_deputi');
         $dataUnit = ArrayHelper::map(Unitkerja::find()->all(), 'ket_unit_kerja', 'ket_unit_kerja');
         $dataPetunjuk= ArrayHelper::map(Petunjuk::find()->all(), 'keterangan_petunjuk', 'keterangan_petunjuk');
+        $temp_model = new TempDokumenMasuk();
 
         if ($model->load(Yii::$app->request->post())) {
+          $temp_model->id_dokumen_masuk = $dataMasuk->id_dokumen_masuk;
+          $temp_model->no_dokumen = $model->no_dokumen;
+          $temp_model->tgl_dokumen = $model->tgl_dokumen;
+          $temp_model->perihal = $model->perihal;
+          $temp_model->asal_dokumen = $model->asal_dokumen;
+          $temp_model->tgl_terima = $model->tgl_terima;
+          $temp_model->kode_sifat_dokumen = $sifat;
+          $temp_model->kesegeraan = $model->kesegeraan;
+          $temp_model->dari = $model->dari;
           $temp = json_encode($model->tujuan_disposisi);
-          $model->tujuan_disposisi = $temp;
-
+          $temp_model->tujuan_disposisi = $temp;
           $temp2 = json_encode($model->petunjuk_disposisi);
-          $model->petunjuk_disposisi = $temp2;
+          $temp_model->petunjuk_disposisi = $temp2;
+          $temp_model->ket_disposisi_kepala = $model->ket_disposisi_kepala;
+          $temp_model->ket_disposisi_tim = $model->ket_disposisi_tim;
+          $temp_model->ket_disposisi_unit = $model->ket_disposisi_unit;
 
-          $model->file_dokumen = UploadedFile::getInstance($model,'file_dokumen');
+          $temp_model->file_dokumen = UploadedFile::getInstance($model,'file_dokumen');
 
-          if($model->file_dokumen == NULL){
-            $model->file_dokumen = $dataMasuk->file_dokumen;
+          if($temp_model->file_dokumen == NULL){
+            $temp_model->file_dokumen = $dataMasuk->file_dokumen;
           }
-
-
-          $model->kode_sifat_dokumen = $sifat;
-          $model->waktu_input = date("d-m-Y H:i:s");
-          $model->id_user = Yii::$app->user->identity->id_user;
-          $model->persetujuan = 'Belum Disetujui';
-          $model->ket_persetujuan=NULL;
-          $model->save();
-          if($model->file_dokumen != $dataMasuk->file_dokumen)
-          $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);
+          $temp_model->waktu_input = $dataMasuk->waktu_input;
+          $temp_model->id_user = $dataMasuk->id_user;
+          $temp_model->editor = Yii::$app->user->identity->nama_user;
+          $temp_model->save(false);
+          $this->actionBelum($sifat,$id);
+          if($temp_model->file_dokumen != $dataMasuk->file_dokumen)
+          $temp_model->file_dokumen->saveAs('uploads/' . $temp_model->file_dokumen->baseName . '.' . $temp_model->file_dokumen->extension);
           return $this->redirect(['view','sifat'=>$sifat,'id' => $model->id_dokumen_masuk,'model' => $model,
           'dataJenisDokumen' => $data,
           'dataSifatDokumen' => $data2,]);
@@ -206,26 +203,19 @@ class DokumenmasukController extends Controller
         return $this->redirect(['index','sifat'=>$sifat]);
     }
 
-    public function actionApprove($sifat,$id)
+    
+
+    public function actionBelum($sifat,$id)
     {
-      $model = $this->findModel($id);
-        $model->persetujuan = 'Disetujui';
-        $model->ket_persetujuan = 'Telah Disetujui Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
-        $model->save();
+        $data = $this->getJenisDokumen();
+        $data2 = $this->getSifatDokumen();
+        $model = $this->findModel($id);
 
-        return $this->redirect(['index','sifat'=>$sifat]);
+          $model->persetujuan = 'Belum Disetujui';
+        $model->ket_persetujuan=NULL;
+          $model->save();
+          return null;
     }
-
-    public function actionReject($sifat,$id)
-    {
-      $model = $this->findModel($id);
-        $model->persetujuan = 'Ditolak';
-        $model->ket_persetujuan = 'Telah Ditolak Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
-        $model->save();
-
-        return $this->redirect(['index','sifat'=>$sifat]);
-    }
-
     /**
      * Finds the Dokumenmasuk model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

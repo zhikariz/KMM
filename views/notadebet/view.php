@@ -27,24 +27,7 @@ $this->params['data2'] = $dataSifatDokumen;
             ],
         ]) ?>
     </p>
-    <?php }else{?>
-      <p>
-        <?= Html::a('Setujui', ['approve', 'id' => $model->id_nota_debet], [
-            'class' => 'btn btn-success',
-            'data' => [
-                'confirm' => 'Apakah kamu ingin menyetujui surat ini?',
-                'method' => 'post',
-            ],
-        ]) ?>
-        <?= Html::a('Tolak', ['reject', 'id' => $model->id_nota_debet], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Apakah kamu ingin menolak surat ini?',
-                'method' => 'post',
-            ],
-        ]) ?>
-      </p>
-      <?php } ?>
+    <?php }?>
 
     <?= DetailView::widget([
         'model' => $model,
@@ -65,6 +48,7 @@ return $no_dokumen;
             'format'=>'raw',
             'value'=>Html::a($model->file_dokumen, "uploads/$model->file_dokumen", ['target'=>'_blank']),
             ],
+
             [
               'attribute'=>'persetujuan',
               'format'=>'raw',
@@ -80,7 +64,10 @@ return $no_dokumen;
             ],
             [
               'attribute'=>'ket_persetujuan',
-            ]
+            ],
+            [
+              'attribute'=>'editor'
+            ],
         ],
     ]) ?>
 

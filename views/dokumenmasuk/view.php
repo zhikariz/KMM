@@ -25,22 +25,7 @@ $this->params['data2'] = $dataSifatDokumen;
         ]) ?>
     </p>
 <?php }else{?>
-  <p>
-    <?= Html::a('Setujui', ['approve', 'sifat'=>$_GET['sifat'],'id' => $model->id_dokumen_masuk], [
-        'class' => 'btn btn-success',
-        'data' => [
-            'confirm' => 'Apakah kamu ingin menyetujui surat ini?',
-            'method' => 'post',
-        ],
-    ]) ?>
-    <?= Html::a('Tolak', ['reject', 'sifat'=>$_GET['sifat'],'id' => $model->id_dokumen_masuk], [
-        'class' => 'btn btn-danger',
-        'data' => [
-            'confirm' => 'Apakah kamu ingin menolak surat ini?',
-            'method' => 'post',
-        ],
-    ]) ?>
-  </p>
+
   <?php }?>
     <?= DetailView::widget([
         'model' => $model,
@@ -50,6 +35,7 @@ $this->params['data2'] = $dataSifatDokumen;
             'perihal',
             'asal_dokumen',
             'tgl_terima',
+            'dari',
             'kodeSifatDokumen.ket_sifat_dokumen',
             [
             'attribute'=>'tujuan_disposisi',
@@ -112,7 +98,11 @@ $this->params['data2'] = $dataSifatDokumen;
             ],
             [
               'attribute'=>'ket_persetujuan',
-            ]
+            ],
+            [
+              'attribute'=>'editor',
+            ],
+
         ],
     ]) ?>
 

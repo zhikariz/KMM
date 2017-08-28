@@ -4,18 +4,18 @@ use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\TempSuratjalanSearch */
+/* @var $searchModel app\models\TempNotaDebetSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Temp Suratjalans';
+$this->title = 'Temp Nota Debets';
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['data'] = $dataJenisDokumen;
 $this->params['data2'] = $dataSifatDokumen;
 ?>
-<div class="temp-suratjalan-index">
+<div class="temp-nota-debet-index">
+
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
     <?= GridView::widget([
     'dataProvider'=>$dataProvider,
     'filterModel'=>$searchModel,
@@ -32,8 +32,8 @@ $this->params['data2'] = $dataSifatDokumen;
         'attribute'=>'no_dokumen',
         'vAlign' => 'middle',
         'hAlign' => 'center',
-        'content' => function($model, $key, $index)  {
-                  $content = $model->kode_tahun."/".$model->no_dokumen."/".$model->format_dokumen."/".$model->kode_satuan_kerja;
+        'content' => function($model, $key, $index) {
+                  $content = $model->kode_tahun."/".$model->kode_satuan_kerja."/".$model->no_dokumen."/".$model->kode_satker_pusat;
                   return $content;
               },
       ],
@@ -107,16 +107,16 @@ $this->params['data2'] = $dataSifatDokumen;
         ],
         'urlCreator' => function ($action, $model, $key, $index) {
           if ($action === 'view') {
-              $url ='index.php?r=tempsuratjalan/view&kode='.$_GET['kode'].'&id='.$model->id_temp_suratjalan;
+              $url ='index.php?r=tempnotadebet/view'.'&id='.$model->id_temp_nota_debet;
               return $url;
           }
 
           if ($action === 'update') {
-              $url ='index.php?r=tempsuratjalan/update&kode='.$_GET['kode'].'&id='.$model->id_surat_jalan;
+              $url ='index.php?r=notadebet/update'.'&id='.$model->id_nota_debet;
               return $url;
           }
           if ($action === 'delete') {
-              $url ='index.php?r=tempsuratjalan/delete&kode='.$_GET['kode'].'&id='.$model->id_surat_jalan;
+              $url ='index.php?r=notadebet/delete'.'&id='.$model->id_nota_debet;
               return $url;
           }
 
@@ -130,7 +130,7 @@ $this->params['data2'] = $dataSifatDokumen;
     // set your toolbar
     'toolbar'=> [
         ['content'=>
-            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index','kode'=>$_GET['kode']], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')])
+          Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index'], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')])
         ],
         '{export}',
         '{toggleData}',
@@ -142,11 +142,10 @@ $this->params['data2'] = $dataSifatDokumen;
     // parameters from the demo form
     'panel'=>[
         'type'=>GridView::TYPE_PRIMARY,
-        'heading' => "Surat Jalan"
+        'heading' => "Temp Nota Debet"
     ],
     'persistResize'=>false,
     'toggleDataOptions'=>['minCount'=>10],
     ]); ?>
-
     <?php Pjax::end(); ?>
 </div>
