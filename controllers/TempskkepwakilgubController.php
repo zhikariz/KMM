@@ -11,6 +11,9 @@ use yii\filters\VerbFilter;
 use app\models\Jenisdokumen;
 use app\models\Sifatdokumen;
 use app\models\SkKepwakilGub;
+use app\models\User;
+use yii\filters\AccessControl;
+use app\components\AccessRule;
 
 /**
  * TempskkepwakilgubController implements the CRUD actions for TempSkKepwakilGub model.
@@ -22,7 +25,28 @@ class TempskkepwakilgubController extends Controller
      */
     public function behaviors()
     {
-        return [
+      return [
+        'access' => [
+            'class' => AccessControl::className(),
+            'ruleConfig' => [
+                     'class' => AccessRule::className(),
+                 ],
+            'only' => ['logout','index','create','update','delete','view','approve','reject'],
+            'rules' => [
+              //nek wes login
+                [
+                    'actions' => ['logout','index','create','update','delete','view','approve','reject'],
+                    'allow' => true,
+                    'roles' => [
+                      User::ROLE_ADMIN,
+                    ],
+                ],
+
+                ]
+
+
+                //nek rung login
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -144,8 +168,8 @@ class TempskkepwakilgubController extends Controller
         $model_sk->id_user = $model->id_user;
         $model_sk->waktu_input = $model->waktu_input;
         $model_sk->file_dokumen = $model->file_dokumen;
-        $model_sk->persetujuan = 'Disetujui';
-        $model_sk->ket_persetujuan = 'Telah Disetujui Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
+        $model_sk->persetujuan_edit = 'Disetujui';
+        $model_sk->ket_persetujuan_edit = 'Telah Disetujui Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
         if($model_sk->editor == null){
           $temp_editor = $model->editor;
             $model_sk->editor = $temp_editor;
@@ -162,8 +186,8 @@ class TempskkepwakilgubController extends Controller
     {
       $model = $this->findModel($id);
       $model_sk = SkKepwakilGub::find()->where(['id_sk_kepwakil_gub'=>$model->id_sk_kepwakil_gub])->one();
-        $model_sk->persetujuan = 'Ditolak';
-        $model_sk->ket_persetujuan = 'Telah Ditolak Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
+        $model_sk->persetujuan_edit = 'Ditolak';
+        $model_sk->ket_persetujuan_edit = 'Telah Ditolak Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
         if($model_sk->editor == null){
           $temp_editor = $model->editor;
             $model_sk->editor = $temp_editor;

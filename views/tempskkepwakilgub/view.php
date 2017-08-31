@@ -9,7 +9,7 @@ use yii\widgets\DetailView;
 /* @var $model app\models\TempSkKepwakilGub */
 
 $this->title = "Detail Dokumen ".$model->kode_tahun."/".$model->no_dokumen."/".$model->format_dokumen."/".$model->kodeTahun->tahun;
-$this->params['breadcrumbs'][] = ['label' => 'Temp Sk Kepwakil Gubs', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Temp Sk Kepwakil Gubs', 'url' => ['index','kode'=>$_GET['kode']]];
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['data'] = $dataJenisDokumen;
 $this->params['data2'] = $dataSifatDokumen;
@@ -55,6 +55,7 @@ $no_dokumen = $model->kode_tahun."/".$model->no_dokumen."/".$model->format_dokum
             'format'=>'raw',
             'value'=>Html::a($model->file_dokumen, "uploads/$model->file_dokumen", ['target'=>'_blank']),
         ],
+        'editor',
         ],
     ]) ?>
 

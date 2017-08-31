@@ -99,7 +99,7 @@ $this->params['data2'] = $dataSifatDokumen;
       'class' => 'kartik\grid\ActionColumn',
       'header' => 'Actions',
       'headerOptions' => ['style' => 'color:#337ab7'],
-      'template' => '{view}{delete}',
+      'template' => '{view}',
       'buttons' => [
         'view' => function ($url, $model) {
             return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [

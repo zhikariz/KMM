@@ -41,12 +41,14 @@ class TempAdmSearch extends TempAdm
      */
     public function search($params,$kode,$sifat)
     {
-        $query = TempAdm::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat]);
+        $query = TempAdm::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat])
+        ->andWhere(['<>','editor',Yii::$app->user->identity->nama_user]);
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination'=>['pageSize'=>5]
         ]);
 
         $this->load($params);

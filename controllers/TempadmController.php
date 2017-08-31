@@ -11,6 +11,9 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Jenisdokumen;
 use app\models\Sifatdokumen;
+use app\models\User;
+use yii\filters\AccessControl;
+use app\components\AccessRule;
 
 /**
  * TempadmController implements the CRUD actions for TempAdm model.
@@ -22,7 +25,28 @@ class TempadmController extends Controller
      */
     public function behaviors()
     {
-        return [
+      return [
+        'access' => [
+            'class' => AccessControl::className(),
+            'ruleConfig' => [
+                     'class' => AccessRule::className(),
+                 ],
+            'only' => ['logout','index','create','update','delete','view','approve','reject'],
+            'rules' => [
+              //nek wes login
+                [
+                    'actions' => ['logout','index','create','update','delete','view','approve','reject'],
+                    'allow' => true,
+                    'roles' => [
+                      User::ROLE_ADMIN,
+                    ],
+                ],
+
+                ]
+
+
+                //nek rung login
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -158,8 +182,8 @@ class TempadmController extends Controller
             $model_adm->editor = implode(' , ',$temp_editor);
           }
 
-          $model_adm->persetujuan = 'Disetujui';
-          $model_adm->ket_persetujuan = 'Telah Disetujui Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
+          $model_adm->persetujuan_edit = 'Disetujui';
+          $model_adm->ket_persetujuan_edit = 'Telah Disetujui Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
           $model_adm->save();
           $this->findModel($id)->delete();
           return $this->redirect(['index','kode'=>$kode,'sifat'=>$sifat,
@@ -175,8 +199,8 @@ class TempadmController extends Controller
         $data2 = $this->getSifatDokumen();
         $model = $this->findModel($id);
         $model_adm = Administratif::find()->where(['id_surat_adm'=>$model->id_surat_adm])->one();
-          $model_adm->persetujuan = 'Ditolak';
-          $model_adm->ket_persetujuan = 'Telah Ditolak Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
+          $model_adm->persetujuan_edit = 'Ditolak';
+          $model_adm->ket_persetujuan_edit = 'Telah Ditolak Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
           if($model_adm->editor == null){
             $temp_editor = $model->editor;
             $model_adm->editor = $temp_editor;

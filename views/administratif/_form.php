@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use \kartik\widgets\Select2;
+use kartik\widgets\DepDrop;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Administratif */
@@ -29,8 +31,16 @@ if($model->isNewRecord){
       echo $form->field($model, 'format_dokumen[satker]')->widget(Select2::classname(),
       [
       'data' => $dataSatker,
-      'options'=>['placeholder'=>'Pilih Satuan Kerja'],
-      'pluginOptions' => ['allowClear' => true]
+      'options'=>
+      [
+        'placeholder'=>'Pilih Satuan Kerja',
+        'onchange'=>'woyo();',
+      ],
+      'pluginOptions' => ['allowClear' => true,
+
+    ],
+
+
       ]);
     }
 
@@ -38,45 +48,90 @@ if($model->isNewRecord){
       echo $form->field($model, 'format_dokumen[tim]')->widget(Select2::classname(),
       [
         'data' => $dataTim,
-        'options'=>['placeholder'=>'Pilih Tim']
+        'options'=>
+        [
+          'placeholder'=>'Pilih Tim',
+          'onchange'=>'woyos();',
+        ],
+        'pluginOptions' => ['allowClear' => true],
+        'disabled'=>true,
       ])
         ->label(false);
 
     }
+
     if(in_array("Unit Kerja",$satker)){
       echo $form->field($model, 'format_dokumen[unit]')->widget(Select2::classname(),
       [
         'data' => $dataUnit,
-        'options'=>['placeholder'=>'Pilih Unit']
+        'options'=>
+        [
+          'placeholder'=>'Pilih Unit',
+        ],
+        'pluginOptions' => ['allowClear' => true],
+        'disabled'=>true,
       ])
         ->label(false);
     }
   }else{
     if(in_array("Satuan Kerja",$satker)){
+      if(Yii::$app->user->identity->role->ket_role != 'Administrator'){
       echo $form->field($model, 'format_dokumen[satker]')->widget(Select2::classname(),
       [
       'data' => $dataSatker,
-      'disabled' => Yii::$app->user->identity->role->ket_role != 'Administrator'?true:false,
-      'options'=>['placeholder'=>'Pilih Satuan Kerja'],
+      'disabled' => true,
+      'options'=>[
+        'placeholder'=>'Pilih Satuan Kerja',
+        'onchange'=>'woyo();',
+      ],
       'pluginOptions' => ['allowClear' => true]
       ]);
 
+    }else{
+      echo $form->field($model, 'format_dokumen[satker]')->widget(Select2::classname(),
+      [
+      'data' => $dataSatker,
+      'options'=>[
+        'placeholder'=>'Pilih Satuan Kerja',
+        'onchange'=>'woyo();',
+      ],
+      'pluginOptions' => ['allowClear' => true]
+      ]);
     }
+  }
     if(in_array("Tim Kerja",$satker)){
+      if(Yii::$app->user->identity->role->ket_role != 'Administrator'){
       echo $form->field($model, 'format_dokumen[tim]')->widget(Select2::classname(),
       [
         'data' => $dataTim,
-        'disabled' => Yii::$app->user->identity->role->ket_role != 'Administrator'?true:false,
-        'options'=>['placeholder'=>'Pilih Tim']
+        'disabled' => true,
+        'options'=>
+        [
+          'placeholder'=>'Pilih Tim',
+        ]
       ])
         ->label(false);
+      } else {
+        echo $form->field($model, 'format_dokumen[tim]')->widget(Select2::classname(),
+        [
+          'data' => $dataTim,
+          'disabled' => true,
+          'options'=>
+          [
+            'placeholder'=>'Pilih Tim',
+            'onchange'=>'woyos();',
+          ]
+        ])
+          ->label(false);
+
+      }
 
     }
     if(in_array("Unit Kerja",$satker)){
       echo $form->field($model, 'format_dokumen[unit]')->widget(Select2::classname(),
       [
         'data' => $dataUnit,
-        'disabled' => Yii::$app->user->identity->role->ket_role != 'Administrator'?true:false,
+        'disabled' => Yii::$app->user->identity->role->ket_role != 'Administrator'?true:true,
         'options'=>['placeholder'=>'Pilih Unit']
       ])
         ->label(false);

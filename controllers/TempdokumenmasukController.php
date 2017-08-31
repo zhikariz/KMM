@@ -11,6 +11,9 @@ use yii\filters\VerbFilter;
 use app\models\Jenisdokumen;
 use app\models\Sifatdokumen;
 use app\models\Dokumenmasuk;
+use app\models\User;
+use yii\filters\AccessControl;
+use app\components\AccessRule;
 
 /**
  * TempdokumenmasukController implements the CRUD actions for TempDokumenMasuk model.
@@ -22,7 +25,28 @@ class TempdokumenmasukController extends Controller
      */
     public function behaviors()
     {
-        return [
+      return [
+        'access' => [
+            'class' => AccessControl::className(),
+            'ruleConfig' => [
+                     'class' => AccessRule::className(),
+                 ],
+            'only' => ['logout','index','create','update','delete','view','approve','reject'],
+            'rules' => [
+              //nek wes login
+                [
+                    'actions' => ['logout','index','create','update','delete','view','approve','reject'],
+                    'allow' => true,
+                    'roles' => [
+                      User::ROLE_ADMIN,
+                    ],
+                ],
+
+                ]
+
+
+                //nek rung login
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

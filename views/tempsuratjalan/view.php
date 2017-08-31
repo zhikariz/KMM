@@ -50,6 +50,7 @@ return $no_dokumen;
             'format'=>'raw',
             'value'=>Html::a($model->file_dokumen, "uploads/$model->file_dokumen", ['target'=>'_blank']),
             ],
+            'editor'
         ],
     ]) ?>
 

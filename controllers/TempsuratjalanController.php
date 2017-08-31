@@ -11,6 +11,9 @@ use yii\filters\VerbFilter;
 use app\models\Jenisdokumen;
 use app\models\Sifatdokumen;
 use app\models\Suratjalan;
+use app\models\User;
+use yii\filters\AccessControl;
+use app\components\AccessRule;
 
 /**
  * TempsuratjalanController implements the CRUD actions for TempSuratjalan model.
@@ -22,7 +25,28 @@ class TempsuratjalanController extends Controller
      */
     public function behaviors()
     {
-        return [
+      return [
+        'access' => [
+            'class' => AccessControl::className(),
+            'ruleConfig' => [
+                     'class' => AccessRule::className(),
+                 ],
+            'only' => ['logout','index','create','update','delete','view','approve','reject'],
+            'rules' => [
+              //nek wes login
+                [
+                    'actions' => ['logout','index','create','update','delete','view','approve','reject'],
+                    'allow' => true,
+                    'roles' => [
+                      User::ROLE_ADMIN,
+                    ],
+                ],
+
+                ]
+
+
+                //nek rung login
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -141,8 +165,8 @@ class TempsuratjalanController extends Controller
       $model_surat->id_user = $model->id_user;
       $model_surat->waktu_input = $model->waktu_input;
       $model_surat->file_dokumen = $model->file_dokumen;
-      $model_surat->persetujuan = 'Disetujui';
-      $model_surat->ket_persetujuan = 'Telah Disetujui Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
+      $model_surat->persetujuan_edit = 'Disetujui';
+      $model_surat->ket_persetujuan_edit = 'Telah Disetujui Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
       if($model_surat->editor == null){
         $temp_editor = $model->editor;
           $model_surat->editor = $temp_editor;
@@ -167,8 +191,8 @@ class TempsuratjalanController extends Controller
       $temp_editor = [$model_surat->editor,$model->editor];
         $model_surat->editor = implode(' , ',$temp_editor);
       }
-        $model_surat->persetujuan = 'Ditolak';
-        $model_surat->ket_persetujuan = 'Telah Ditolak Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
+        $model_surat->persetujuan_edit = 'Ditolak';
+        $model_surat->ket_persetujuan_edit = 'Telah Ditolak Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
         $model_surat->save();
         $this->findModel($id)->delete();
 

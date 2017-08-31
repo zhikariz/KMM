@@ -10,6 +10,9 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\Jenisdokumen;
 use app\models\Sifatdokumen;
+use app\models\User;
+use yii\filters\AccessControl;
+use app\components\AccessRule;
 
 /**
  * PejabatController implements the CRUD actions for Pejabat model.
@@ -21,7 +24,28 @@ class PejabatController extends Controller
      */
     public function behaviors()
     {
-        return [
+      return [
+        'access' => [
+            'class' => AccessControl::className(),
+            'ruleConfig' => [
+                     'class' => AccessRule::className(),
+                 ],
+            'only' => ['logout','index','create','update','delete','view'],
+            'rules' => [
+              //nek wes login
+                [
+                    'actions' => ['logout','index','create','update','delete','view'],
+                    'allow' => true,
+                    'roles' => [
+                      User::ROLE_ADMIN,
+                    ],
+                ],
+
+                ]
+
+
+                //nek rung login
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

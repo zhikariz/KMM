@@ -6,14 +6,41 @@ use aryelds\sweetalert\SweetAlert;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\DokumenmasukSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+if(date('d-m-Y') != $libur['waktu_hari_libur']){
+  $dataContent = Yii::$app->user->identity->role->ket_role== 'Operator' || Yii::$app->user->identity->role->ket_role=='Administrator'?
+  Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create','sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-success', 'title'=>Yii::t('app', 'Create Satuan Kerja')])   . ' '.
+    Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index','sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')]):
+      Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index','sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')]);
+      $dataTemplate = Yii::$app->user->identity->role->ket_role=='Approval'?'{view}':(Yii::$app->user->identity->role->ket_role=='Operator'?('{view}{update}'):'{view}{update}{delete}');
+}else{
+  $dataContent = Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index','sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')]);
+  $dataTemplate = '{view}';
+}
+if((date('D')=='Sat')||(date('D')=='Sun'))
+{
+  $dataContent = Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create','sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-success', 'title'=>Yii::t('app', 'Create Satuan Kerja')])   . ' '.Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index','sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')]);
+  $dataTemplate = '{view}';
+}
+$this->title = 'Dokumen Masuk ';
 
-$this->title = 'Dokumen Masuk';
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['data'] = $dataJenisDokumen;
 $this->params['data2'] = $dataSifatDokumen;
 ?>
 <div class="dokumenmasuk-index">
 
+  <?php if(date('d-m-Y') == $libur['waktu_hari_libur']){?>
+  <div class="row">
+<div class="col-sm-12 text-center" style="color:red;"><?='Hari Ini Libur dengan Keterangan '.$libur->ket_hari_libur."<br>".'Anda Tidak Dapat Melakukan Input, Edit dan Delete Dokumen'?></div>
+</div>
+<?php }?>
+<?php if((date('D')=='Sat')||(date('D')=='Sun'))
+{?>
+  <div class="row">
+<div class="col-sm-12 text-center" style="color:red;"><?php date('D')=="Sat"?$hari="Sabtu":$hari="Minggu" ?><?='Hari Ini Hari '.$hari.'<br> Anda Dapat Melakukan Input Dokumen tetapi tidak dapat Edit dan Delete Dokumen'?></div>
+</div>
+<?php }
+?>
     <?php Pjax::begin(); ?>
     <?php foreach (Yii::$app->session->getAllFlashes() as $message) {
         echo SweetAlert::widget([
@@ -84,11 +111,16 @@ $this->params['data2'] = $dataSifatDokumen;
         'format'=>'html',
         'content'=>function($model,$key,$index){
           $temp=json_decode($model->tujuan_disposisi,true);
+          if($temp['kepala']!=null){
           $a = $temp['kepala'];
         for($i=0;$i<count($a);$i++){
           $vl[$i]='<button class="btn-xs btn btn-danger" style="margin: 1px;">'.$a[$i].'</button>';
         }
-        $hasil = implode($vl);
+            $hasil = implode($vl);
+      }else{
+      $hasil = null;
+      }
+
         if($temp['unit']!=null){
         $c = $temp['unit'];
         for($i=0;$i<count((array)$c);$i++){
@@ -152,7 +184,7 @@ $this->params['data2'] = $dataSifatDokumen;
         'class' => 'kartik\grid\ActionColumn',
         'header' => 'Actions',
         'headerOptions' => ['style' => 'color:#337ab7'],
-      'template' => Yii::$app->user->identity->role->ket_role=='Approval'?'{view}':(Yii::$app->user->identity->role->ket_role=='Operator'?('{view}{update}'):'{view}{update}{delete}'),
+      'template' => $dataTemplate,
         'buttons' => [
           'view' => function ($url, $model) {
               return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
@@ -201,10 +233,8 @@ $this->params['data2'] = $dataSifatDokumen;
     // set your toolbar
     'toolbar'=> [
         ['content'=>
-        Yii::$app->user->identity->role->ket_role== 'Operator' || Yii::$app->user->identity->role->ket_role=='Administrator'?
-        Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create','sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-success', 'title'=>Yii::t('app', 'Create Satuan Kerja')])   . ' '.
-          Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index','sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')]):
-            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index','sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')])
+        $dataContent,
+
         ],
         '{export}',
         '{toggleData}',

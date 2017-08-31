@@ -16,7 +16,7 @@ AppAsset::register($this);
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <?= Html::csrfMetaTags() ?>
   <title><?= Html::encode($this->title) ?></title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  <link rel="stylesheet" href="dist/css/font.css">
   <link href='<?= Yii::$app->request->baseUrl?>/dist/img/bi.ico' rel='SHORTCUT ICON'/>
     <?php $this->head() ?>
     <style media="screen">
@@ -79,7 +79,7 @@ border-left-color: #fff;
         <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
           <ul class="nav navbar-nav">
             <?php
-            if(Yii::$app->user->identity->role->ket_role=='Administrator' || Yii::$app->user->identity->role->ket_role=='Operator'){
+            if(Yii::$app->user->identity->role->ket_role=='Administrator' || Yii::$app->user->identity->role->ket_role=='Operator' || Yii::$app->user->identity->role->ket_role=='Approval'){
             ?>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dokumen Masuk <span class="caret"></span></a>
@@ -123,7 +123,7 @@ border-left-color: #fff;
               </li>
 
               <?php }
-              if(Yii::$app->user->identity->role->ket_role=='Administrator' || Yii::$app->user->identity->role->ket_role=='Approval'){
+              if(Yii::$app->user->identity->role->ket_role=='Administrator'){
               ?>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Approval Dokumen Keluar <span class="caret"></span></a>
@@ -167,35 +167,6 @@ border-left-color: #fff;
                 </ul>
               </li>
               <?php }?>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Lain - Lain <span class="caret"></span></a>
-                <ul class="dropdown-menu" role="menu">
-                  <li class="dropdown-submenu">
-        <a tabindex="-1" href="#">Kinerja</a>
-        <ul class="dropdown-menu">
-          <li class="dropdown-submenu">
-            <a href="#">Anggaran</a>
-            <ul class="dropdown-menu">
-                <li><a href="#">Operasional</a></li>
-                <li><a href="#">Investasi</a></li>
-                <li><a href="#">PSBI</a></li>
-            </ul>
-          </li>
-          <li><a href="#">IKU</a></li>
-        </ul>
-      </li>
-      <li class="dropdown-submenu">
-<a tabindex="-1" href="#">Peminjaman</a>
-<ul class="dropdown-menu">
-<li><a href="#">Kendaraan</a></li>
-<li><a href="#">Ruang Rapat</a></li>
-</ul>
-</li>
-                  <li><a href="#">Pemesanan ATK</a></li>
-                  <li><a href="#">Project Management</a></li>
-                  <li><a href="#">Sanksi</a></li>
-                </ul>
-              </li>
           </ul>
 
         </div>
@@ -217,7 +188,6 @@ border-left-color: #fff;
                 <li><?=Html::a('Tim', ['tim/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Tim')])?></li>
                 <li><?=Html::a('Petunjuk / Disposisi', ['petunjuk/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Petunjuk / Disposisi')])?></li>
                 <li><?=Html::a('Satker Kantor Pusat', ['satkerpusat/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Satker Kantor Pusat')])?></li>
-                <li class="divider"></li>
                 <li><?=Html::a('User', ['user/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'User')])?></li>
                 <li><?=Html::a('Hari Libur', ['hariliburtahunan/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Hari Libur')])?></li>
               </ul>
@@ -359,4 +329,36 @@ function checkTime(i) {
 }
 setInterval(showTime, 500);
 //-->
+</script>
+<script>
+var obj = document.getElementById('administratif-format_dokumen-satker');
+var obj2 = document.getElementById('administratif-format_dokumen-tim');
+var obj3 = document.getElementById('administratif-format_dokumen-unit');
+$(document).ready(function(){
+  if(obj.options[obj.selectedIndex].text != 'Pilih Satuan Kerja'){
+    obj2.disabled = false;
+  }else{
+    obj2.disabled = true;
+  }
+  if(obj2.options[obj2.selectedIndex].text != 'Pilih Tim'){
+    obj3.disabled = false;
+  }else{
+    obj3.disabled = true;
+  }
+})
+function woyo(){
+  if(obj.options[obj.selectedIndex].text != null){
+    obj2.disabled = false;
+  }else{
+    obj2.disabled = true;
+  }
+}
+function woyos(){
+  if(obj2.options[obj2.selectedIndex].text != null){
+    obj3.disabled = false;
+  }else{
+    obj3.disabled = true;
+  }
+}
+
 </script>

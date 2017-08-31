@@ -38,9 +38,9 @@ class Notadebet extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['persetujuan','kode_tahun', 'no_dokumen', 'kode_satuan_kerja', 'kode_satker_pusat', 'pengesah', 'perihal', 'id_user', 'waktu_input'], 'required'],
+            [['kode_tahun', 'no_dokumen', 'kode_satuan_kerja', 'kode_satker_pusat', 'pengesah', 'perihal', 'id_user', 'waktu_input'], 'required'],
             [['kode_tahun', 'no_dokumen', 'id_user'], 'integer'],
-            [['ket_persetujuan'],'string'],
+            [['ket_penyetuju_dokumen','penyetuju_dokumen','persetujuan_edit','ket_persetujuan_edit'],'string'],
             [['kode_satuan_kerja'], 'exist', 'skipOnError' => true, 'targetClass' => Satuankerja::className(), 'targetAttribute' => ['kode_satuan_kerja' => 'kode_satuan_kerja']],
             [['kode_satker_pusat'], 'exist', 'skipOnError' => true, 'targetClass' => Satkerpusat::className(), 'targetAttribute' => ['kode_satker_pusat' => 'kode_satker_pusat']],
             [['kode_tahun'], 'exist', 'skipOnError' => true, 'targetClass' => Tahun::className(), 'targetAttribute' => ['kode_tahun' => 'kode_tahun']],

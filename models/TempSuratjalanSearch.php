@@ -41,12 +41,13 @@ class TempSuratjalanSearch extends TempSuratjalan
      */
     public function search($params)
     {
-        $query = TempSuratjalan::find();
+        $query = TempSuratjalan::find()->andWhere(['<>','editor',Yii::$app->user->identity->nama_user]);
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination'=>['pageSize'=>5]
         ]);
 
         $this->load($params);

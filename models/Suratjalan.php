@@ -39,7 +39,7 @@ class Suratjalan extends \yii\db\ActiveRecord
         return [
             [['kode_tahun', 'kode_satuan_kerja', 'no_dokumen', 'pengesah', 'perihal', 'id_user', 'waktu_input'], 'required'],
             [['kode_tahun', 'no_dokumen', 'id_user'], 'integer'],
-            [['persetujuan','ket_persetujuan'],'string'],
+            [['penyetuju_dokumen','ket_penyetuju_dokumen','persetujuan_edit','ket_persetujuan_edit'],'string'],
             [['kode_satuan_kerja'], 'exist', 'skipOnError' => true, 'targetClass' => Satuankerja::className(), 'targetAttribute' => ['kode_satuan_kerja' => 'kode_satuan_kerja']],
             [['kode_tahun'], 'exist', 'skipOnError' => true, 'targetClass' => Tahun::className(), 'targetAttribute' => ['kode_tahun' => 'kode_tahun']],
             [['id_user'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['id_user' => 'id_user']],

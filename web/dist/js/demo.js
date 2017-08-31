@@ -44,6 +44,7 @@ $(function () {
    * @param String name Name of of the setting
    * @returns String The value of the setting | null
    */
+
   function get(name) {
     if (typeof (Storage) !== 'undefined') {
       return localStorage.getItem(name)

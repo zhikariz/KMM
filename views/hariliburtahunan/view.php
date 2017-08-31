@@ -9,10 +9,10 @@ use yii\widgets\DetailView;
 $this->title = $model->id_hari_libur;
 $this->params['breadcrumbs'][] = ['label' => 'Hariliburtahunans', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['data'] = $dataJenisDokumen;
+$this->params['data2'] = $dataSifatDokumen;
 ?>
 <div class="hariliburtahunan-view">
-
-    <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
         <?= Html::a('Update', ['update', 'id' => $model->id_hari_libur], ['class' => 'btn btn-primary']) ?>

@@ -11,6 +11,9 @@ use yii\filters\VerbFilter;
 use app\models\Jenisdokumen;
 use app\models\Sifatdokumen;
 use app\models\Notadebet;
+use app\models\User;
+use yii\filters\AccessControl;
+use app\components\AccessRule;
 /**
  * TempnotadebetController implements the CRUD actions for TempNotaDebet model.
  */
@@ -21,7 +24,28 @@ class TempnotadebetController extends Controller
      */
     public function behaviors()
     {
-        return [
+      return [
+        'access' => [
+            'class' => AccessControl::className(),
+            'ruleConfig' => [
+                     'class' => AccessRule::className(),
+                 ],
+            'only' => ['logout','index','create','update','delete','view','approve','reject'],
+            'rules' => [
+              //nek wes login
+                [
+                    'actions' => ['logout','index','create','update','delete','view','approve','reject'],
+                    'allow' => true,
+                    'roles' => [
+                      User::ROLE_ADMIN,
+                    ],
+                ],
+
+                ]
+
+
+                //nek rung login
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -128,8 +152,8 @@ class TempnotadebetController extends Controller
         $model_nota->id_user = $model->id_user;
         $model_nota->waktu_input = $model->waktu_input;
         $model_nota->file_dokumen = $model->file_dokumen;
-        $model_nota->persetujuan = 'Disetujui';
-        $model_nota->ket_persetujuan = 'Telah Disetujui Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
+        $model_nota->persetujuan_edit = 'Disetujui';
+        $model_nota->ket_persetujuan_edit = 'Telah Disetujui Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
         if($model_nota->editor == null){
           $temp_editor = $model->editor;
           $model_nota->editor = $temp_editor;
@@ -147,8 +171,8 @@ class TempnotadebetController extends Controller
     {
       $model = $this->findModel($id);
       $model_nota = Notadebet::find()->where(['id_nota_debet'=>$model->id_nota_debet])->one();
-        $model_nota->persetujuan = 'Ditolak';
-        $model_nota->ket_persetujuan = 'Telah Ditolak Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
+        $model_nota->persetujuan_edit = 'Ditolak';
+        $model_nota->ket_persetujuan_edit = 'Telah Ditolak Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
         if($model_nota->editor == null){
           $temp_editor = $model->editor;
           $model_nota->editor = $temp_editor;

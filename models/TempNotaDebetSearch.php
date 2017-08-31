@@ -41,12 +41,13 @@ class TempNotaDebetSearch extends TempNotaDebet
      */
     public function search($params)
     {
-        $query = TempNotaDebet::find();
+        $query = TempNotaDebet::find()->andWhere(['<>','editor',Yii::$app->user->identity->nama_user]);
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination'=>['pageSize'=>5]
         ]);
 
         $this->load($params);

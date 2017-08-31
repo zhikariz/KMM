@@ -8,6 +8,11 @@ use app\models\HariliburtahunanSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Jenisdokumen;
+use app\models\Sifatdokumen;
+use app\models\User;
+use yii\filters\AccessControl;
+use app\components\AccessRule;
 
 /**
  * HariliburtahunanController implements the CRUD actions for Hariliburtahunan model.
@@ -19,7 +24,29 @@ class HariliburtahunanController extends Controller
      */
     public function behaviors()
     {
-        return [
+      return [
+        'access' => [
+            'class' => AccessControl::className(),
+            'ruleConfig' => [
+                     'class' => AccessRule::className(),
+                 ],
+            'only' => ['logout','index','create','update','delete','view'],
+            'rules' => [
+              //nek wes login
+                [
+                    'actions' => ['logout','index','create','update','delete','view'],
+                    'allow' => true,
+                    'roles' => [
+                      User::ROLE_ADMIN,
+                    ],
+                ],
+
+                ]
+
+
+                //nek rung login
+            ],
+
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -35,12 +62,16 @@ class HariliburtahunanController extends Controller
      */
     public function actionIndex()
     {
+      $data = $this->getJenisDokumen();
+      $data2 = $this->getSifatDokumen();
         $searchModel = new HariliburtahunanSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'dataJenisDokumen' => $data,
+            'dataSifatDokumen' => $data2
         ]);
     }
 
@@ -51,8 +82,12 @@ class HariliburtahunanController extends Controller
      */
     public function actionView($id)
     {
+      $data = $this->getJenisDokumen();
+      $data2 = $this->getSifatDokumen();
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'dataJenisDokumen' => $data,
+            'dataSifatDokumen' => $data2
         ]);
     }
 
@@ -64,12 +99,16 @@ class HariliburtahunanController extends Controller
     public function actionCreate()
     {
         $model = new Hariliburtahunan();
+        $data = $this->getJenisDokumen();
+        $data2 = $this->getSifatDokumen();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id_hari_libur]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'dataJenisDokumen' => $data,
+                'dataSifatDokumen' => $data2
             ]);
         }
     }
@@ -83,12 +122,16 @@ class HariliburtahunanController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $data = $this->getJenisDokumen();
+        $data2 = $this->getSifatDokumen();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id_hari_libur]);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'dataJenisDokumen' => $data,
+                'dataSifatDokumen' => $data2
             ]);
         }
     }
@@ -101,9 +144,18 @@ class HariliburtahunanController extends Controller
      */
     public function actionDelete($id)
     {
+      $data = $this->getJenisDokumen();
+      $data2 = $this->getSifatDokumen();
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect
+        (
+          [
+            'index',
+            'dataJenisDokumen' => $data,
+            'dataSifatDokumen' => $data2
+          ]
+        );
     }
 
     /**
@@ -120,5 +172,14 @@ class HariliburtahunanController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function getJenisDokumen()
+    {
+      return Jenisdokumen::find()->orderBy(['kode_jenis_dokumen'=>SORT_DESC])->all();
+    }
+    public function getSifatDokumen()
+    {
+      return Sifatdokumen::find()->orderBy(['kode_sifat_dokumen'=>SORT_DESC])->all();
     }
 }

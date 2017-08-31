@@ -16,6 +16,8 @@ $this->params['data2'] = $dataSifatDokumen;
 <div class="dokumenmasuk-view">
 <?php if(Yii::$app->user->identity->role->ket_role == 'Administrator' || Yii::$app->user->identity->role->ket_role == 'Operator'){?>
     <p>
+      <?php if(date('d-m-Y') != $libur['waktu_hari_libur']){
+        if((date('D')=='Sat')||(date('D')=='Sun')){}else{?>
         <?= Html::a('Update', ['update', 'sifat'=>$_GET['sifat'],'id' => $model->id_dokumen_masuk], ['class' => 'btn btn-primary']) ?>
           <?php if(Yii::$app->user->identity->role->ket_role == 'Administrator'){?>
         <?= Html::a('Delete', ['delete', 'sifat'=>$_GET['sifat'],'id' => $model->id_dokumen_masuk], [
@@ -25,7 +27,7 @@ $this->params['data2'] = $dataSifatDokumen;
                 'method' => 'post',
             ],
         ]) ?>
-        <?php } ?>
+        <?php }}} ?>
     </p>
 <?php }?>
 <?php foreach (Yii::$app->session->getAllFlashes() as $message) {
@@ -54,11 +56,16 @@ $this->params['data2'] = $dataSifatDokumen;
             'format' => 'raw',
             'value'=>function($data,$row) use ($dataDokumenMasuk){
               $temp=json_decode($dataDokumenMasuk['tujuan_disposisi'],true);
+              if($temp['kepala']!=null){
               $a = $temp['kepala'];
             for($i=0;$i<count($a);$i++){
               $vl[$i]='<button class="btn-xs btn btn-danger" style="margin: 1px;">'.$a[$i].'</button>';
             }
             $hasil = implode($vl) ."<br>";
+          }else{
+            $hasil = '';
+          }
+
             if($temp['unit']!=null){
             $c = $temp['unit'];
             for($i=0;$i<count((array)$c);$i++){

@@ -10,6 +10,8 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\Jenisdokumen;
 use app\models\Sifatdokumen;
+use app\models\User;
+use app\components\AccessRule;
 
 class SiteController extends Controller
 {
@@ -21,13 +23,24 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
+                'ruleConfig' => [
+                         'class' => AccessRule::className(),
+                     ],
+                'only' => ['logout','index'],
                 'rules' => [
+                  //nek wes login
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout','index'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' =>
+                        [
+                        User::ROLE_ADMIN,
+                        User::ROLE_OPERATOR,
+                        User::ROLE_APPROVAL,
+                      ],
                     ],
+
+                    //nek rung login
                 ],
             ],
             'verbs' => [

@@ -9,10 +9,10 @@ $this->title = 'Update Hariliburtahunan: ' . $model->id_hari_libur;
 $this->params['breadcrumbs'][] = ['label' => 'Hariliburtahunans', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id_hari_libur, 'url' => ['view', 'id' => $model->id_hari_libur]];
 $this->params['breadcrumbs'][] = 'Update';
+$this->params['data'] = $dataJenisDokumen;
+$this->params['data2'] = $dataSifatDokumen;
 ?>
 <div class="hariliburtahunan-update">
-
-    <h1><?= Html::encode($this->title) ?></h1>
 
     <?= $this->render('_form', [
         'model' => $model,

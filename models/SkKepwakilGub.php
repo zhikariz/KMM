@@ -38,7 +38,7 @@ class SkKepwakilGub extends \yii\db\ActiveRecord
         return [
             [['kode_tahun', 'no_dokumen', 'format_dokumen', 'perihal', 'pengesah', 'id_user', 'waktu_input'], 'required'],
             [['kode_tahun', 'no_dokumen', 'id_user'], 'integer'],
-            [['persetujuan','ket_persetujuan'],'string'],
+            [['ket_penyetuju_dokumen','penyetuju_dokumen','persetujuan_edit','ket_persetujuan_edit'],'string'],
             [['kode_tahun'], 'exist', 'skipOnError' => true, 'targetClass' => Tahun::className(), 'targetAttribute' => ['kode_tahun' => 'kode_tahun']],
             [['id_user'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['id_user' => 'id_user']],
             [['file_dokumen'], 'file', 'skipOnEmpty' => true, 'extensions' => 'doc, docx, pdf'],

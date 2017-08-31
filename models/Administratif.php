@@ -42,7 +42,7 @@ class Administratif extends \yii\db\ActiveRecord
         return [
             [['no_dokumen','kode_tahun','kode_jenis_dokumen','kode_sifat_dokumen','id_user', 'pengesah', 'perihal','waktu_input'], 'required'],
             [['no_dokumen', 'kode_tahun', 'id_user'], 'integer'],
-            [['persetujuan','ket_persetujuan','format_dokumen', 'kode_jenis_dokumen', 'kode_sifat_dokumen', 'waktu_input'], 'string' ],
+            [['ket_penyetuju_dokumen','penyetuju_dokumen','persetujuan_edit','ket_persetujuan_edit','format_dokumen', 'kode_jenis_dokumen', 'kode_sifat_dokumen', 'waktu_input'], 'string' ],
             [['kode_jenis_dokumen'], 'exist', 'skipOnError' => true, 'targetClass' => Jenisdokumen::className(), 'targetAttribute' => ['kode_jenis_dokumen' => 'kode_jenis_dokumen']],
             [['kode_sifat_dokumen'], 'exist', 'skipOnError' => true, 'targetClass' => Sifatdokumen::className(), 'targetAttribute' => ['kode_sifat_dokumen' => 'kode_sifat_dokumen']],
             [['kode_tahun'], 'exist', 'skipOnError' => true, 'targetClass' => Tahun::className(), 'targetAttribute' => ['kode_tahun' => 'kode_tahun']],

@@ -17,6 +17,10 @@ use app\models\Petunjuk;
 use app\models\Pejabat;
 use yii\web\UploadedFile;
 use app\models\TempDokumenMasuk;
+use app\models\Hariliburtahunan;
+use app\models\User;
+use yii\filters\AccessControl;
+use app\components\AccessRule;
 
 /**
  * DokumenmasukController implements the CRUD actions for Dokumenmasuk model.
@@ -28,7 +32,51 @@ class DokumenmasukController extends Controller
      */
     public function behaviors()
     {
-        return [
+      return [
+        'access' => [
+            'class' => AccessControl::className(),
+            'ruleConfig' => [
+                     'class' => AccessRule::className(),
+                 ],
+            'only' => ['logout','index','create','update','delete','view'],
+            'rules' => [
+              //nek wes login
+                [
+                    'actions' => ['logout','create','update',],
+                    'allow' => true,
+                    'roles' => [
+                      User::ROLE_ADMIN,
+                      User::ROLE_OPERATOR,
+                    ],
+                ],
+                [
+                  'actions'=>['index','view'],
+                  'allow'=>true,
+                  'roles'=>[
+                    User::ROLE_ADMIN,
+                    User::ROLE_OPERATOR,
+                    User::ROLE_APPROVAL,
+                  ]
+                ],
+                [
+                  'actions'=>['approve'],
+                  'allow'=>true,
+                  'roles'=>[
+                    User::ROLE_APPROVAL,
+                  ]
+                ],
+                [
+                  'actions' => ['delete'],
+                  'allow'=>true,
+                  'roles'=>[
+                    User::ROLE_ADMIN
+                  ]
+                ]
+
+
+                //nek rung login
+            ],
+        ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -44,16 +92,19 @@ class DokumenmasukController extends Controller
      */
     public function actionIndex($sifat)
     {
+
         $searchModel = new DokumenmasukSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$sifat);
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
+        $libur = Hariliburtahunan::find()->andWhere(['like','waktu_hari_libur',date('d-m-Y')])->one();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2,
+            'libur'=>$libur,
         ]);
     }
 
@@ -68,11 +119,13 @@ class DokumenmasukController extends Controller
       $data2 = $this->getSifatDokumen();
       $model = $this->findModel($id);
       $data_dokumen_masuk = Dokumenmasuk::find()->where(['kode_sifat_dokumen'=>$sifat,'id_dokumen_masuk'=>$id])->one();
+      $libur = Hariliburtahunan::find()->andWhere(['like','waktu_hari_libur',date('d-m-Y')])->one();
         return $this->render('view', [
             'model' => $model,
             'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2,
             'dataDokumenMasuk' => $data_dokumen_masuk,
+            'libur'=>$libur,
         ]);
     }
 
@@ -102,7 +155,13 @@ class DokumenmasukController extends Controller
 
 
           $model->kode_sifat_dokumen = $sifat;
+          if(date('D')=='Sat'){
+            $model->waktu_input = date('d-m-Y',strtotime('-1 day')).' '.date('H:i:s',strtotime('23:59:59'));
+          }else if(date('D')=='Sun'){
+            $model->waktu_input = date('d-m-Y',strtotime('-2 day')).' '.date('H:i:s',strtotime('23:59:59'));
+          }else{
           $model->waktu_input = date("d-m-Y H:i:s");
+          }
           $model->id_user = Yii::$app->user->identity->id_user;
           $model->persetujuan = NULL;
           $model->ket_persetujuan = NULL;

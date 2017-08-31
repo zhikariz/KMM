@@ -47,7 +47,11 @@ class SkKepwakilGubSearch extends SkKepwakilGub
         break;
         case 'Operator':
         $query =SkKepwakilGub::find()->where(['format_dokumen'=>$kode])
-        ->andWhere(['or',['persetujuan'=>'Ditolak'],['persetujuan'=>'Disetujui'],['persetujuan'=>NULL]]);
+        ->andWhere(['or',['persetujuan_edit'=>'Ditolak'],['persetujuan_edit'=>'Disetujui'],['persetujuan_edit'=>NULL]]);
+        break;
+        case 'Approval':
+        $query =SkKepwakilGub::find()->where(['format_dokumen'=>$kode])
+        ->andWhere(['like','pengesah',Yii::$app->user->identity->nama_user]);
         break;
       }
         // add conditions that should always apply here

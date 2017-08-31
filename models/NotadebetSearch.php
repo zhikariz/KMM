@@ -47,7 +47,10 @@ class NotadebetSearch extends Notadebet
           $query = Notadebet::find();
           break;
       case 'Operator':
-          $query = Notadebet::find()->andWhere(['or',['persetujuan'=>'Ditolak'],['persetujuan'=>'Disetujui'],['persetujuan'=>NULL]]);
+          $query = Notadebet::find()->andWhere(['or',['persetujuan_edit'=>'Ditolak'],['persetujuan_edit'=>'Disetujui'],['persetujuan_edit'=>NULL]]);
+          break;
+      case 'Approval':
+          $query = Notadebet::find()->andWhere(['like','pengesah',Yii::$app->user->identity->nama_user]);
           break;
 
   }

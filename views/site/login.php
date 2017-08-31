@@ -18,14 +18,14 @@ use yii\bootstrap\ActiveForm;
 	<title>Bank Indonesia</title>
 
 	<!-- Google Fonts -->
-	<link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700|Lato:400,100,300,700,900' rel='stylesheet' type='text/css'>
+	<!-- <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700|Lato:400,100,300,700,900' rel='stylesheet' type='text/css'> !-->
 
 	<link rel="stylesheet" href="<?=Yii::$app->request->baseUrl?>/login/animate.css">
 	<!-- Custom Stylesheet -->
 	<link rel="stylesheet" href="<?=Yii::$app->request->baseUrl?>/login/style.css">
   <link href='<?= Yii::$app->request->baseUrl?>/dist/img/bi.ico' rel='SHORTCUT ICON'/>
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>-->
   <style>
   body {
     	 background: url("<?=Yii::$app->request->baseUrl?>/login/photo_bg.jpg") no-repeat center center fixed;

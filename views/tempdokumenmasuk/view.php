@@ -6,8 +6,8 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\TempDokumenMasuk */
 
-$this->title = $model->id_temp_dokumen_masuk;
-$this->params['breadcrumbs'][] = ['label' => 'Temp Dokumen Masuks', 'url' => ['index']];
+$this->title = $model->no_dokumen;
+$this->params['breadcrumbs'][] = ['label' => 'Temp Dokumen Masuks', 'url' => ['index','sifat'=>$_GET['sifat']]];
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['data'] = $dataJenisDokumen;
 $this->params['data2'] = $dataSifatDokumen;
@@ -32,29 +32,67 @@ $this->params['data2'] = $dataSifatDokumen;
     ]) ?>
   </p>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id_temp_dokumen_masuk',
-            'id_dokumen_masuk',
-            'no_dokumen:ntext',
-            'tgl_dokumen',
-            'perihal:ntext',
-            'asal_dokumen:ntext',
-            'tgl_terima',
-            'kode_sifat_dokumen',
-            'kesegeraan',
-            'dari',
-            'tujuan_disposisi:ntext',
-            'petunjuk_disposisi:ntext',
-            'ket_disposisi_kepala:ntext',
-            'ket_disposisi_tim:ntext',
-            'ket_disposisi_unit:ntext',
-            'file_dokumen:ntext',
-            'id_user',
-            'waktu_input',
-            'editor:ntext',
-        ],
-    ]) ?>
+  <?= DetailView::widget([
+      'model' => $model,
+      'attributes' => [
+          'no_dokumen',
+          'tgl_dokumen',
+          'perihal',
+          'asal_dokumen',
+          'tgl_terima',
+          'dari',
+          [
+          'attribute'=>'tujuan_disposisi',
+          'format' => 'raw',
+          'value'=>function($data,$row){
+            $temp=json_decode($data->tujuan_disposisi,true);
+            if($temp['kepala']!=null){
+            $a = $temp['kepala'];
+          for($i=0;$i<count($a);$i++){
+            $vl[$i]='<button class="btn-xs btn btn-danger" style="margin: 1px;">'.$a[$i].'</button>';
+          }
+          $hasil = implode($vl) ."<br>";
+        }else{
+          $hasil = '';
+        }
+
+          if($temp['unit']!=null){
+          $c = $temp['unit'];
+          for($i=0;$i<count((array)$c);$i++){
+            $u[$i]='<button class="btn-xs btn btn-primary" style="margin: 1px;">'.$c[$i].'</button>';
+          }
+          $hasil .= implode($u);
+        }
+          return $hasil;
+
+          }
+          ],
+          [
+          'attribute'=>'petunjuk_disposisi',
+          'format' => 'raw',
+          'value'=>function($data,$row){
+            $temp=json_decode($data->petunjuk_disposisi,true);
+            for($i=0;$i<count($temp);$i++){
+              $vl[$i]='<button class="btn-xs btn btn-warning" style="margin: 1px;">'.$temp[$i].'</button><br>';
+            }
+            $hasil = implode($vl);
+             return $hasil;
+          }
+          ],
+          'ket_disposisi_kepala',
+          'ket_disposisi_tim',
+          'ket_disposisi_unit',
+          [
+          'attribute'=>'file_dokumen',
+          'format'=>'raw',
+          'value'=>Html::a($model->file_dokumen, "uploads/$model->file_dokumen", ['target'=>'_blank']),
+          ],
+          'waktu_input',
+          [
+            'attribute'=>'editor',
+          ],
+
+      ],
+  ]) ?>
 
 </div>

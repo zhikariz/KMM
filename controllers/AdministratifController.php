@@ -18,7 +18,10 @@ use app\models\Unitkerja;
 use app\models\Tim;
 use app\models\Pengesah;
 use app\models\TempAdm;
-
+use yii\filters\AccessControl;
+use app\components\AccessRule;
+use app\models\User;
+use app\models\Hariliburtahunan;
 
 
 /**
@@ -32,6 +35,50 @@ class AdministratifController extends Controller
     public function behaviors()
     {
         return [
+          'access' => [
+              'class' => AccessControl::className(),
+              'ruleConfig' => [
+                       'class' => AccessRule::className(),
+                   ],
+              'only' => ['logout','index','create','update','delete','view','approve'],
+              'rules' => [
+                //nek wes login
+                  [
+                      'actions' => ['logout','create','update',],
+                      'allow' => true,
+                      'roles' => [
+                        User::ROLE_ADMIN,
+                        User::ROLE_OPERATOR,
+                      ],
+                  ],
+                  [
+                    'actions'=>['index','view'],
+                    'allow'=>true,
+                    'roles'=>[
+                      User::ROLE_ADMIN,
+                      User::ROLE_OPERATOR,
+                      User::ROLE_APPROVAL,
+                    ]
+                  ],
+                  [
+                    'actions'=>['approve'],
+                    'allow'=>true,
+                    'roles'=>[
+                      User::ROLE_APPROVAL,
+                    ]
+                  ],
+                  [
+                    'actions' => ['delete'],
+                    'allow'=>true,
+                    'roles'=>[
+                      User::ROLE_ADMIN
+                    ]
+                  ]
+
+
+                  //nek rung login
+              ],
+          ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -47,6 +94,7 @@ class AdministratifController extends Controller
      */
     public function actionIndex($kode,$sifat)
     {
+
         $searchModel = new AdministratifSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$kode,$sifat);
         $data = $this->getJenisDokumen();
@@ -55,6 +103,7 @@ class AdministratifController extends Controller
         $sd = new Sifatdokumen();
         $data3 = $jd->find()->where(['kode_jenis_dokumen'=>$kode])->one();
         $data4 = $sd->find()->where(['kode_sifat_dokumen'=>$sifat])->one();
+        $libur = Hariliburtahunan::find()->andWhere(['like','waktu_hari_libur',date('d-m-Y')])->one();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -62,6 +111,7 @@ class AdministratifController extends Controller
             'dataSifatDokumen' => $data2,
             'kode'=>$data3,
             'sifat'=>$data4,
+            'libur'=>$libur
 
         ]);
     }
@@ -76,16 +126,13 @@ class AdministratifController extends Controller
       $data = $this->getJenisDokumen();
       $data2 = $this->getSifatDokumen();
       $model=$this->findModel($id);
-     $temp=json_decode($model->pengesah,true);
-     for($i=0;$i<count($temp);$i++){
-       $a[$i]='<button class="btn-xs btn btn-info" style="margin: 1px;">'.$temp[$i].'</button>';
-     }
-      $vl = implode('<br>',$a);
-      $model->pengesah = $vl;
+      $libur = Hariliburtahunan::find()->andWhere(['like','waktu_hari_libur',date('d-m-Y')])->one();
+
         return $this->render('view', [
             'model' => $model,
             'dataJenisDokumen' => $data,
-            'dataSifatDokumen' => $data2
+            'dataSifatDokumen' => $data2,
+            'libur'=>$libur
         ]);
     }
 
@@ -135,12 +182,21 @@ class AdministratifController extends Controller
 
             $pengesah_temp = $model->pengesah;
             $model->pengesah = json_encode($pengesah_temp);
+            if(date('D')=='Sat'){
+              $model->waktu_input = date('d-m-Y',strtotime('-1 day')).' '.date('H:i:s',strtotime('23:59:59'));
+            }else if(date('D')=='Sun'){
+              $model->waktu_input = date('d-m-Y',strtotime('-2 day')).' '.date('H:i:s',strtotime('23:59:59'));
+            }else{
             $model->waktu_input = date("d-m-Y H:i:s");
+            }
+
             $model->id_user = Yii::$app->user->identity->id_user;
             $model->kode_jenis_dokumen = $kode;
             $model->kode_sifat_dokumen = $sifat;
-            $model->persetujuan = NULL;
-            $model->ket_persetujuan=NULL;
+            $model->penyetuju_dokumen=NULL;
+            $model->ket_penyetuju_dokumen=NULL;
+            $model->persetujuan_edit = NULL;
+            $model->ket_persetujuan_edit=NULL;
 
             $model->save();
             if($model->file_dokumen != NULL)
@@ -233,6 +289,7 @@ class AdministratifController extends Controller
           if($temp_model->file_dokumen != $dataAdm->file_dokumen){
           $temp_model->file_dokumen->saveAs('uploads/' . $temp_model->file_dokumen->baseName . '.' . $temp_model->file_dokumen->extension);
         }
+        if(Yii::$app->user->identity->role->ket_role == 'Operator'){
         Yii::$app->getSession()->setFlash('success', [
        'text' => 'Dokumen Selesai Terupdate Silahkan Tunggu Approval Untuk Menyetujui',
        'title' => 'Proses Update',
@@ -240,6 +297,16 @@ class AdministratifController extends Controller
        'timer' => 3000,
        'showConfirmButton' => true
    ]);
+ }else{
+   Yii::$app->getSession()->setFlash('success', [
+  'text' => 'Dokumen Selesai Terupdate Silahkan Tunggu Admin Approval Lain Untuk Menyetujui',
+  'title' => 'Proses Update',
+  'type' => 'success',
+  'timer' => 3000,
+  'showConfirmButton' => true
+]);
+
+ }
             return $this->redirect(['view', 'model'=>$model,'kode'=>$kode,'sifat'=>$sifat,'id'=>$model->id_surat_adm,'id' => $model->id_surat_adm,
             'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2]);
@@ -287,14 +354,51 @@ class AdministratifController extends Controller
         'dataSifatDokumen' => $data2]);
     }
 
+    public function actionApprove($kode,$sifat,$id)
+    {
+      $model= $this->findModel($id);
+      $data = $this->getJenisDokumen();
+      $data2 = $this->getSifatDokumen();
+      if($model->penyetuju_dokumen == NULL){
+        $user[] = Yii::$app->user->identity->nama_user;
+        $model->penyetuju_dokumen = json_encode($user);
+        $format[] = 'Telah Disetujui Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
+        $model->ket_penyetuju_dokumen = json_encode($format);
+      }else{
+        $temp = json_decode($model->penyetuju_dokumen,true);
+          array_push($temp,Yii::$app->user->identity->nama_user);
+        $model->penyetuju_dokumen = json_encode($temp);
+
+        $temp_ket = json_decode($model->ket_penyetuju_dokumen,true);
+        $format2 = 'Telah Disetujui Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
+        array_push($temp_ket,$format2);
+        $model->ket_penyetuju_dokumen = json_encode($temp_ket);
+      }
+      $model->save();
+
+
+      Yii::$app->getSession()->setFlash('success', [
+     'text' => 'Dokumen Telah Disetujui',
+     'title' => 'Berhasil',
+     'type' => 'success',
+     'timer' => 3000,
+     'showConfirmButton' => true
+      ]);
+      return $this->redirect(['index','kode'=>$kode,'sifat'=>$sifat,
+      'dataJenisDokumen' => $data,
+      'dataSifatDokumen' => $data2]);
+    }
+
     public function actionBelum($kode,$sifat,$id)
     {
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
         $model = $this->findModel($id);
 
-          $model->persetujuan = 'Belum Disetujui';
-        $model->ket_persetujuan=NULL;
+        $model->persetujuan_edit = 'Belum Disetujui';
+        $model->penyetuju_dokumen = NULL;
+        $model->ket_penyetuju_dokumen = NULL;
+        $model->ket_persetujuan_edit=NULL;
           $model->save();
           return null;
     }

@@ -73,11 +73,16 @@ $this->params['data2'] = $dataSifatDokumen;
       'format'=>'html',
       'content'=>function($model,$key,$index){
         $temp=json_decode($model->tujuan_disposisi,true);
+        if($temp['kepala']!=null){
         $a = $temp['kepala'];
       for($i=0;$i<count($a);$i++){
         $vl[$i]='<button class="btn-xs btn btn-danger" style="margin: 1px;">'.$a[$i].'</button>';
       }
-      $hasil = implode($vl);
+          $hasil = implode($vl);
+    }else{
+    $hasil = null;
+    }
+
       if($temp['unit']!=null){
       $c = $temp['unit'];
       for($i=0;$i<count((array)$c);$i++){

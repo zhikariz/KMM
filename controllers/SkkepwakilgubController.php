@@ -15,6 +15,10 @@ use app\models\Pengesah;
 use app\models\Tahun;
 use yii\web\UploadedFile;
 use app\models\TempSkKepwakilGub;
+use app\models\Hariliburtahunan;
+use app\models\User;
+use yii\filters\AccessControl;
+use app\components\AccessRule;
 
 /**
  * SkKepwakilGubSjalanController implements the CRUD actions for SkKepwakilGubSjalan model.
@@ -26,7 +30,51 @@ class SkkepwakilgubController extends Controller
      */
     public function behaviors()
     {
-        return [
+      return [
+        'access' => [
+            'class' => AccessControl::className(),
+            'ruleConfig' => [
+                     'class' => AccessRule::className(),
+                 ],
+            'only' => ['logout','index','create','update','delete','view'],
+            'rules' => [
+              //nek wes login
+                [
+                    'actions' => ['logout','create','update',],
+                    'allow' => true,
+                    'roles' => [
+                      User::ROLE_ADMIN,
+                      User::ROLE_OPERATOR,
+                    ],
+                ],
+                [
+                  'actions'=>['index','view'],
+                  'allow'=>true,
+                  'roles'=>[
+                    User::ROLE_ADMIN,
+                    User::ROLE_OPERATOR,
+                    User::ROLE_APPROVAL,
+                  ]
+                ],
+                [
+                  'actions'=>['approve'],
+                  'allow'=>true,
+                  'roles'=>[
+                    User::ROLE_APPROVAL,
+                  ]
+                ],
+                [
+                  'actions' => ['delete'],
+                  'allow'=>true,
+                  'roles'=>[
+                    User::ROLE_ADMIN
+                  ]
+                ]
+
+
+                //nek rung login
+            ],
+        ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -46,12 +94,14 @@ class SkkepwakilgubController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$kode);
         $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
+        $libur = Hariliburtahunan::find()->andWhere(['like','waktu_hari_libur',date('d-m-Y')])->one();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2,
+            'libur'=>$libur
         ]);
     }
 
@@ -65,16 +115,12 @@ class SkkepwakilgubController extends Controller
       $data = $this->getJenisDokumen();
       $data2 = $this->getSifatDokumen();
       $model=$this->findModel($id);
-      $temp = json_decode($model->pengesah);
-      for($i=0;$i<count($temp);$i++){
-        $a[$i]='<button class="btn-xs btn btn-info" style="margin: 1px;">'.$temp[$i].'</button>';
-      }
-       $vl = implode('<br>',$a);
-      $model->pengesah = $vl;
+$libur = Hariliburtahunan::find()->andWhere(['like','waktu_hari_libur',date('d-m-Y')])->one();
         return $this->render('view', [
             'model' => $model,
             'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2,
+            'libur'=>$libur
         ]);
     }
 
@@ -114,10 +160,18 @@ class SkkepwakilgubController extends Controller
 
           $pengesah_temp = $model->pengesah;
           $model->pengesah = json_encode($pengesah_temp);
+          if(date('D')=='Sat'){
+            $model->waktu_input = date('d-m-Y',strtotime('-1 day')).' '.date('H:i:s',strtotime('23:59:59'));
+          }else if(date('D')=='Sun'){
+            $model->waktu_input = date('d-m-Y',strtotime('-2 day')).' '.date('H:i:s',strtotime('23:59:59'));
+          }else{
           $model->waktu_input = date("d-m-Y H:i:s");
+          }
           $model->id_user = Yii::$app->user->identity->id_user;
-          $model->persetujuan = NULL;
-          $model->ket_persetujuan = NULL;
+          $model->penyetuju_dokumen=NULL;
+          $model->ket_penyetuju_dokumen=NULL;
+          $model->persetujuan_edit = NULL;
+          $model->ket_persetujuan_edit = NULL;
           $model->save(false);
           if($model->file_dokumen != NULL)
           $model->file_dokumen->saveAs('uploads/' . $model->file_dokumen->baseName . '.' . $model->file_dokumen->extension);
@@ -187,6 +241,7 @@ class SkkepwakilgubController extends Controller
         $temp_model->save(false);
             if($temp_model->file_dokumen != $dataSk->file_dokumen){
             $temp_model->file_dokumen->saveAs('uploads/' . $temp_model->file_dokumen->baseName . '.' . $temp_model->file_dokumen->extension);}
+            if(Yii::$app->user->identity->role->ket_role == 'Operator'){
             Yii::$app->getSession()->setFlash('success', [
            'text' => 'Dokumen Selesai Terupdate Silahkan Tunggu Approval Untuk Menyetujui',
            'title' => 'Proses Update',
@@ -194,6 +249,16 @@ class SkkepwakilgubController extends Controller
            'timer' => 3000,
            'showConfirmButton' => true
        ]);
+     }else{
+       Yii::$app->getSession()->setFlash('success', [
+      'text' => 'Dokumen Selesai Terupdate Silahkan Tunggu Admin Approval Lain Untuk Menyetujui',
+      'title' => 'Proses Update',
+      'type' => 'success',
+      'timer' => 3000,
+      'showConfirmButton' => true
+    ]);
+
+     }
             return $this->redirect(['view',
               'id'=>$model->id_sk_kepwakil_gub,
               'kode'=>$kode,
@@ -233,13 +298,50 @@ class SkkepwakilgubController extends Controller
         return $this->redirect(['index','kode'=>$kode]);
     }
 
+    public function actionApprove($kode,$id)
+    {
+      $model= $this->findModel($id);
+      $data = $this->getJenisDokumen();
+      $data2 = $this->getSifatDokumen();
+      if($model->penyetuju_dokumen == NULL){
+        $user[] = Yii::$app->user->identity->nama_user;
+        $model->penyetuju_dokumen = json_encode($user);
+        $format[] = 'Telah Disetujui Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
+        $model->ket_penyetuju_dokumen = json_encode($format);
+      }else{
+        $temp = json_decode($model->penyetuju_dokumen,true);
+          array_push($temp,Yii::$app->user->identity->nama_user);
+        $model->penyetuju_dokumen = json_encode($temp);
+
+        $temp_ket = json_decode($model->ket_penyetuju_dokumen,true);
+        $format2 = 'Telah Disetujui Pada '. date("d-m-Y H:i:s") . ' Oleh '. Yii::$app->user->identity->nama_user;
+        array_push($temp_ket,$format2);
+        $model->ket_penyetuju_dokumen = json_encode($temp_ket);
+      }
+      $model->save();
+
+
+      Yii::$app->getSession()->setFlash('success', [
+     'text' => 'Dokumen Telah Disetujui',
+     'title' => 'Berhasil',
+     'type' => 'success',
+     'timer' => 3000,
+     'showConfirmButton' => true
+      ]);
+      return $this->redirect(['index','kode'=>$kode,
+      'dataJenisDokumen' => $data,
+      'dataSifatDokumen' => $data2]);
+    }
+
     public function actionBelum($kode,$id)
     {
         $model = $this->findModel($id);
-        $model->persetujuan = 'Belum Disetujui';
-        $model->ket_persetujuan=NULL;
-          $model->save();
-          return null;
+        $model->persetujuan_edit = 'Belum Disetujui';
+        $model->ket_persetujuan_edit=NULL;
+        $model->penyetuju_dokumen = NULL;
+        $model->ket_penyetuju_dokumen=NULL;
+        $model->save();
+        return null;
     }
 
     /**

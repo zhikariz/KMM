@@ -41,12 +41,14 @@ class TempSkKepwakilGubSearch extends TempSkKepwakilGub
      */
     public function search($params,$kode)
     {
-        $query = TempSkKepwakilGub::find()->where(['format_dokumen'=>$kode]);
+        $query = TempSkKepwakilGub::find()->where(['format_dokumen'=>$kode])
+        ->andWhere(['<>','editor',Yii::$app->user->identity->nama_user]);;
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination'=>['pageSize'=>5]
         ]);
 
         $this->load($params);

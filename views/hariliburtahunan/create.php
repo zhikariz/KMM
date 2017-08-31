@@ -9,6 +9,8 @@ use yii\helpers\Html;
 $this->title = 'Create Hari Libur';
 $this->params['breadcrumbs'][] = ['label' => 'Hari Libur', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['data'] = $dataJenisDokumen;
+$this->params['data2'] = $dataSifatDokumen;
 ?>
 <div class="hariliburtahunan-create">
 
