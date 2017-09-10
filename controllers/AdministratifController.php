@@ -267,17 +267,19 @@ class AdministratifController extends Controller
           {
             $temp_format = json_encode($model->format_dokumen);
             $temp_model->format_dokumen = $temp_format;
-              $temp_model->no_dokumen = $model->no_dokumen;
+            $temp_model->no_dokumen = $model->no_dokumen;
+            $temp_model->waktu_input = $model->waktu_input;
           }else{
               $temp_model->format_dokumen = $dataAdm->format_dokumen;
               $temp_model->no_dokumen = $dataAdm->no_dokumen;
+              $temp_model->waktu_input = $dataAdm->waktu_input;
           }
           $temp_model->id_surat_adm = $model->id_surat_adm;
           $temp_model->kode_tahun = $dataAdm->kode_tahun;
 
           $pengesah_temp = $model->pengesah;
           $temp_model->pengesah = json_encode($pengesah_temp);
-          $temp_model->waktu_input = $dataAdm->waktu_input;
+
           $temp_model->id_user = $dataAdm->id_user;
           $temp_model->kode_jenis_dokumen = $kode;
           $temp_model->kode_sifat_dokumen = $sifat;

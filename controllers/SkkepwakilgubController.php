@@ -225,8 +225,10 @@ $libur = Hariliburtahunan::find()->andWhere(['like','waktu_hari_libur',date('d-m
         if(Yii::$app->user->identity->role->ket_role == 'Administrator')
         {
             $temp_model->no_dokumen = $model->no_dokumen;
+            $temp_model->waktu_input = $model->waktu_input;
         }else{
             $temp_model->no_dokumen = $dataSk->no_dokumen;
+            $temp_model->waktu_input = $dataSk->waktu_input;
         }
           $temp_model->kode_tahun = $dataSk->kode_tahun;
           $temp_model->format_dokumen = $dataSk->format_dokumen;
@@ -235,7 +237,7 @@ $libur = Hariliburtahunan::find()->andWhere(['like','waktu_hari_libur',date('d-m
           $temp_model->pengesah = json_encode($pengesah_temp);
           $temp_model->perihal = $model->perihal;
           $temp_model->id_user = $dataSk->id_user;
-          $temp_model->waktu_input = $dataSk->waktu_input;
+
           $temp_model->editor = Yii::$app->user->identity->nama_user;
         $this->actionBelum($kode,$id);
         $temp_model->save(false);

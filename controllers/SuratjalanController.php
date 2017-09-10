@@ -224,13 +224,15 @@ class SuratjalanController extends Controller
           {
               $temp_model->no_dokumen = $model->no_dokumen;
               $temp_model->kode_satuan_kerja = $model->kode_satuan_kerja;
+              $temp_model->waktu_input = $model->waktu_input;
           }else {
               $temp_model->no_dokumen = $dataSurat->no_dokumen;
               $temp_model->kode_satuan_kerja = $dataSurat->kode_satuan_kerja;
+              $temp_model->waktu_input = $dataSurat->waktu_input;
           }
           $temp_model->format_dokumen = $kode;
           $temp_model->id_user = $dataSurat->id_user;
-          $temp_model->waktu_input = $dataSurat->waktu_input;
+
           $temp_model->editor = Yii::$app->user->identity->nama_user;
           $temp_model->perihal = $model->perihal;
           $pengesah_temp = $model->pengesah;

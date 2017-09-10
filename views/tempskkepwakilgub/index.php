@@ -78,6 +78,28 @@ $this->params['data2'] = $dataSifatDokumen;
 
         },
       ],
+      [
+        'label'=>'Aksi Persetujuan',
+        'vAlign' => 'middle',
+        'hAlign'=>'center',
+        'format'=>'raw',
+        'content'=>function($model,$key,$index){
+          return Html::a('Setujui', ['approve', 'kode'=>$model->format_dokumen,'id' => $model->id_temp_sk_kep_wakil_gub], [
+              'class' => 'btn btn-success',
+              'data' => [
+                  'confirm' => 'Apakah kamu ingin menyetujui surat ini?',
+                  'method' => 'post',
+              ],
+          ]).' '.
+          Html::a('Tolak', ['reject', 'kode'=>$model->format_dokumen,'id' => $model->id_temp_sk_kep_wakil_gub], [
+              'class' => 'btn btn-danger',
+              'data' => [
+                  'confirm' => 'Apakah kamu ingin menolak surat ini?',
+                  'method' => 'post',
+              ],
+          ]);
+        }
+      ],
 
       [
         'class' => 'kartik\grid\ActionColumn',

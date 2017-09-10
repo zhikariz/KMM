@@ -46,8 +46,7 @@ class AdministratifSearch extends Administratif
         $query = Administratif::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat]);
         break;
     case 'Operator':
-        $query =Administratif::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat])
-        ->andWhere(['or',['persetujuan_edit'=>'Ditolak'],['persetujuan_edit'=>'Disetujui'],['persetujuan_edit'=>NULL]]);
+        $query =Administratif::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat]);
         break;
     case 'Approval':
         $query =Administratif::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat])

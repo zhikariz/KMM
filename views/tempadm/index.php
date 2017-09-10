@@ -94,6 +94,28 @@ $this->params['data2'] = $dataSifatDokumen;
         return Html::a($temp, "uploads/$temp", ['target'=>'_blank','data-pjax'=>"0"]);}
     },
     ],
+    [
+      'label'=>'Aksi Persetujuan',
+      'vAlign' => 'middle',
+      'hAlign'=>'center',
+      'format'=>'raw',
+      'content'=>function($model,$key,$index){
+        return Html::a('Setujui', ['approve', 'kode'=>$model->kode_jenis_dokumen,'sifat'=>$model->kode_sifat_dokumen,'id' => $model->id_temp_adm], [
+            'class' => 'btn-sm btn-success',
+            'data' => [
+                'confirm' => 'Apakah kamu ingin menyetujui surat ini?',
+                'method' => 'post',
+            ],
+        ]). ' '.
+         Html::a('Tolak', ['reject', 'kode'=>$model->kode_jenis_dokumen,'sifat'=>$model->kode_sifat_dokumen,'id' => $model->id_temp_adm], [
+            'class' => 'btn-sm btn-danger',
+            'data' => [
+                'confirm' => 'Apakah kamu ingin menolak surat ini?',
+                'method' => 'post',
+            ],
+        ]);
+      }
+    ],
 
     [
       'class' => 'kartik\grid\ActionColumn',

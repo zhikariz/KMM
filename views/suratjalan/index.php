@@ -142,6 +142,21 @@ $this->params['data2'] = $dataSifatDokumen;
         'hAlign' => 'center',
         'header' => 'Pembuat',
       ],
+      [
+        'label'=>'Aksi Persetujuan',
+        'vAlign' => 'middle',
+        'hAlign'=>'center',
+        'format'=>'raw',
+        'content'=>function($model,$key,$index){
+          return Html::a('Setujui', ['approve', 'kode'=>$model->format_dokumen,'id' => $model->id_surat_jalan], [
+              'class' => 'btn btn-success',
+              'data' => [
+                  'confirm' => 'Apakah anda ingin menyetujui dokumen ini?',
+                  'method' => 'post',
+              ],
+          ]);
+        }
+      ],
 
       [
         'class' => 'kartik\grid\ActionColumn',

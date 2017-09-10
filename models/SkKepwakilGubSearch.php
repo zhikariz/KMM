@@ -46,8 +46,7 @@ class SkKepwakilGubSearch extends SkKepwakilGub
         $query = SkKepwakilGub::find()->where(['format_dokumen'=>$kode]);
         break;
         case 'Operator':
-        $query =SkKepwakilGub::find()->where(['format_dokumen'=>$kode])
-        ->andWhere(['or',['persetujuan_edit'=>'Ditolak'],['persetujuan_edit'=>'Disetujui'],['persetujuan_edit'=>NULL]]);
+        $query =SkKepwakilGub::find()->where(['format_dokumen'=>$kode]);
         break;
         case 'Approval':
         $query =SkKepwakilGub::find()->where(['format_dokumen'=>$kode])

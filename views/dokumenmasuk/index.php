@@ -178,8 +178,6 @@ $this->params['data2'] = $dataSifatDokumen;
 
         },
       ],
-
-
       [
         'class' => 'kartik\grid\ActionColumn',
         'header' => 'Actions',

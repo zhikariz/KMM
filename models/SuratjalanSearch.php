@@ -46,7 +46,7 @@ class SuratjalanSearch extends Suratjalan
           $query = Suratjalan::find();
           break;
       case 'Operator':
-          $query = Suratjalan::find()->andWhere(['or',['persetujuan_edit'=>'Ditolak'],['persetujuan_edit'=>'Disetujui'],['persetujuan_edit'=>NULL]]);
+          $query = Suratjalan::find();
           break;
           case 'Approval':
           $query = Suratjalan::find()->andWhere(['like','pengesah',Yii::$app->user->identity->nama_user]);

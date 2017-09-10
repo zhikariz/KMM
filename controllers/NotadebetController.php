@@ -230,8 +230,10 @@ class NotadebetController extends Controller
           if(Yii::$app->user->identity->role->ket_role == 'Administrator')
           {
               $temp_model->no_dokumen = $model->no_dokumen;
+              $temp_model->waktu_input = $model->waktu_input;
           }else{
               $temp_model->no_dokumen = $dataNota->no_dokumen;
+                $temp_model->waktu_input = $dataNota->waktu_input;
           }
           $pengesah_temp = $model->pengesah;
           $temp_model->pengesah = json_encode($pengesah_temp);
@@ -241,7 +243,7 @@ class NotadebetController extends Controller
           $temp_model->kode_satker_pusat = $model->kode_satker_pusat;
           $temp_model->perihal = $model->perihal;
           $temp_model->id_user = $dataNota->id_user;
-          $temp_model->waktu_input = $dataNota->waktu_input;
+
           $temp_model->editor = Yii::$app->user->identity->nama_user;
 
           $this->actionBelum($id);

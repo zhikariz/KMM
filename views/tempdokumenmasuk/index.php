@@ -140,6 +140,28 @@ $this->params['data2'] = $dataSifatDokumen;
 
       },
     ],
+    [
+      'label'=>'Aksi Persetujuan',
+      'vAlign' => 'middle',
+      'hAlign'=>'center',
+      'format'=>'raw',
+      'content'=>
+      function($model,$key,$index){
+        return Html::a('Setujui', ['approve', 'sifat'=>$_GET['sifat'],'id' => $model->id_temp_dokumen_masuk], [
+            'class' => 'btn-sm btn-success',
+            'data' => [
+                'confirm' => 'Apakah kamu ingin menyetujui surat ini?',
+                'method' => 'post',
+            ],
+        ]) .' '. Html::a('Tolak', ['reject', 'sifat'=>$_GET['sifat'],'id' => $model->id_temp_dokumen_masuk], [
+            'class' => 'btn-sm btn-danger',
+            'data' => [
+                'confirm' => 'Apakah kamu ingin menolak surat ini?',
+                'method' => 'post',
+            ],
+        ]);
+      }
+    ],
 
 
     [

@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use \kartik\widgets\Select2;
+use kartik\date\DatePicker;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Notadebet */
@@ -18,6 +19,14 @@ use \kartik\widgets\Select2;
            if (!$model->isNewRecord) {
              if(Yii::$app->user->identity->role->ket_role== 'Administrator'){
              echo $form->field($model, 'no_dokumen')->textInput(['maxlength' => true,]);
+             echo $form->field($model, 'waktu_input')->widget(DatePicker::classname(), [
+             'options' => ['placeholder' => 'Masukkan Tanggal Dokumen ...'],
+                     'language' => 'id',
+             'pluginOptions' => [
+                 'autoclose'=>true,
+                 'format' => 'dd-mm-yyyy'
+             ]
+         ]);
            }
            }
              ?>
