@@ -85,14 +85,14 @@ $this->params['data2'] = $dataSifatDokumen;
         'format'=>'raw',
         'content'=>function($model,$key,$index){
           return Html::a('Setujui', ['approve', 'kode'=>$model->format_dokumen,'id' => $model->id_temp_sk_kep_wakil_gub], [
-              'class' => 'btn btn-success',
+              'class' => 'btn-sm btn-success',
               'data' => [
                   'confirm' => 'Apakah kamu ingin menyetujui surat ini?',
                   'method' => 'post',
               ],
           ]).' '.
           Html::a('Tolak', ['reject', 'kode'=>$model->format_dokumen,'id' => $model->id_temp_sk_kep_wakil_gub], [
-              'class' => 'btn btn-danger',
+              'class' => 'btn-sm btn-danger',
               'data' => [
                   'confirm' => 'Apakah kamu ingin menolak surat ini?',
                   'method' => 'post',

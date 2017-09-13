@@ -189,3 +189,4 @@ $this->params['data2'] = $dataSifatDokumen;
   ]); ?>
   <?php Pjax::end(); ?>
 </div>
+

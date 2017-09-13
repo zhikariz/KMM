@@ -28,7 +28,7 @@ use yii\bootstrap\ActiveForm;
 	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>-->
   <style>
   body {
-    	 background: url("<?=Yii::$app->request->baseUrl?>/login/photo_bg.jpg") no-repeat center center fixed;
+    	 background: url("<?=Yii::$app->request->baseUrl?>/images/GedungBI.jpg") no-repeat center center fixed;
       	background-size: cover;
       	font-size: 16px;
       	font-family: 'Lato', sans-serif;

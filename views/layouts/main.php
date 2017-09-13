@@ -4,6 +4,11 @@ use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use app\models\Jenisdokumen;
 use yii\helpers\Url;
+use app\models\TempAdm;
+use app\models\TempSkKepwakilGub;
+use app\models\TempSuratJalan;
+use app\models\TempNotaDebet;
+use app\models\TempDokumenMasuk;
 
 AppAsset::register($this);
 ?>
@@ -135,11 +140,14 @@ border-left-color: #fff;
         foreach($this->params['data'] as $index){
           ?>
           <li class="dropdown-submenu">
-            <a href="#"><?= $index['ket_jenis_dokumen'];?></a>
+            <a href="#"><?= $index['ket_jenis_dokumen'].' <span class="label label-info"> '. TempAdm::find()
+            ->where(['kode_jenis_dokumen'=>$index['kode_jenis_dokumen']])->count().'</span>'?></a>
             <ul class="dropdown-menu">
               <?php foreach($this->params['data2'] as $index2){
                 ?>
-                <li><?=Html::a($index2['ket_sifat_dokumen'], ['tempadm/index','kode'=>$index['kode_jenis_dokumen'],'sifat'=>$index2['kode_sifat_dokumen']], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Satuan Kerja')])?></li>
+                <li><?=Html::a($index2['ket_sifat_dokumen'].' <span class="label label-danger"> '.$jml=TempAdm::find()
+                ->where(['kode_jenis_dokumen'=>$index['kode_jenis_dokumen'],'kode_sifat_dokumen'=>$index2['kode_sifat_dokumen']])->andWhere(['<>','editor',Yii::$app->user->identity->nama_user])->count().'</span>', 
+                ['tempadm/index','kode'=>$index['kode_jenis_dokumen'],'sifat'=>$index2['kode_sifat_dokumen']], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Satuan Kerja')])?></li>
                 <?php
               }?>
             </ul>
@@ -149,7 +157,8 @@ border-left-color: #fff;
 
         </ul>
                   </li>
-                  <li><?=Html::a('SK Kepala Perwakilan', ['tempskkepwakilgub/index','kode'=>'Kep/KPwBI/Slo/Intern'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Administratif')])?></li>
+                  <li><?=Html::a('SK Kepala Perwakilan'.' <span class="label label-info"> '. TempSkKepwakilGub::find()
+                  ->where(['format_dokumen'=>'Kep/KPwBI/Slo/Intern'])->andWhere(['<>','editor',Yii::$app->user->identity->nama_user])->count().'</span>', ['tempskkepwakilgub/index','kode'=>'Kep/KPwBI/Slo/Intern'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Administratif')])?></li>
                   <li><?=Html::a('SK Gubernur BI', ['tempskkepwakilgub/index','kode'=>'Kep.GBI/Slo'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'SK Kep Wakil & SK Gub BI')])?></li>
                   <li><?=Html::a('Surat Jalan', ['tempsuratjalan/index','kode'=>'Perjl.'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Surat Jalan')])?></li>
                   <li><?=Html::a('Nota Debet', ['tempnotadebet/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Nota Debet')])?></li>
@@ -229,7 +238,7 @@ border-left-color: #fff;
                 <!-- Menu Footer-->
                 <li class="user-footer">
                   <div class="pull-left">
-                    <a href="#" class="btn btn-default btn-flat">Profile</a>
+                    <?=Html::a('Reset Password',['site/change'],['class'=>'btn btn-default btn-flat'])?>
                   </div>
                   <div class="pull-right">
                   <?php $a=Yii::$app->user->isGuest;
@@ -276,6 +285,7 @@ border-left-color: #fff;
       </section>
     </div>
   </div>
+
   <footer class="main-footer">
     <div class="container">
       <div class="pull-right hidden-xs">
@@ -362,3 +372,4 @@ function woyos(){
 }
 
 </script>
+

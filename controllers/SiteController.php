@@ -30,7 +30,7 @@ class SiteController extends Controller
                 'rules' => [
                   //nek wes login
                     [
-                        'actions' => ['logout','index'],
+                        'actions' => ['logout','index','change'],
                         'allow' => true,
                         'roles' =>
                         [
@@ -120,6 +120,28 @@ class SiteController extends Controller
 
         return $this->goHome();
     }
+
+    public function actionChange()
+    {
+        $model = User::find()->where(['username'=>Yii::$app->user->identity->username])->one();
+        $data = $this->getJenisDokumen();
+        $data2 = $this->getSifatDokumen();
+        if ($model->load(Yii::$app->request->post())) {
+            $temp = $model->password;
+            $model->password = Yii::$app->security->generatePasswordHash($temp);
+            $model->save();
+            return $this->render('index',[ 'dataJenisDokumen' => $data,
+            'dataSifatDokumen' => $data2,]);
+        }else{
+        return $this->render(
+            'change',
+            [
+                'model'=>$model,
+                'dataJenisDokumen' => $data,
+                'dataSifatDokumen' => $data2,
+            ]
+        );
+    }}
 
     public function getJenisDokumen()
     {

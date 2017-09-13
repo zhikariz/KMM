@@ -15,7 +15,7 @@ $this->params['data2'] = $dataSifatDokumen;
         <div class="jumbotron" style="background-color:white;">
         <div class="container text-center">
                 <p><b>  Petunjuk Penggunaaan Sistem Informasi Dokumen </b></p>
-                    <img src="https://www.kubik.co.id/wp-content/uploads/2016/07/Bank-Indonesia.png" width="400px" heigh="400px"/>
+                    <img src="<?=Yii::$app->request->baseUrl?>/images/bg.png" width="400px" heigh="400px"/>
 
     </div>
         </div>

@@ -27,6 +27,7 @@ $this->title = 'Administratif '.$kode['ket_jenis_dokumen']." || ".$sifat['ket_si
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['data'] = $dataJenisDokumen;
 $this->params['data2'] = $dataSifatDokumen;
+
 ?>
 <div class="administratif-index">
   <?php if(date('d-m-Y') == $libur['waktu_hari_libur']){?>
@@ -166,14 +167,26 @@ $this->params['data2'] = $dataSifatDokumen;
         'hAlign'=>'center',
         'format'=>'raw',
         'content'=>function($model,$key,$index){
-          return Html::a('Setujui', ['approve', 'kode'=>$model->kode_jenis_dokumen,'sifat'=>$model->kode_sifat_dokumen,'id' => $model->id_surat_adm], [
+          if(Yii::$app->user->identity->role->ket_role == 'Approval'){
+            if(strpos($model->pengesah,Yii::$app->user->identity->nama_user)==true){
+          if(strpos($model->penyetuju_dokumen,Yii::$app->user->identity->nama_user) == false ){
+            return Html::a('Setujui', ['approve', 'kode'=>$model->kode_jenis_dokumen,'sifat'=>$model->kode_sifat_dokumen,'id' => $model->id_surat_adm], [
               'class' => 'btn btn-success',
               'data' => [
                   'confirm' => 'Apakah anda ingin menyetujui dokumen ini?',
                   'method' => 'post',
               ],
           ]);
+            }else{
+              return '<span class="label label-info">Sudah Disetujui</button>';
+            }
+          }else{
+            return '<button class="label label-danger">Anda Bukan <br>Pengesah Dokumen Ini</button>';
+          }
+        }else{
+          return '<button class="label label-danger">Anda Bukan Approval</button>';
         }
+      }
       ],
       [
         'class' => 'kartik\grid\ActionColumn',

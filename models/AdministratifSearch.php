@@ -50,7 +50,7 @@ class AdministratifSearch extends Administratif
         break;
     case 'Approval':
         $query =Administratif::find()->where(['kode_jenis_dokumen'=>$kode,'kode_sifat_dokumen'=>$sifat])
-        ->andWhere(['like','pengesah',Yii::$app->user->identity->nama_user]);
+        ;
         break;
         }
 

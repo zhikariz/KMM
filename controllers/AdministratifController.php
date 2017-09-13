@@ -104,6 +104,7 @@ class AdministratifController extends Controller
         $data3 = $jd->find()->where(['kode_jenis_dokumen'=>$kode])->one();
         $data4 = $sd->find()->where(['kode_sifat_dokumen'=>$sifat])->one();
         $libur = Hariliburtahunan::find()->andWhere(['like','waktu_hari_libur',date('d-m-Y')])->one();
+       
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -111,7 +112,8 @@ class AdministratifController extends Controller
             'dataSifatDokumen' => $data2,
             'kode'=>$data3,
             'sifat'=>$data4,
-            'libur'=>$libur
+            'libur'=>$libur,
+
 
         ]);
     }
