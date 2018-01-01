@@ -7,11 +7,12 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
+use app\components\AccessRule;
+
 use app\models\LoginForm;
-use app\models\Jenisdokumen;
 use app\models\Sifatdokumen;
 use app\models\User;
-use app\components\AccessRule;
+
 
 class SiteController extends Controller
 {
@@ -36,7 +37,6 @@ class SiteController extends Controller
                         [
                         User::ROLE_ADMIN,
                         User::ROLE_OPERATOR,
-                        User::ROLE_APPROVAL,
                       ],
                     ],
 
@@ -75,10 +75,8 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-      $data = $this->getJenisDokumen();
       $data2 = $this->getSifatDokumen();
       return $this->render('index', [
-          'dataJenisDokumen' => $data,
           'dataSifatDokumen' => $data2,
       ]);
     }
@@ -90,12 +88,10 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-      $data = $this->getJenisDokumen();
       $data2 = $this->getSifatDokumen();
         if (!Yii::$app->user->isGuest) {
 
           return $this->render('index', [
-              'dataJenisDokumen' => $data,
               'dataSifatDokumen' => $data2,
           ]);
         }
@@ -124,29 +120,22 @@ class SiteController extends Controller
     public function actionChange()
     {
         $model = User::find()->where(['username'=>Yii::$app->user->identity->username])->one();
-        $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
         if ($model->load(Yii::$app->request->post())) {
             $temp = $model->password;
             $model->password = Yii::$app->security->generatePasswordHash($temp);
             $model->save();
-            return $this->render('index',[ 'dataJenisDokumen' => $data,
-            'dataSifatDokumen' => $data2,]);
+            return $this->render('index',[
+            'dataSifatDokumen' => $data2,
+          ]);
         }else{
-        return $this->render(
-            'change',
-            [
+        return $this->render('change', [
                 'model'=>$model,
-                'dataJenisDokumen' => $data,
                 'dataSifatDokumen' => $data2,
             ]
         );
     }}
 
-    public function getJenisDokumen()
-    {
-      return Jenisdokumen::find()->orderBy(['kode_jenis_dokumen'=>SORT_DESC])->all();
-    }
     public function getSifatDokumen()
     {
       return Sifatdokumen::find()->orderBy(['kode_sifat_dokumen'=>SORT_DESC])->all();

@@ -3,16 +3,17 @@
 namespace app\controllers;
 
 use Yii;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+use app\components\AccessRule;
+
 use app\models\Unitkerja;
 use app\models\UnitkerjaSearch;
 use app\models\Jenisdokumen;
 use app\models\Sifatdokumen;
-use yii\web\Controller;
-use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use app\models\User;
-use yii\filters\AccessControl;
-use app\components\AccessRule;
 
 /**
  * UnitkerjaController implements the CRUD actions for Unitkerja model.
@@ -63,12 +64,10 @@ class UnitkerjaController extends Controller
     {
         $searchModel = new UnitkerjaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2
         ]);
     }
@@ -80,11 +79,9 @@ class UnitkerjaController extends Controller
      */
     public function actionView($id)
     {
-      $data = $this->getJenisDokumen();
       $data2 = $this->getSifatDokumen();
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2
         ]);
     }
@@ -97,16 +94,22 @@ class UnitkerjaController extends Controller
     public function actionCreate()
     {
         $model = new Unitkerja();
-        $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
+          Yii::$app->getSession()->setFlash('success', [
+         'text' => 'Unit Kerja Telah Disimpan',
+         'title' => 'Tersimpan',
+         'type' => 'success',
+         'timer' => 3000,
+         'showConfirmButton' => true
+     ]);
             return $this->redirect(['view', 'id' => $model->kode_unit_kerja,
-            'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2]);
+
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'dataJenisDokumen' => $data,
                 'dataSifatDokumen' => $data2
             ]);
         }
@@ -121,16 +124,23 @@ class UnitkerjaController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
+          Yii::$app->getSession()->setFlash('success', [
+         'text' => 'Unit Kerja Telah Diupdate',
+         'title' => 'Tersimpan',
+         'type' => 'success',
+         'timer' => 3000,
+         'showConfirmButton' => true
+     ]);
             return $this->redirect(['view', 'id' => $model->kode_unit_kerja,
-            'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2]);
+
+
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'dataJenisDokumen' => $data,
                 'dataSifatDokumen' => $data2
             ]);
         }
@@ -144,11 +154,17 @@ class UnitkerjaController extends Controller
      */
     public function actionDelete($id)
     {
-      $data = $this->getJenisDokumen();
       $data2 = $this->getSifatDokumen();
         $this->findModel($id)->delete();
+        Yii::$app->getSession()->setFlash('success', [
+       'text' => 'Unit Kerja Telah Dihapus',
+       'title' => 'Terhapus',
+       'type' => 'success',
+       'timer' => 3000,
+       'showConfirmButton' => true
+   ]);
 
-        return $this->redirect(['index','dataJenisDokumen' => $data,
+        return $this->redirect(['index',
         'dataSifatDokumen' => $data2]);
     }
 
@@ -168,10 +184,6 @@ class UnitkerjaController extends Controller
         }
     }
 
-    public function getJenisDokumen()
-    {
-      return Jenisdokumen::find()->orderBy(['kode_jenis_dokumen'=>SORT_DESC])->all();
-    }
     public function getSifatDokumen()
     {
       return Sifatdokumen::find()->orderBy(['kode_sifat_dokumen'=>SORT_DESC])->all();

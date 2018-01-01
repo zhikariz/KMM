@@ -3,17 +3,20 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\TempDokumenMasuk;
-use app\models\TempDokumenMasukSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+use app\components\AccessRule;
+
+
 use app\models\Jenisdokumen;
 use app\models\Sifatdokumen;
 use app\models\Dokumenmasuk;
 use app\models\User;
-use yii\filters\AccessControl;
-use app\components\AccessRule;
+use app\models\TempDokumenMasuk;
+use app\models\TempDokumenMasukSearch;
+
 
 /**
  * TempdokumenmasukController implements the CRUD actions for TempDokumenMasuk model.
@@ -64,13 +67,11 @@ class TempdokumenmasukController extends Controller
     {
         $searchModel = new TempDokumenMasukSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$sifat);
-        $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2,
         ]);
     }
@@ -82,11 +83,9 @@ class TempdokumenmasukController extends Controller
      */
     public function actionView($id)
     {
-      $data = $this->getJenisDokumen();
       $data2 = $this->getSifatDokumen();
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2,
         ]);
     }
@@ -105,7 +104,6 @@ class TempdokumenmasukController extends Controller
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'dataJenisDokumen' => $data,
                 'dataSifatDokumen' => $data2,
             ]);
         }
@@ -126,7 +124,6 @@ class TempdokumenmasukController extends Controller
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'dataJenisDokumen' => $data,
                 'dataSifatDokumen' => $data2,
             ]);
         }
@@ -163,6 +160,13 @@ class TempdokumenmasukController extends Controller
         }
         $model_masuk->save();
         $this->findModel($id)->delete();
+        Yii::$app->getSession()->setFlash('success', [
+       'text' => 'Dokumen Telah Disetujui',
+       'title' => 'Tersimpan',
+       'type' => 'success',
+       'timer' => 3000,
+       'showConfirmButton' => true
+   ]);
 
         return $this->redirect(['index','sifat'=>$sifat]);
     }
@@ -182,6 +186,13 @@ class TempdokumenmasukController extends Controller
         }
         $model->save();
         $this->findModel($id)->delete();
+        Yii::$app->getSession()->setFlash('success', [
+       'text' => 'Dokumen Telah Ditolak',
+       'title' => 'Tersimpan',
+       'type' => 'success',
+       'timer' => 3000,
+       'showConfirmButton' => true
+   ]);
 
         return $this->redirect(['index','sifat'=>$sifat]);
     }
@@ -215,10 +226,6 @@ class TempdokumenmasukController extends Controller
         }
     }
 
-    public function getJenisDokumen()
-    {
-      return Jenisdokumen::find()->orderBy(['kode_jenis_dokumen'=>SORT_DESC])->all();
-    }
     public function getSifatDokumen()
     {
       return Sifatdokumen::find()->orderBy(['kode_sifat_dokumen'=>SORT_DESC])->all();

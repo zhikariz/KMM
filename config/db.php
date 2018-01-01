@@ -2,7 +2,7 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=kmm_sodoc',
+    'dsn' => 'mysql:host=localhost;dbname=kmm',
     'username' => 'root',
     'password' => '',
     'charset' => 'utf8',

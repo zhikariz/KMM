@@ -11,7 +11,7 @@ if(date('d-m-Y') != $libur['waktu_hari_libur']){
   Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create','sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-success', 'title'=>Yii::t('app', 'Create Satuan Kerja')])   . ' '.
     Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index','sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')]):
       Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index','sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')]);
-      $dataTemplate = Yii::$app->user->identity->role->ket_role=='Approval'?'{view}':(Yii::$app->user->identity->role->ket_role=='Operator'?('{view}{update}'):'{view}{update}{delete}');
+      $dataTemplate = Yii::$app->user->identity->role->ket_role=='Operator'?('{view}{update}'):'{view}{update}{delete}';
 }else{
   $dataContent = Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index','sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')]);
   $dataTemplate = '{view}';
@@ -21,10 +21,9 @@ if((date('D')=='Sat')||(date('D')=='Sun'))
   $dataContent = Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create','sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-success', 'title'=>Yii::t('app', 'Create Satuan Kerja')])   . ' '.Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['index','sifat'=>$_GET['sifat']], ['data-pjax'=>0, 'class'=>'btn btn-default', 'title'=>Yii::t('app', 'Reset Grid')]);
   $dataTemplate = '{view}';
 }
-$this->title = 'Dokumen Masuk ';
+$this->title = $_GET['sifat']=="Rhs"?("Dokumen Masuk Rahasia"):"Dokumen Masuk Biasa";
 
 $this->params['breadcrumbs'][] = $this->title;
-$this->params['data'] = $dataJenisDokumen;
 $this->params['data2'] = $dataSifatDokumen;
 ?>
 <div class="dokumenmasuk-index">
@@ -244,7 +243,7 @@ $this->params['data2'] = $dataSifatDokumen;
     // parameters from the demo form
     'panel'=>[
         'type'=>GridView::TYPE_PRIMARY,
-        'heading' => "Dokumen Masuk ",
+        'heading' => $_GET['sifat']=="Rhs"?("Dokumen Masuk Rahasia"):"Dokumen Masuk Biasa",
     ],
     'persistResize'=>false,
     'toggleDataOptions'=>['minCount'=>10],

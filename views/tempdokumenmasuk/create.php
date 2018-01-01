@@ -9,6 +9,7 @@ use yii\helpers\Html;
 $this->title = 'Create Temp Dokumen Masuk';
 $this->params['breadcrumbs'][] = ['label' => 'Temp Dokumen Masuks', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+$this->params['data2'] = $dataSifatDokumen;
 ?>
 <div class="temp-dokumen-masuk-create">
 

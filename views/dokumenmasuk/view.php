@@ -10,7 +10,6 @@ use aryelds\sweetalert\SweetAlert;
 $this->title = "Detail Dokumen ".$model->no_dokumen;
 $this->params['breadcrumbs'][] = ['label' => 'Dokumen Masuk', 'url' => ['index','sifat'=>$_GET['sifat']]];
 $this->params['breadcrumbs'][] = $this->title;
-$this->params['data'] = $dataJenisDokumen;
 $this->params['data2'] = $dataSifatDokumen;
 ?>
 <div class="dokumenmasuk-view">

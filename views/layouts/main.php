@@ -96,81 +96,21 @@ border-left-color: #fff;
                 }?>
               </ul>
             </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dokumen Keluar <span class="caret"></span></a>
-                <ul class="dropdown-menu" role="menu">
-                  <li class="dropdown-submenu">
-        <a tabindex="-1" href="#">Administratif</a>
-        <ul class="dropdown-menu">
-        <?php
-        foreach($this->params['data'] as $index){
-          ?>
-          <li class="dropdown-submenu">
-            <a href="#"><?= $index['ket_jenis_dokumen'];?></a>
-            <ul class="dropdown-menu">
-              <?php foreach($this->params['data2'] as $index2){
-                ?>
-                <li><?=Html::a($index2['ket_sifat_dokumen'], ['administratif/index','kode'=>$index['kode_jenis_dokumen'],'sifat'=>$index2['kode_sifat_dokumen']], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Satuan Kerja')])?></li>
-                <?php
-              }?>
-            </ul>
-          </li>
-          <?php
-        }?>
 
-        </ul>
-                  </li>
-                  <li><?=Html::a('SK Kepala Perwakilan', ['skkepwakilgub/index','kode'=>'Kep/KPwBI/Slo/Intern'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Administratif')])?></li>
-                  <li><?=Html::a('SK Gubernur BI', ['skkepwakilgub/index','kode'=>'Kep.GBI/Slo'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'SK Kep Wakil & SK Gub BI')])?></li>
-                  <li><?=Html::a('Surat Jalan', ['suratjalan/index','kode'=>'Perjl.'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Surat Jalan')])?></li>
-                  <li><?=Html::a('Nota Debet', ['notadebet/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Nota Debet')])?></li>
-                </ul>
-              </li>
 
               <?php }
               if(Yii::$app->user->identity->role->ket_role=='Administrator'){
               ?>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Approval Dokumen Keluar <span class="caret"></span></a>
-                <ul class="dropdown-menu" role="menu">
-                  <li class="dropdown-submenu">
-        <a tabindex="-1" href="#">Administratif</a>
-        <ul class="dropdown-menu">
-        <?php
-        foreach($this->params['data'] as $index){
-          ?>
-          <li class="dropdown-submenu">
-            <a href="#"><?= $index['ket_jenis_dokumen'].' <span class="label label-info"> '. TempAdm::find()
-            ->where(['kode_jenis_dokumen'=>$index['kode_jenis_dokumen']])->count().'</span>'?></a>
-            <ul class="dropdown-menu">
-              <?php foreach($this->params['data2'] as $index2){
-                ?>
-                <li><?=Html::a($index2['ket_sifat_dokumen'].' <span class="label label-danger"> '.$jml=TempAdm::find()
-                ->where(['kode_jenis_dokumen'=>$index['kode_jenis_dokumen'],'kode_sifat_dokumen'=>$index2['kode_sifat_dokumen']])->andWhere(['<>','editor',Yii::$app->user->identity->nama_user])->count().'</span>', 
-                ['tempadm/index','kode'=>$index['kode_jenis_dokumen'],'sifat'=>$index2['kode_sifat_dokumen']], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Satuan Kerja')])?></li>
-                <?php
-              }?>
-            </ul>
-          </li>
-          <?php
-        }?>
 
-        </ul>
-                  </li>
-                  <li><?=Html::a('SK Kepala Perwakilan'.' <span class="label label-info"> '. TempSkKepwakilGub::find()
-                  ->where(['format_dokumen'=>'Kep/KPwBI/Slo/Intern'])->andWhere(['<>','editor',Yii::$app->user->identity->nama_user])->count().'</span>', ['tempskkepwakilgub/index','kode'=>'Kep/KPwBI/Slo/Intern'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Administratif')])?></li>
-                  <li><?=Html::a('SK Gubernur BI', ['tempskkepwakilgub/index','kode'=>'Kep.GBI/Slo'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'SK Kep Wakil & SK Gub BI')])?></li>
-                  <li><?=Html::a('Surat Jalan', ['tempsuratjalan/index','kode'=>'Perjl.'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Surat Jalan')])?></li>
-                  <li><?=Html::a('Nota Debet', ['tempnotadebet/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Nota Debet')])?></li>
-                </ul>
-              </li>
 
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Approval Dokumen Masuk <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
                   <?php foreach($this->params['data2'] as $index2){
                     ?>
-                    <li><?=Html::a($index2['ket_sifat_dokumen'], ['tempdokumenmasuk/index','sifat'=>$index2['kode_sifat_dokumen']], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Satuan Kerja')])?></li>
+                    <li>
+                      <?=Html::a($index2['ket_sifat_dokumen'].' <span class="label label-info">'.TempDokumenMasuk::find()
+                      ->where(['kode_sifat_dokumen'=>$index2['kode_sifat_dokumen']])->count().'</span>', ['tempdokumenmasuk/index','sifat'=>$index2['kode_sifat_dokumen']], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Satuan Kerja')])?></li>
                     <?php
                   }?>
                 </ul>
@@ -188,15 +128,10 @@ border-left-color: #fff;
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Management <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
-                <li><?=Html::a('Satuan Kerja', ['satuankerja/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Satuan Kerja')])?></li>
                 <li><?=Html::a('Unit Kerja', ['unitkerja/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Unit Kerja')])?></li>
-                <li><?=Html::a('Jenis Dokumen', ['jenisdokumen/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Jenis Dokumen')])?></li>
                 <li><?=Html::a('Sifat Dokumen', ['sifatdokumen/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Sifat Dokumen')])?></li>
                 <li><?=Html::a('Pejabat', ['pejabat/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Pejabat')])?></li>
-                <li><?=Html::a('Pengesah', ['pengesah/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Pengesah')])?></li>
-                <li><?=Html::a('Tim', ['tim/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Tim')])?></li>
                 <li><?=Html::a('Petunjuk / Disposisi', ['petunjuk/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Petunjuk / Disposisi')])?></li>
-                <li><?=Html::a('Satker Kantor Pusat', ['satkerpusat/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Satker Kantor Pusat')])?></li>
                 <li><?=Html::a('User', ['user/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'User')])?></li>
                 <li><?=Html::a('Hari Libur', ['hariliburtahunan/index'], ['data-pjax'=>0, 'title'=>Yii::t('app', 'Hari Libur')])?></li>
               </ul>
@@ -340,36 +275,3 @@ function checkTime(i) {
 setInterval(showTime, 500);
 //-->
 </script>
-<script>
-var obj = document.getElementById('administratif-format_dokumen-satker');
-var obj2 = document.getElementById('administratif-format_dokumen-tim');
-var obj3 = document.getElementById('administratif-format_dokumen-unit');
-$(document).ready(function(){
-  if(obj.options[obj.selectedIndex].text != 'Pilih Satuan Kerja'){
-    obj2.disabled = false;
-  }else{
-    obj2.disabled = true;
-  }
-  if(obj2.options[obj2.selectedIndex].text != 'Pilih Tim'){
-    obj3.disabled = false;
-  }else{
-    obj3.disabled = true;
-  }
-})
-function woyo(){
-  if(obj.options[obj.selectedIndex].text != null){
-    obj2.disabled = false;
-  }else{
-    obj2.disabled = true;
-  }
-}
-function woyos(){
-  if(obj2.options[obj2.selectedIndex].text != null){
-    obj3.disabled = false;
-  }else{
-    obj3.disabled = true;
-  }
-}
-
-</script>
-

@@ -1,3 +1,3 @@
 <?php
-header("location: web/");
+header("location: /kmm/web/");
 ?>

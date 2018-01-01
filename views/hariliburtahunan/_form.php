@@ -16,7 +16,7 @@ use kartik\date\DatePicker;
            ]); ?>
 
     <?=$form->field($model, 'waktu_hari_libur')->widget(DatePicker::classname(), [
-    'options' => ['placeholder' => 'Masukkan Tanggal Terima ...'],
+    'options' => ['placeholder' => 'Masukkan Tanggal Hari Libur ...'],
             'disabled' => Yii::$app->user->identity->role->ket_role != 'Administrator' ? true:false,
     'pluginOptions' => [
         'autoclose'=>true,

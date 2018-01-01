@@ -3,17 +3,27 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
+use aryelds\sweetalert\SweetAlert;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\PetunjukSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Petunjuk';
+$this->title = 'Management Petunjuk';
 $this->params['breadcrumbs'][] = $this->title;
-$this->params['data'] = $dataJenisDokumen;
 $this->params['data2'] = $dataSifatDokumen;
 ?>
 <div class="petunjuk-index">
-
+  <?php foreach (Yii::$app->session->getAllFlashes() as $message) {
+      echo SweetAlert::widget([
+          'options' => [
+              'title' => (!empty($message['title'])) ? Html::encode($message['title']) : 'Title Not Set!',
+              'text' => (!empty($message['text'])) ? Html::encode($message['text']) : 'Text Not Set!',
+              'type' => (!empty($message['type'])) ? $message['type'] : SweetAlert::TYPE_INFO,
+              'timer' => (!empty($message['timer'])) ? $message['timer'] : 4000,
+              'showConfirmButton' =>  (!empty($message['showConfirmButton'])) ? $message['showConfirmButton'] : true,
+          ]
+      ]);
+  }?>
   <?php Pjax::begin(); ?>
       <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
       <?= GridView::widget([
@@ -57,7 +67,7 @@ $this->params['data2'] = $dataSifatDokumen;
       // parameters from the demo form
       'panel'=>[
           'type'=>GridView::TYPE_PRIMARY,
-          'heading' => 'Petunjuk / Disposisi'
+          'heading' => 'Management Petunjuk / Disposisi'
       ],
       'persistResize'=>false,
       'toggleDataOptions'=>['minCount'=>10]

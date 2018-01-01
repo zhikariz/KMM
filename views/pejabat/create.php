@@ -9,7 +9,6 @@ use yii\helpers\Html;
 $this->title = 'Create Pejabat';
 $this->params['breadcrumbs'][] = ['label' => 'Pejabats', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-$this->params['data'] = $dataJenisDokumen;
 $this->params['data2'] = $dataSifatDokumen;
 ?>
 <div class="pejabat-create">

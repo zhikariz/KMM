@@ -3,16 +3,17 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Petunjuk;
-use app\models\PetunjukSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\models\Jenisdokumen;
-use app\models\Sifatdokumen;
-use app\models\User;
 use yii\filters\AccessControl;
 use app\components\AccessRule;
+
+use app\models\Petunjuk;
+use app\models\PetunjukSearch;
+use app\models\Sifatdokumen;
+use app\models\User;
+
 
 /**
  * PetunjukController implements the CRUD actions for Petunjuk model.
@@ -63,12 +64,10 @@ class PetunjukController extends Controller
     {
         $searchModel = new PetunjukSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2,
         ]);
     }
@@ -80,11 +79,9 @@ class PetunjukController extends Controller
      */
     public function actionView($id)
     {
-      $data = $this->getJenisDokumen();
       $data2 = $this->getSifatDokumen();
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2,
         ]);
     }
@@ -96,16 +93,21 @@ class PetunjukController extends Controller
      */
     public function actionCreate()
     {
-      $data = $this->getJenisDokumen();
       $data2 = $this->getSifatDokumen();
         $model = new Petunjuk();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+          Yii::$app->getSession()->setFlash('success', [
+         'text' => 'Petunjuk Telah Disimpan',
+         'title' => 'Tersimpan',
+         'type' => 'success',
+         'timer' => 3000,
+         'showConfirmButton' => true
+     ]);
             return $this->redirect(['view', 'id' => $model->id_petunjuk]);
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'dataJenisDokumen' => $data,
                 'dataSifatDokumen' => $data2,
             ]);
         }
@@ -120,14 +122,19 @@ class PetunjukController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+          Yii::$app->getSession()->setFlash('success', [
+         'text' => 'Petunjuk Telah Diupdate',
+         'title' => 'Tersimpan',
+         'type' => 'success',
+         'timer' => 3000,
+         'showConfirmButton' => true
+     ]);
             return $this->redirect(['view', 'id' => $model->id_petunjuk]);
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'dataJenisDokumen' => $data,
                 'dataSifatDokumen' => $data2,
             ]);
         }
@@ -142,6 +149,13 @@ class PetunjukController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
+        Yii::$app->getSession()->setFlash('success', [
+       'text' => 'Petunjuk Telah Dihapus',
+       'title' => 'Terhapus',
+       'type' => 'success',
+       'timer' => 3000,
+       'showConfirmButton' => true
+   ]);
 
         return $this->redirect(['index']);
     }
@@ -162,10 +176,6 @@ class PetunjukController extends Controller
         }
     }
 
-    public function getJenisDokumen()
-    {
-      return Jenisdokumen::find()->orderBy(['kode_jenis_dokumen'=>SORT_DESC])->all();
-    }
     public function getSifatDokumen()
     {
       return Sifatdokumen::find()->orderBy(['kode_sifat_dokumen'=>SORT_DESC])->all();

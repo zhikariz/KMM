@@ -27,8 +27,7 @@ use Yii;
 class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
   const ROLE_ADMIN = 1;
-  const ROLE_APPROVAL = 2;
-  const ROLE_OPERATOR = 3;
+  const ROLE_OPERATOR = 2;
 
     /**
      * @inheritdoc

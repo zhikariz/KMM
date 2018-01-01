@@ -3,15 +3,17 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Jenisdokumen;
-use app\models\Sifatdokumen;
-use app\models\SifatdokumenSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\models\User;
 use yii\filters\AccessControl;
 use app\components\AccessRule;
+
+use app\models\User;
+use app\models\Jenisdokumen;
+use app\models\Sifatdokumen;
+use app\models\SifatdokumenSearch;
+
 
 /**
  * SifatdokumenController implements the CRUD actions for Sifatdokumen model.
@@ -62,12 +64,10 @@ class SifatdokumenController extends Controller
     {
         $searchModel = new SifatdokumenSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2
         ]);
     }
@@ -79,11 +79,9 @@ class SifatdokumenController extends Controller
      */
     public function actionView($id)
     {
-      $data = $this->getJenisDokumen();
       $data2 = $this->getSifatDokumen();
         return $this->render('view', [
             'model' => $this->findModel($id),
-            'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2
         ]);
     }
@@ -96,16 +94,21 @@ class SifatdokumenController extends Controller
     public function actionCreate()
     {
         $model = new Sifatdokumen();
-        $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->kode_sifat_dokumen,
-            'dataJenisDokumen' => $data,
+          Yii::$app->getSession()->setFlash('success', [
+         'text' => 'Sifat Dokumen Telah Disimpan',
+         'title' => 'Tersimpan',
+         'type' => 'success',
+         'timer' => 3000,
+         'showConfirmButton' => true
+     ]);
+            return $this->redirect(['view',
+            'id' => $model->kode_sifat_dokumen,
             'dataSifatDokumen' => $data2]);
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'dataJenisDokumen' => $data,
                 'dataSifatDokumen' => $data2
             ]);
         }
@@ -120,16 +123,21 @@ class SifatdokumenController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->kode_sifat_dokumen,
-            'dataJenisDokumen' => $data,
+          Yii::$app->getSession()->setFlash('success', [
+         'text' => 'Sifat Dokumen Telah Diupdate',
+         'title' => 'Tersimpan',
+         'type' => 'success',
+         'timer' => 3000,
+         'showConfirmButton' => true
+     ]);
+            return $this->redirect(['view',
+            'id' => $model->kode_sifat_dokumen,
             'dataSifatDokumen' => $data2]);
         } else {
             return $this->render('update', [
                 'model' => $model,
-                'dataJenisDokumen' => $data,
                 'dataSifatDokumen' => $data2
             ]);
         }
@@ -144,9 +152,15 @@ class SifatdokumenController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-        $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
-        return $this->redirect(['index','dataJenisDokumen' => $data,
+        Yii::$app->getSession()->setFlash('success', [
+       'text' => 'Sifat Dokumen Telah Dihapus',
+       'title' => 'Terhapus',
+       'type' => 'success',
+       'timer' => 3000,
+       'showConfirmButton' => true
+   ]);
+        return $this->redirect(['index',
         'dataSifatDokumen' => $data2]);
     }
 
@@ -165,10 +179,7 @@ class SifatdokumenController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-    public function getJenisDokumen()
-    {
-      return Jenisdokumen::find()->orderBy(['kode_jenis_dokumen'=>SORT_DESC])->all();
-    }
+
     public function getSifatDokumen()
     {
       return Sifatdokumen::find()->orderBy(['kode_sifat_dokumen'=>SORT_DESC])->all();

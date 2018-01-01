@@ -3,24 +3,24 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Dokumenmasuk;
-use app\models\DokumenmasukSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
-use app\models\Jenisdokumen;
+use yii\web\UploadedFile;
+use yii\filters\AccessControl;
+use app\components\AccessRule;
+
+use app\models\Dokumenmasuk;
+use app\models\DokumenmasukSearch;
 use app\models\Sifatdokumen;
-use app\models\Tim;
 use app\models\Unitkerja;
 use app\models\Petunjuk;
 use app\models\Pejabat;
-use yii\web\UploadedFile;
 use app\models\TempDokumenMasuk;
 use app\models\Hariliburtahunan;
 use app\models\User;
-use yii\filters\AccessControl;
-use app\components\AccessRule;
+
 
 /**
  * DokumenmasukController implements the CRUD actions for Dokumenmasuk model.
@@ -55,14 +55,6 @@ class DokumenmasukController extends Controller
                   'roles'=>[
                     User::ROLE_ADMIN,
                     User::ROLE_OPERATOR,
-                    User::ROLE_APPROVAL,
-                  ]
-                ],
-                [
-                  'actions'=>['approve'],
-                  'allow'=>true,
-                  'roles'=>[
-                    User::ROLE_APPROVAL,
                   ]
                 ],
                 [
@@ -72,8 +64,6 @@ class DokumenmasukController extends Controller
                     User::ROLE_ADMIN
                   ]
                 ]
-
-
                 //nek rung login
             ],
         ],
@@ -95,14 +85,12 @@ class DokumenmasukController extends Controller
 
         $searchModel = new DokumenmasukSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$sifat);
-        $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
         $libur = Hariliburtahunan::find()->andWhere(['like','waktu_hari_libur',date('d-m-Y')])->one();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2,
             'libur'=>$libur,
         ]);
@@ -115,14 +103,12 @@ class DokumenmasukController extends Controller
      */
     public function actionView($sifat,$id)
     {
-      $data = $this->getJenisDokumen();
       $data2 = $this->getSifatDokumen();
       $model = $this->findModel($id);
       $data_dokumen_masuk = Dokumenmasuk::find()->where(['kode_sifat_dokumen'=>$sifat,'id_dokumen_masuk'=>$id])->one();
       $libur = Hariliburtahunan::find()->andWhere(['like','waktu_hari_libur',date('d-m-Y')])->one();
         return $this->render('view', [
             'model' => $model,
-            'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2,
             'dataDokumenMasuk' => $data_dokumen_masuk,
             'libur'=>$libur,
@@ -137,7 +123,6 @@ class DokumenmasukController extends Controller
     public function actionCreate($sifat)
     {
         $model = new Dokumenmasuk();
-        $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
         //ngambil data checkbox
         $dataKepala = ArrayHelper::map(Pejabat::find()->all(), 'nama_deputi', 'nama_deputi');
@@ -176,12 +161,10 @@ class DokumenmasukController extends Controller
          'showConfirmButton' => true
      ]);
             return $this->redirect(['view','sifat'=>$sifat,'id' => $model->id_dokumen_masuk,'model' => $model,
-            'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2,]);
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'dataJenisDokumen' => $data,
                 'dataSifatDokumen' => $data2,
                 'dataUnit'=>$dataUnit,
                 'dataKepala'=>$dataKepala,
@@ -199,7 +182,6 @@ class DokumenmasukController extends Controller
     public function actionUpdate($sifat,$id)
     {
         $model = $this->findModel($id);
-        $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
         $dataMasuk = $this->findModel($id);
         $dataKepala = ArrayHelper::map(Pejabat::find()->all(), 'nama_deputi', 'nama_deputi');
@@ -238,15 +220,19 @@ class DokumenmasukController extends Controller
           if($temp_model->file_dokumen != $dataMasuk->file_dokumen)
           $temp_model->file_dokumen->saveAs('uploads/' . $temp_model->file_dokumen->baseName . '.' . $temp_model->file_dokumen->extension);
           Yii::$app->getSession()->setFlash('success', [
-         'text' => 'Dokumen Selesai Terupdate Silahkan Tunggu Approval Untuk Menyetujui',
+         'text' => 'Dokumen Selesai Terupdate Silahkan Tunggu Admin Untuk Menyetujui Pembaruan',
          'title' => 'Proses Update',
          'type' => 'success',
          'timer' => 3000,
          'showConfirmButton' => true
      ]);
-          return $this->redirect(['view','sifat'=>$sifat,'id' => $model->id_dokumen_masuk,'model' => $model,
-          'dataJenisDokumen' => $data,
-          'dataSifatDokumen' => $data2,]);
+          return $this->redirect([
+              'view',
+              'sifat'=>$sifat,
+              'id' => $model->id_dokumen_masuk,
+              'model' => $model,
+              'dataSifatDokumen' => $data2
+            ]);
         } else {
           $temp = json_decode($model->tujuan_disposisi,true);
           $model->tujuan_disposisi = $temp;
@@ -254,7 +240,6 @@ class DokumenmasukController extends Controller
           $model->petunjuk_disposisi = $temp2;
             return $this->render('update', [
                 'model' => $model,
-                'dataJenisDokumen' => $data,
                 'dataSifatDokumen' => $data2,
                 'dataUnit'=>$dataUnit,
                 'dataKepala'=>$dataKepala,
@@ -287,14 +272,14 @@ class DokumenmasukController extends Controller
 
     public function actionBelum($sifat,$id)
     {
-        $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
-        $model = $this->findModel($id);
 
-          $model->persetujuan = 'Belum Disetujui';
+        $model = $this->findModel($id);
+        $model->persetujuan = 'Belum Disetujui';
         $model->ket_persetujuan=NULL;
-          $model->save();
-          return null;
+        $model->save();
+
+        return null;
     }
     /**
      * Finds the Dokumenmasuk model based on its primary key value.
@@ -311,10 +296,7 @@ class DokumenmasukController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-    public function getJenisDokumen()
-    {
-      return Jenisdokumen::find()->orderBy(['kode_jenis_dokumen'=>SORT_DESC])->all();
-    }
+
     public function getSifatDokumen()
     {
       return Sifatdokumen::find()->orderBy(['kode_sifat_dokumen'=>SORT_DESC])->all();

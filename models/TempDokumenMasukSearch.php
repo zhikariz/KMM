@@ -41,7 +41,7 @@ class TempDokumenMasukSearch extends TempDokumenMasuk
      */
     public function search($params,$sifat)
     {
-        $query = TempDokumenMasuk::find()->where(['kode_sifat_dokumen'=>$sifat]);
+        $query = TempDokumenMasuk::find()->where(['kode_sifat_dokumen'=>$sifat])->andWhere(['<>','editor',Yii::$app->user->identity->nama_user]);
 
         // add conditions that should always apply here
 

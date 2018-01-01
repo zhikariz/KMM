@@ -9,7 +9,6 @@ $this->title = 'Update Dokumen Masuk: ' . $model->no_dokumen;
 $this->params['breadcrumbs'][] = ['label' => 'Dokumen Masuk', 'url' => ['index','sifat'=>$_GET['sifat']]];
 $this->params['breadcrumbs'][] = ['label' => $model->no_dokumen, 'url' => ['view', 'sifat'=>$_GET['sifat'], 'id' => $model->id_dokumen_masuk]];
 $this->params['breadcrumbs'][] = 'Update';
-$this->params['data'] = $dataJenisDokumen;
 $this->params['data2'] = $dataSifatDokumen;
 ?>
 <div class="dokumenmasuk-update">

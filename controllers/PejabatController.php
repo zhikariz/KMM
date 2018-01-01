@@ -3,16 +3,17 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Pejabat;
-use app\models\PejabatSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use app\models\Jenisdokumen;
-use app\models\Sifatdokumen;
-use app\models\User;
 use yii\filters\AccessControl;
 use app\components\AccessRule;
+
+use app\models\Sifatdokumen;
+use app\models\User;
+use app\models\Pejabat;
+use app\models\PejabatSearch;
+
 
 /**
  * PejabatController implements the CRUD actions for Pejabat model.
@@ -40,7 +41,6 @@ class PejabatController extends Controller
                       User::ROLE_ADMIN,
                     ],
                 ],
-
                 ]
 
 
@@ -63,12 +63,10 @@ class PejabatController extends Controller
     {
         $searchModel = new PejabatSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2,
         ]);
     }
@@ -80,11 +78,10 @@ class PejabatController extends Controller
      */
     public function actionView($id)
     {
-      $data = $this->getJenisDokumen();
       $data2 = $this->getSifatDokumen();
+      $model = $this->findModel($id);
         return $this->render('view', [
-            'model' => $this->findModel($id),
-            'dataJenisDokumen' => $data,
+            'model' => $model,
             'dataSifatDokumen' => $data2
         ]);
     }
@@ -97,16 +94,20 @@ class PejabatController extends Controller
     public function actionCreate()
     {
         $model = new Pejabat();
-        $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+          Yii::$app->getSession()->setFlash('success', [
+         'text' => 'Pejabat Telah Disimpan',
+         'title' => 'Tersimpan',
+         'type' => 'success',
+         'timer' => 3000,
+         'showConfirmButton' => true
+     ]);
             return $this->redirect(['view', 'id' => $model->id_pejabat,
-            'dataJenisDokumen' => $data,
             'dataSifatDokumen' => $data2]);
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'dataJenisDokumen' => $data,
                 'dataSifatDokumen' => $data2
             ]);
         }
@@ -121,14 +122,21 @@ class PejabatController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_pejabat,'dataJenisDokumen' => $data,
+          Yii::$app->getSession()->setFlash('success', [
+         'text' => 'Pejabat Telah Diupdate',
+         'title' => 'Tersimpan',
+         'type' => 'success',
+         'timer' => 3000,
+         'showConfirmButton' => true
+     ]);
+            return $this->redirect(['view',
+            'id' => $model->id_pejabat,
             'dataSifatDokumen' => $data2]);
         } else {
             return $this->render('update', [
-                'model' => $model,'dataJenisDokumen' => $data,
+                'model' => $model,
                 'dataSifatDokumen' => $data2
             ]);
         }
@@ -143,10 +151,17 @@ class PejabatController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-        $data = $this->getJenisDokumen();
         $data2 = $this->getSifatDokumen();
-        return $this->redirect(['index','dataJenisDokumen' => $data,
-        'dataSifatDokumen' => $data2]);
+        Yii::$app->getSession()->setFlash('success', [
+       'text' => 'Pejabat Telah Dihapus',
+       'title' => 'Terhapus',
+       'type' => 'success',
+       'timer' => 3000,
+       'showConfirmButton' => true
+   ]);
+        return $this->redirect(['index',
+        'dataSifatDokumen' => $data2
+      ]);
     }
 
     /**
@@ -164,10 +179,7 @@ class PejabatController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-    public function getJenisDokumen()
-    {
-      return Jenisdokumen::find()->orderBy(['kode_jenis_dokumen'=>SORT_DESC])->all();
-    }
+
     public function getSifatDokumen()
     {
       return Sifatdokumen::find()->orderBy(['kode_sifat_dokumen'=>SORT_DESC])->all();

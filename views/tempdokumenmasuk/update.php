@@ -9,6 +9,7 @@ $this->title = 'Update Temp Dokumen Masuk: ' . $model->id_temp_dokumen_masuk;
 $this->params['breadcrumbs'][] = ['label' => 'Temp Dokumen Masuks', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id_temp_dokumen_masuk, 'url' => ['view', 'id' => $model->id_temp_dokumen_masuk]];
 $this->params['breadcrumbs'][] = 'Update';
+$this->params['data2'] = $dataSifatDokumen;
 ?>
 <div class="temp-dokumen-masuk-update">
 
